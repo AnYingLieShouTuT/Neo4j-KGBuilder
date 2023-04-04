@@ -1,23 +1,12 @@
-<!--
- * @Description: kgBuilder
- * @Author: tanc
- * @Date: 2021-12-26 16:50:07
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-03-29 11:23:25
--->
 <template>
   <div class="mind-box">
     <!-- 左侧 -->
     <el-scrollbar class="mind-l">
       <div class="ml-m">
-        <div class="guanzhu" style="padding: 20px;">
+        <div class="guanzhu" style="padding: 20px">
           <h2 class="hometitle ml-ht">图谱列表</h2>
-          <div class="ml-a-box" style="min-height:280px">
-            <el-tag
-              class="tag-ml-5"
-              @click="createDomain"
-              >新建图谱</el-tag
-            >
+          <div class="ml-a-box" style="min-height: 280px">
+            <el-tag class="tag-ml-5" @click="createDomain">新建图谱</el-tag>
             <el-tag
               @click="matchDomainGraph(m)"
               v-for="(m, index) in pageModel.nodeList"
@@ -61,7 +50,7 @@
         <span>
           <span class="dibmr">
             <span>当前领域:</span>
-            <span style="color:red">{{ domain }}</span>
+            <span style="color: red">{{ domain }}</span>
           </span>
         </span>
         <div v-show="domain != ''" class="fl" style="display: flex">
@@ -83,7 +72,8 @@
               <el-tag
                 v-for="(m, index) in pageSizeList"
                 size="mini"
-                :key="index"  :type="m.isActive?'success':''"
+                :key="index"
+                :type="m.isActive ? 'success' : ''"
                 class="tag-ml-5"
                 @click="setMatchSize(m)"
                 >{{ m.size }}</el-tag
@@ -105,11 +95,7 @@
           <a href="javascript:void(0)" @click="exportGraph" class="svg-a-sm">
             <i class="el-icon-download">导出</i>
           </a>
-          <a
-            href="javascript:void(0)"
-            @click="requestFullScreen"
-            class="svg-a-sm"
-          >
+          <a href="javascript:void(0)" @click="requestFullScreen" class="svg-a-sm">
             <i class="el-icon-monitor">全屏</i>
           </a>
           <a href="javascript:void(0)" @click="help" class="svg-a-sm">
@@ -201,7 +187,7 @@ export default {
     KgJson,
     KgHelp,
     KgWanted,
-    kgbuilder
+    kgbuilder,
   },
   provide() {
     return {
@@ -213,7 +199,7 @@ export default {
       quickAddNodes: this.btnQuickAddNode,
       createSingleNode: this.createSingleNode,
       updateCoordinateOfNode: this.updateCoordinateOfNode,
-      getNodeDetail: this.getNodeDetail
+      getNodeDetail: this.getNodeDetail,
     };
   },
   data() {
@@ -226,7 +212,7 @@ export default {
           title: "新建",
           icon: {
             type: "text",
-            content: "新建"
+            content: "新建",
           },
           defaultEvent: (d, _this, d3) => {
             console.log("level2Group");
@@ -236,7 +222,7 @@ export default {
               title: "点",
               icon: {
                 type: "text",
-                content: "点"
+                content: "点",
               },
               defaultEvent: (d, _this, d3) => {
                 this.$refs.kg_form.initBatchAddChild(
@@ -246,35 +232,35 @@ export default {
                   this.domain
                 );
               },
-              childrens: []
+              childrens: [],
             },
             {
               title: "块",
               icon: {
                 type: "text",
-                content: "块"
+                content: "块",
               },
               defaultEvent: (d, _this, d3) => {
                 this.$message({ message: "开发中", type: "success" });
-              }
+              },
             },
             {
               title: "集",
               icon: {
                 type: "text",
-                content: "集"
+                content: "集",
               },
               defaultEvent: (d, _this, d3) => {
                 this.$message({ message: "开发中", type: "success" });
-              }
-            }
-          ]
+              },
+            },
+          ],
         },
         {
           title: "编辑",
           icon: {
             type: "icon",
-            content: "#icon-editor"
+            content: "#icon-editor",
           },
           defaultEvent: (d, _this, d3) => {
             _this.$nextTick(() => {
@@ -282,34 +268,25 @@ export default {
                 uuid: d.uuid,
                 name: d.name,
                 r: parseInt(d.r),
-                color: d.color
+                color: d.color,
               };
-              _this.$emit(
-                "editForm",
-                true,
-                "nodeEdit",
-                formNode,
-                _this.domainId
-              );
+              _this.$emit("editForm", true, "nodeEdit", formNode, _this.domainId);
             });
           },
-          childrens: []
+          childrens: [],
         },
         {
           title: "展开",
           icon: {
             type: "icon",
-            content: "#icon-salescenter-fill"
+            content: "#icon-salescenter-fill",
           },
           defaultEvent: (d, _this, d3) => {
             let data = { domain: _this.domain, nodeId: d.uuid };
-            kgBuilderApi.getMoreRelationNode(data).then(result => {
+            kgBuilderApi.getMoreRelationNode(data).then((result) => {
               if (result.code == 200) {
                 //把不存在于画布的节点添加到画布
-                _this.mergeNodeAndLink(
-                  result.data.node,
-                  result.data.relationship
-                );
+                _this.mergeNodeAndLink(result.data.node, result.data.relationship);
                 //重新绘制
                 //_this.updateGraph();
               } else {
@@ -317,17 +294,17 @@ export default {
               }
             });
           },
-          childrens: []
+          childrens: [],
         },
         {
           title: "删除",
           icon: {
             type: "icon",
-            content: "#icon-ashbin-fill"
+            content: "#icon-ashbin-fill",
           },
           defaultEvent: (d, _this, d3) => {
             let data = { domain: _this.domain, nodeId: d.uuid };
-            kgBuilderApi.deleteNode(data).then(result => {
+            kgBuilderApi.deleteNode(data).then((result) => {
               if (result.code == 200) {
                 //let rShips = result.data;
                 // 删除节点对应的关系
@@ -353,26 +330,26 @@ export default {
               }
             });
           },
-          childrens: []
+          childrens: [],
         },
         {
           title: "连线",
           icon: {
             type: "icon",
-            content: "#icon-link"
+            content: "#icon-link",
           },
           defaultEvent: (data, _this, d3) => {
             this.createLink(data);
             //_this.updateGraph();
           },
-          childrens: []
+          childrens: [],
         },
         {
           title: "哈哈这里也可以用外部图片",
           icon: {
             type: "url",
             content:
-              "https://tvax2.sinaimg.cn/crop.0.0.1008.1008.50/006Y2wSTly8gurymhtku4j60s00s0gn602.jpg"
+              "https://tvax2.sinaimg.cn/crop.0.0.1008.1008.50/006Y2wSTly8gurymhtku4j60s00s0gn602.jpg",
           },
           defaultEvent: (d, _this, d3) => {},
           childrens: [
@@ -380,7 +357,7 @@ export default {
               title: "点",
               icon: {
                 type: "text",
-                content: "点"
+                content: "点",
               },
               defaultEvent: (d, _this, d3) => {
                 console.log("点");
@@ -390,7 +367,7 @@ export default {
                   title: "点1",
                   icon: {
                     type: "text",
-                    content: "点1"
+                    content: "点1",
                   },
                   defaultEvent: (d, _this, d3) => {
                     console.log("点1");
@@ -400,79 +377,79 @@ export default {
                       title: "点2",
                       icon: {
                         type: "text",
-                        content: "点2"
+                        content: "点2",
                       },
                       defaultEvent: (d, _this, d3) => {
                         console.log("点");
                       },
-                      childrens: []
+                      childrens: [],
                     },
                     {
                       title: "块2",
                       icon: {
                         type: "text2",
-                        content: "块"
+                        content: "块",
                       },
                       defaultEvent: (d, _this, d3) => {
                         console.log("块2");
-                      }
+                      },
                     },
                     {
                       title: "集2",
                       icon: {
                         type: "text",
-                        content: "集2"
+                        content: "集2",
                       },
                       defaultEvent: (d, _this, d3) => {
                         console.log("集2");
-                      }
-                    }
-                  ]
+                      },
+                    },
+                  ],
                 },
                 {
                   title: "块1",
                   icon: {
                     type: "text",
-                    content: "块1"
+                    content: "块1",
                   },
                   defaultEvent: (d, _this, d3) => {
                     console.log("块1");
-                  }
+                  },
                 },
                 {
                   title: "集1",
                   icon: {
                     type: "text1",
-                    content: "集"
+                    content: "集",
                   },
                   defaultEvent: (d, _this, d3) => {
                     console.log("集1");
-                  }
-                }
-              ]
+                  },
+                },
+              ],
             },
             {
               title: "块",
               icon: {
                 type: "text",
-                content: "块"
+                content: "块",
               },
               defaultEvent: (d, _this, d3) => {
                 console.log("块");
-              }
+              },
             },
             {
               title: "集",
               icon: {
                 type: "text",
-                content: "集"
+                content: "集",
               },
               defaultEvent: (d, _this, d3) => {
                 console.log("集");
-              }
-            }
-          ]
-        }
+              },
+            },
+          ],
+        },
       ],
       _thisView: null,
       timer: null,
@@ -482,7 +459,7 @@ export default {
         { size: 500, isActive: true },
         { size: 1000, isActive: false },
         { size: 2000, isActive: false },
-        { size: 5000, isActive: false }
+        { size: 5000, isActive: false },
       ],
       domain: "",
       domainId: 0,
@@ -497,34 +474,32 @@ export default {
         pageSize: 30,
         totalCount: 0,
         totalPage: 0,
-        nodeList: []
+        nodeList: [],
       },
       graphData: {
         nodes: [],
-        links: []
+        links: [],
       },
       jsonShow: false,
-      helpShow: false
+      helpShow: false,
     };
   },
   filters: {
-    labelFormat: function(value) {
+    labelFormat: function (value) {
       let domain = value.substring(1, value.length - 1);
       return domain;
-    }
+    },
   },
   mounted() {},
   created() {
     this.getDomain();
     this.$nextTick(() => {
-      this.width = document.getElementsByClassName(
-        "graphContainer"
-      )[0].offsetWidth;
+      this.width = document.getElementsByClassName("graphContainer")[0].offsetWidth;
       //this.height = document.getElementsByClassName('graphContainer')[0].offsetHeight
       this.height = window.screen.height;
       this.style = {
         width: this.width + "px",
-        height: this.height + "px"
+        height: this.height + "px",
       };
       //console.log(this.width, this.height)
       EventBus.$emit("DIV", this.width, this.height);
@@ -557,7 +532,7 @@ export default {
       let data = graphNode;
       data.domain = this.domain;
       let _this = this;
-      kgBuilderApi.createNode(data).then(result => {
+      kgBuilderApi.createNode(data).then((result) => {
         if (result.code == 200) {
           //删除旧节点，由于我们改变的是属性，不是uuid,此处我们需要更新属性，或者删除节点重新添加
           let newNode = result.data;
@@ -574,24 +549,24 @@ export default {
       let image = data.imagePath;
       let nodeId = data.nodeId;
       let _this = this;
-      kgBuilderApi.saveNodeImage(JSON.stringify(data)).then(result => {
+      kgBuilderApi.saveNodeImage(JSON.stringify(data)).then((result) => {
         if (result.code == 200) {
           _this.graphData.nodes
-            .filter(n => n.uuid == nodeId)
-            .map(m => {
+            .filter((n) => n.uuid == nodeId)
+            .map((m) => {
               m.image = image;
               return m;
             });
           _this.$message({
             message: "操作成功",
-            type: "success"
+            type: "success",
           });
         }
       });
     },
     //上传富文本
     saveNodeContent(data) {
-      kgBuilderApi.saveNodeContent(JSON.stringify(data)).then(result => {
+      kgBuilderApi.saveNodeContent(JSON.stringify(data)).then((result) => {
         if (result.code == 200) {
           this.$message({ message: "操作成功", type: "success" });
         }
@@ -601,7 +576,7 @@ export default {
     createSingleNode(left, top) {
       let data = { name: "", r: 30 };
       data.domain = this.domain;
-      kgBuilderApi.createNode(data).then(result => {
+      kgBuilderApi.createNode(data).then((result) => {
         if (result.code == 200) {
           let newNode = result.data;
           _.assignIn(newNode, {
@@ -610,7 +585,7 @@ export default {
             fx: left,
             fy: top,
             r: parseInt(newNode.r),
-            image: ""
+            image: "",
           });
           this.graphData.nodes.push(newNode);
         }
@@ -618,24 +593,20 @@ export default {
     },
     updateCoordinateOfNode(nodes) {
       let data = { domain: this.domain, nodes: nodes };
-      kgBuilderApi.updateCoordinateOfNode(data).then(result => {});
+      kgBuilderApi.updateCoordinateOfNode(data).then((result) => {});
     },
     //删除节点
     deleteNode(out_buttongroup_id) {
       let _this = this;
       _this
-        .$confirm(
-          "此操作将删除该节点及周边关系(不可恢复), 是否继续?",
-          "三思而后行",
-          {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning"
-          }
-        )
-        .then(function() {
+        .$confirm("此操作将删除该节点及周边关系(不可恢复), 是否继续?", "三思而后行", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+        .then(function () {
           let data = { domain: _this.domain, nodeId: _this.selectNode.nodeId };
-          kgBuilderApi.deleteNode(data).then(result => {
+          kgBuilderApi.deleteNode(data).then((result) => {
             if (result.code == 200) {
               _this.svg.selectAll(out_buttongroup_id).remove();
               let rShips = result.data;
@@ -662,16 +633,16 @@ export default {
                 //_this.updateGraph();
                 _this.$message({
                   type: "success",
-                  message: "操作成功!"
+                  message: "操作成功!",
                 });
               }
             }
           });
         })
-        .catch(function() {
+        .catch(function () {
           _this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -682,11 +653,11 @@ export default {
         .$confirm("此操作将删除该关系(不可恢复), 是否继续?", "三思而后行", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         })
-        .then(function() {
+        .then(function () {
           let data = { domain: _this.domain, shipId: sdata.uuid };
-          kgBuilderApi.deleteLink(data).then(result => {
+          kgBuilderApi.deleteLink(data).then((result) => {
             if (result.code == 200) {
               let j = -1;
               for (let i = 0; i < _this.graphData.links.length; i++) {
@@ -701,16 +672,16 @@ export default {
             }
           });
         })
-        .catch(function() {
+        .catch(function () {
           _this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
     //添加连线
     createLink(data) {
-      kgBuilderApi.createLink(data).then(result => {
+      kgBuilderApi.createLink(data).then((result) => {
         if (result.code == 200) {
           let newShip = result.data;
           this.graphData.links.push(newShip);
@@ -723,19 +694,19 @@ export default {
       this.$prompt("请输入关系名称", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        inputValue: sdata.cname
+        inputValue: sdata.cname,
       })
-        .then(function(res) {
+        .then(function (res) {
           let value = res.value;
           let data = {
             domain: _this.domain,
             shipId: sdata.uuid,
-            shipName: value
+            shipName: value,
           };
-          kgBuilderApi.updateLink(data).then(result => {
+          kgBuilderApi.updateLink(data).then((result) => {
             if (result.code == 200) {
               let newShip = result.data;
-              _this.graphData.links.forEach(function(m) {
+              _this.graphData.links.forEach(function (m) {
                 if (m.uuid == newShip.uuid) {
                   m.name = newShip.name;
                 }
@@ -743,7 +714,7 @@ export default {
             }
           });
         })
-        .catch(function() {});
+        .catch(function () {});
     },
     //更新节点名称
     updateNodeName(d) {
@@ -752,12 +723,12 @@ export default {
         .$prompt("编辑节点名称", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          inputValue: d.name
+          inputValue: d.name,
         })
-        .then(function(res) {
+        .then(function (res) {
           let value = res.value;
           let data = { domain: _this.domain, nodeId: d.uuid, nodeName: value };
-          kgBuilderApi.updateNodeName(data).then(result => {
+          kgBuilderApi.updateNodeName(data).then((result) => {
             if (result.code == 200) {
               if (d.uuid != 0) {
                 for (let i = 0; i < _this.graphData.nodes.length; i++) {
@@ -769,22 +740,22 @@ export default {
               //_this.updateGraph();
               _this.$message({
                 message: "操作成功",
-                type: "success"
+                type: "success",
               });
             }
           });
         })
-        .catch(function() {
+        .catch(function () {
           _this.$message({
             type: "info",
-            message: "取消操作"
+            message: "取消操作",
           });
         });
     },
     //初始化节点富文本内容
     initNodeContent(data) {
       let param = { domainId: data.domainId, nodeId: data.nodeId };
-      kgBuilderApi.getNodeContent(param).then(response => {
+      kgBuilderApi.getNodeContent(param).then((response) => {
         if (response.code == 200) {
           if (response.data) {
             this.$refs.kg_form.initContent(response.data.content);
@@ -797,14 +768,14 @@ export default {
     //初始化节点添加的图片
     initNodeImage(data) {
       let param = { domainId: data.domainId, nodeId: data.nodeId };
-      kgBuilderApi.getNodeImage(param).then(response => {
+      kgBuilderApi.getNodeImage(param).then((response) => {
         if (response.code == 200) {
           if (response.data) {
             let nodeImageList = [];
             for (let i = 0; i < response.data.length; i++) {
               nodeImageList.push({
                 file: response.data[i].fileName,
-                imageType: response.data[i].imageType
+                imageType: response.data[i].imageType,
               });
               this.$refs.kg_form.initImage(nodeImageList);
             }
@@ -817,7 +788,7 @@ export default {
     //一次性获取富文本和图片
     getNodeDetail(nodeId, left, top) {
       let data = { domainId: this.domainId, nodeId: nodeId };
-      kgBuilderApi.getNodeDetail(data).then(result => {
+      kgBuilderApi.getNodeDetail(data).then((result) => {
         if (result.code == 200) {
           if (result.data) {
             this.$refs.node_richer.init(
@@ -861,7 +832,7 @@ export default {
       let data = {
         domain: this.domain,
         nodeName: this.nodeName,
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
       };
       let _this = this;
       // axios.get('/static/kgData.json', {}).then(function (response) {
@@ -872,7 +843,7 @@ export default {
       //     // _this.graphData.links =data.relationship;
       // })
       // d3.select(".graphContainer >svg").remove();
-      kgBuilderApi.getDomainGraph(data).then(result => {
+      kgBuilderApi.getDomainGraph(data).then((result) => {
         if (result.code == 200) {
           if (result.data != null) {
             _this.graphData = { nodes: [], links: [] };
@@ -885,7 +856,7 @@ export default {
     //展开更多节点
     getMoreNode() {
       let data = { domain: this.domain, nodeId: this.selectNode.nodeId };
-      kgBuilderApi.getMoreRelationNode(data).then(result => {
+      kgBuilderApi.getMoreRelationNode(data).then((result) => {
         if (result.code == 200) {
           //把不存在于画布的节点添加到画布
           this.mergeNodeAndLink(result.data.node, result.data.relationship);
@@ -906,12 +877,12 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
-        .then(function(res) {
+        .then(function (res) {
           let data = { domainId: id, domain: value };
-          kgBuilderApi.deleteDomain(data).then(result => {
+          kgBuilderApi.deleteDomain(data).then((result) => {
             if (result.code == 200) {
               this.getDomain();
               this.domain = "";
@@ -921,7 +892,7 @@ export default {
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -929,12 +900,12 @@ export default {
     createDomain(value) {
       this.$prompt("请输入领域名称", "提示", {
         confirmButtonText: "确定",
-        cancelButtonText: "取消"
+        cancelButtonText: "取消",
       })
-        .then(res => {
+        .then((res) => {
           value = res.value;
           let data = { domain: value, type: 0 };
-          kgBuilderApi.createDomain(data).then(result => {
+          kgBuilderApi.createDomain(data).then((result) => {
             if (result.code == 200) {
               this.getDomain();
               this.domain = value;
@@ -946,12 +917,12 @@ export default {
     },
     //获取领域标签
     getLabels(data) {
-      kgBuilderApi.getDomains(data).then(result => {
+      kgBuilderApi.getDomains(data).then((result) => {
         if (result.code == 200) {
           this.pageModel = result.data;
           this.pageModel.totalPage =
             parseInt((result.data.totalCount - 1) / result.data.pageSize) + 1;
-          this.pageModel.nodeList.map(n => {
+          this.pageModel.nodeList.map((n) => {
             n.type = "";
             return n;
           });
@@ -959,13 +930,11 @@ export default {
       });
     },
     getDomain(pageIndex) {
-      this.pageModel.pageIndex = pageIndex
-        ? pageIndex
-        : this.pageModel.pageIndex;
+      this.pageModel.pageIndex = pageIndex ? pageIndex : this.pageModel.pageIndex;
       let data = {
         pageIndex: this.pageModel.pageIndex,
         pageSize: this.pageModel.pageSize,
-        command: 0
+        command: 0,
       };
       this.getLabels(data);
     },
@@ -973,7 +942,7 @@ export default {
       this.domain = domain.name;
       this.domainId = domain.id;
       this.getDomainGraph();
-      this.pageModel.nodeList.map(n => {
+      this.pageModel.nodeList.map((n) => {
         if (n.name == domain.name) {
           n.type = "success";
         } else {
@@ -987,8 +956,8 @@ export default {
       html2canvas(document.querySelector(".graphContainer"), {
         width: document.querySelector(".graphContainer").offsetWidth, // canvas画板的宽度 一般都是要保存的那个dom的宽度
         height: document.querySelector(".graphContainer").offsetHeight, // canvas画板的高度  同上
-        scale: 1
-      }).then(function(canvas) {
+        scale: 1,
+      }).then(function (canvas) {
         let a = document.createElement("a");
         a.href = canvas.toDataURL("image/png"); //将画布内的信息导出为png图片数据
         let timeStamp = Date.parse(new Date());
@@ -1016,7 +985,7 @@ export default {
         return;
       }
       let data = { domain: this.domain };
-      kgBuilderApi.exportGraph(data).then(result => {
+      kgBuilderApi.exportGraph(data).then((result) => {
         if (result.code == 200) {
           window.location.href = result.fileName;
         }
@@ -1039,16 +1008,16 @@ export default {
     //合并节点和连线
     mergeNodeAndLink(newNodes, newLinks) {
       let _this = this;
-      newNodes.forEach(function(m) {
-        let sobj = _this.graphData.nodes.find(function(x) {
+      newNodes.forEach(function (m) {
+        let sobj = _this.graphData.nodes.find(function (x) {
           return x.uuid === m.uuid;
         });
         if (typeof sobj == "undefined") {
           _this.graphData.nodes.push(m);
         }
       });
-      newLinks.forEach(function(m) {
-        let sobj = _this.graphData.links.find(function(x) {
+      newLinks.forEach(function (m) {
+        let sobj = _this.graphData.links.find(function (x) {
           return x.uuid === m.uuid;
         });
         if (typeof sobj == "undefined") {
@@ -1062,9 +1031,9 @@ export default {
         domain: this.domain,
         sourceName: param.sourceNodeName,
         targetNames: param.targetNodeNames,
-        relation: param.relation
+        relation: param.relation,
       };
-      kgBuilderApi.batchCreateNode(data).then(result => {
+      kgBuilderApi.batchCreateNode(data).then((result) => {
         if (result.code == 200) {
           //把不存在于画布的节点添加到画布
           this.mergeNodeAndLink(result.data.nodes, result.data.ships);
@@ -1072,7 +1041,7 @@ export default {
           //this.updateGraph();
           this.$message({
             message: "操作成功",
-            type: "success"
+            type: "success",
           });
         }
       });
@@ -1083,16 +1052,16 @@ export default {
         domain: this.domain,
         sourceId: param.sourceUuid,
         targetNames: param.targetNodeNames,
-        relation: param.relation
+        relation: param.relation,
       };
-      kgBuilderApi.batchCreateChildNode(data).then(result => {
+      kgBuilderApi.batchCreateChildNode(data).then((result) => {
         if (result.code == 200) {
           //把不存在于画布的节点添加到画布
           this.mergeNodeAndLink(result.data.nodes, result.data.ships);
           //重新绘制
           this.$message({
             message: "操作成功",
-            type: "success"
+            type: "success",
           });
         }
       });
@@ -1101,20 +1070,20 @@ export default {
     batchCreateSameNode(param) {
       let data = {
         domain: this.domain,
-        sourceNames: param.sourceNodeName
+        sourceNames: param.sourceNodeName,
       };
-      kgBuilderApi.batchCreateSameNode(data).then(result => {
+      kgBuilderApi.batchCreateSameNode(data).then((result) => {
         if (result.code == 200) {
           //把不存在于画布的节点添加到画布
           this.mergeNodeAndLink(result.data, null);
           this.$message({
             message: "操作成功",
-            type: "success"
+            type: "success",
           });
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style>
@@ -1482,10 +1451,9 @@ ul {
   display: inline-block;
   line-height: 30px;
 }
-.tag-ml-5{
- margin:5px;
- cursor:pointer;
- float:left
+.tag-ml-5 {
+  margin: 5px;
+  cursor: pointer;
+  float: left;
 }
-
 </style>

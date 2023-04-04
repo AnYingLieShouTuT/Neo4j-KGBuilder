@@ -1,20 +1,13 @@
 <template>
   <div class="kg-table" ref="kgTable">
-    <div
-      ref="tableOperate"
-      v-show="buttonGroup"
-      class="table-operate button-group"
-    >
+    <div ref="tableOperate" v-show="buttonGroup" class="table-operate button-group">
       <slot name="button-group"></slot>
     </div>
     <div class="pagi-table" ref="pagiTable">
       <p
         class="notice mt10"
-        v-show="
-          multipleSelection.length > 0 && config.selection && !config.notShowNum
-        "
+        v-show="multipleSelection.length > 0 && config.selection && !config.notShowNum"
       >
-
         已选择<span>{{ multipleSelection.length }}</span
         >项
       </p>
@@ -96,17 +89,13 @@
                   "
                   @click="handleClick(item.method, scope.row)"
                   v-if="
-                    !item.hide ||
-                    !item.hide.value.includes(scope.row[item.hide.field])
+                    !item.hide || !item.hide.value.includes(scope.row[item.hide.field])
                   "
-                  ><svg-icon :icon="item.icon"></svg-icon
-                  >{{ item.label }}</el-button
+                  ><svg-icon :icon="item.icon"></svg-icon>{{ item.label }}</el-button
                 >
               </template>
             </span>
-            <span
-              v-else-if="operation.doubleTitle && operation.type === 'link'"
-            >
+            <span v-else-if="operation.doubleTitle && operation.type === 'link'">
               <el-link
                 class="btn-a"
                 v-for="(item, index) in operation.options"
@@ -152,19 +141,19 @@
 
 <script>
 export default {
-  name: 'kgTable',
+  name: "kgTable",
   props: {
     buttonGroup: {
       type: Boolean,
-      default: true
+      default: true,
     },
     loading: {
       type: Boolean,
-      default: false
+      default: false,
     },
     columns: {
       type: Array,
-      required: true
+      required: true,
     },
     pageObj: {
       type: Object,
@@ -173,82 +162,82 @@ export default {
         currentPage: 1,
         pageSize: 15,
         list: [],
-        totalCount: 0
-      })
+        totalCount: 0,
+      }),
     },
     operation: {
-      type: Object
+      type: Object,
     },
     config: {
       type: Object,
       default: () => ({
         pagination: true, // 是否显示分页
         selection: true, // 多选
-        rowKey: 'id', // table row-key配置参数
-        notUseMaxHeight: false
-      })
-    }
+        rowKey: "id", // table row-key配置参数
+        notUseMaxHeight: false,
+      }),
+    },
   },
   components: {},
   data() {
     return {
       multipleSelection: [],
-      maxHeight: 0
-    }
+      maxHeight: 0,
+    };
   },
   computed: {
     tableBind() {
-      const obj = {}
+      const obj = {};
       if (!this.config.notUseMaxHeight) {
-        obj['max-height'] = this.maxHeight
+        obj["max-height"] = this.maxHeight;
       }
-      return obj
-    }
+      return obj;
+    },
   },
   watch: {
-    'pageObj.list': {
+    "pageObj.list": {
       deep: true,
       handler() {
-        this.multipleSelection.length = 0
-      }
-    }
+        this.multipleSelection.length = 0;
+      },
+    },
   },
   created() {},
   mounted() {
     this.$nextTick(function () {
-      const operateHeight = this.$refs.tableOperate.clientHeight
+      const operateHeight = this.$refs.tableOperate.clientHeight;
       this.maxHeight =
         this.$refs.kgTable.clientHeight -
         108 -
         operateHeight -
         10 +
         (this.config.pagination ? 0 : 64) +
-        'px'
-    })
+        "px";
+    });
   },
   methods: {
     onSelectionChange(selection) {
-      this.multipleSelection = selection
-      this.$emit('selection-change', this.multipleSelection)
+      this.multipleSelection = selection;
+      this.$emit("selection-change", this.multipleSelection);
     },
     onSelectChange(selection, row) {
-      this.$emit('select', selection, row)
+      this.$emit("select", selection, row);
     },
     onSelectAllChange(selection) {
-      this.$emit('select-all', selection)
+      this.$emit("select-all", selection);
     },
     getPage({ page, limit }) {
-      this.$emit('pagination', { page, limit })
+      this.$emit("pagination", { page, limit });
     },
     handleClick(method, row) {
-      this.$emit('handleClick', { method, row })
+      this.$emit("handleClick", { method, row });
     },
     toggleRowSelection(row, selected) {
-      this.$refs.table.toggleRowSelection(row, selected)
-    }
+      this.$refs.table.toggleRowSelection(row, selected);
+    },
   },
-  beforeDestroy() {}
-}
+  beforeDestroy() {},
+};
 </script>
 
 <style lang="less" scoped>
@@ -278,6 +267,5 @@ export default {
   /deep/ .el-link.is-underline:hover:after {
     border-bottom: none;
   }
-
 }
 </style>

@@ -5,13 +5,12 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import KGBuilder from "@/components/KGBuilder.vue";
 export default {
   name: "Home",
   components: {
-    KGBuilder
-  }
+    KGBuilder,
+  },
 };
 </script>
 <style>

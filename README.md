@@ -59,6 +59,4 @@ demo地址：[http://kg.miaoleyan.com](http://kg.miaoleyan.com)
 G6 [https://g6.antv.vision/zh/examples/gallery](https://g6.antv.vision/zh/examples/gallery)
 ### 推荐图数据库
 Nebula [https://docs.nebula-graph.com.cn/2.5.1/](https://docs.nebula-graph.com.cn/2.5.1/)
-## 交流
-![](./kgbuilder.jpg)
-![](./kgbuilder2.jpg)
+

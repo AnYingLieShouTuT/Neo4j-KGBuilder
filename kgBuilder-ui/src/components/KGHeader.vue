@@ -1,4 +1,5 @@
 <template>
+  <!-- 导航栏 -->
   <div class="menu">
     <nav class="nav" id="topnav">
       <h1 class="logo"><a href="/">KGBuilder</a></h1>
@@ -34,39 +35,17 @@ export default {
         {
           title: "首页",
           icon: "glyphicon glyphicon-cog",
-          // linkUrl: "http://www.miaoleyan.com",
+          linkUrl: "/",
           active: false,
           childrens: [],
         },
-        // {
-        //   title: "分享",
-        //   icon: "glyphicon glyphicon-th-list",
-        //   linkUrl: "javascript:void(0);",
-        //   active: false,
-        //   childrens: [
-        //     {
-        //       title: "杨青博客",
-        //       icon: "",
-        //       linkUrl: "http://www.yangqq.com/",
-        //       active: false,
-        //       childrens: []
-        //     },
-        //     {
-        //       title: "程序猿DD",
-        //       icon: "",
-        //       linkUrl: "http://blog.didispace.com/",
-        //       active: false,
-        //       childrens: []
-        //     },
-        //     {
-        //       title: "hAdmin",
-        //       icon: "",
-        //       linkUrl: "http://demo.mycodes.net/houtai/hAdmin",
-        //       active: false,
-        //       childrens: []
-        //     }
-        //   ]
-        // }
+        {
+          title: "规则库",
+          icon: "glyphicon glyphicon-th-list",
+          linkUrl: "/rules",
+          active: false,
+          childrens: [],
+        },
       ],
     };
   },

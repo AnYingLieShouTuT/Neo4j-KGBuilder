@@ -45,10 +45,6 @@
             >下一页</a
           >
         </div>
-        <!-- 关注及交流 -->
-        <div>
-          <kg-focus ref="kg_focus"></kg-focus>
-        </div>
       </div>
     </el-scrollbar>
     <!-- 左侧over -->
@@ -103,9 +99,6 @@
           </a>
           <a href="javascript:void(0)" @click="help" class="svg-a-sm">
             <i class="el-icon-info">帮助</i>
-          </a>
-          <a href="javascript:void(0)" @click="wanted" class="svg-a-sm">
-            <i class="el-icon-question">反馈</i>
           </a>
         </div>
       </div>
@@ -173,9 +166,6 @@
     <div>
       <kg-help ref="kg_help"></kg-help>
     </div>
-    <div>
-      <kg-wanted ref="kg_wanted"></kg-wanted>
-    </div>
   </div>
 </template>
 <script>
@@ -186,8 +176,6 @@ import MenuBlank from "@/views/kgbuilder/components/menu_blank";
 import MenuLink from "@/views/kgbuilder/components/menu_link";
 import KgForm from "@/views/kgbuilder/components/kg_form";
 import NodeRicher from "@/views/kgbuilder/components/node_richer";
-import KgFocus from "@/components/KGFocus";
-import KgWanted from "@/components/KGWanted";
 import KgJson from "@/views/kgbuilder/components/kg_json";
 import KgHelp from "@/views/kgbuilder/components/kg_help";
 import html2canvas from "html2canvas";
@@ -198,10 +186,9 @@ export default {
     MenuLink,
     KgForm,
     NodeRicher,
-    KgFocus,
     KgJson,
     KgHelp,
-    KgWanted,
+    // KgWanted,
   },
   data() {
     return {
@@ -1435,9 +1422,9 @@ export default {
     showJsonData() {
       this.$refs.kg_json.init();
     },
-    wanted() {
-      this.$refs.kg_wanted.init();
-    },
+    // wanted() {
+    //   this.$refs.kg_wanted.init();
+    // },
     //导入图谱
     importGraph() {
       if (!this.domain || this.domain == "") {

@@ -1,19 +1,16 @@
 package com.warmer.web.controller;
 
 import com.csvreader.CsvWriter;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.warmer.base.enums.ReturnStatus;
 import com.warmer.base.util.*;
 import com.warmer.web.config.WebAppConfig;
 import com.warmer.web.entity.KgDomain;
-import com.warmer.web.entity.KgFeedBack;
 import com.warmer.web.entity.KgNodeDetail;
 import com.warmer.web.entity.KgNodeDetailFile;
 import com.warmer.web.model.NodeItem;
 import com.warmer.web.request.*;
-import com.warmer.web.service.FeedBackService;
 import com.warmer.web.service.KgGraphService;
 import com.warmer.web.service.KnowledgeGraphService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +36,7 @@ public class KGManagerController extends BaseController {
     private KgGraphService kgGraphService;
     @Autowired
     private KnowledgeGraphService kgService;
-    @Autowired
-    FeedBackService feedBackService;
+
 
     @GetMapping("/")
     public String home() {
@@ -438,17 +434,7 @@ public class KGManagerController extends BaseController {
             return R.error(e.getMessage());
         }
     }
-    @ResponseBody
-    @RequestMapping(value = "/feedBack")
-    public R<Map<String, Object>> feedBack(KgFeedBack submitItem) {
-        try {
-            feedBackService.insert(submitItem);
-            return R.success();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return R.error(e.getMessage());
-        }
-    }
+
     @ResponseBody
     @RequestMapping(value = "/saveNodeImage")
     public R<String> saveNodeImage(@RequestBody Map<String, Object> params) {

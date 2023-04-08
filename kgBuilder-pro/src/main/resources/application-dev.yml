@@ -21,7 +21,7 @@ spring:
       type: com.zaxxer.hikari.HikariDataSource
 mybatis:
   typeAliasesPackage: com.warmer.kgmaker.entity
-  mapperLocations: classpath*:/mapping/*.xml
+#  mapperLocations: classpath*:/mapping/*.xml
 #配置分页插件pagehelper
 pagehelper:
     helperDialect: mysql
@@ -30,8 +30,10 @@ pagehelper:
     params: count=countSql
 # 配置MyBatis日志
 mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml, classpath*:/mapping/*.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    call-setters-on-nulls: true
 #--------七牛云配置
 qiniu:
   access:

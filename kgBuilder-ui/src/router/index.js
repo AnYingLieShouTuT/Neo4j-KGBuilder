@@ -12,7 +12,7 @@ const routes = [
     {
         path: "/rules",
         name: "rules",
-        component: () => import("../views/kgbuilder/components/rules.vue")
+        component: () => import("../views/kgbuilder/rules.vue")
     },
     {
         path: "/builder",
@@ -24,11 +24,6 @@ const routes = [
         name: "kg",
         component: () => import("../views/kgbuilder/index_v1.vue")
     },
-    // {
-    //     path: "/rules",
-    //     name: "rules",
-    //     component: () => import("../views/kgbuilder/rule_list.vue")
-    // },
     //   {
     //     path: "/er",
     //     name: "er",

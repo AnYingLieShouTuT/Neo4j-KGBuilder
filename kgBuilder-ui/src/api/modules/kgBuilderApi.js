@@ -1,23 +1,21 @@
-import BaseAPI from '@/utils/BaseAPI'
+import BaseAPI from "@/utils/BaseAPI";
 
 class kgBuilderApi extends BaseAPI {
     // 获取图谱数据
     getKgData() {
         return this.get("/static/kgData.json");
     }
-    getDomainNode(domainId) {
-        return this.get('/er/getDomainNode', {
-            domainId
-        })
-
-    }
+    // getDomainNode(domainId) {
+    //     return this.get("/er/getDomainNode", {
+    //         domainId,
+    //     });
+    // }
     getDomains(data) {
         return this.post("/getGraph", data, {
             headers: {
-                'Content-Type': 'application/json'
-            }
-        }
-        );
+                "Content-Type": "application/json",
+            },
+        });
     }
     createDomain(data) {
         return this.get("/createDomain", data);
@@ -37,22 +35,22 @@ class kgBuilderApi extends BaseAPI {
     saveNodeImage(data) {
         return this.post("/saveNodeImage", data, {
             headers: {
-                'Content-Type': 'application/json'
-            }
+                "Content-Type": "application/json",
+            },
         });
     }
     saveNodeContent(data) {
         return this.post("/saveNodeContent", data, {
             headers: {
-                'Content-Type': 'application/json'
-            }
+                "Content-Type": "application/json",
+            },
         });
     }
     getDomainGraph(data) {
         return this.post("/getDomainGraph", data, {
             headers: {
-                'Content-Type': 'application/json'
-            }
+                "Content-Type": "application/json",
+            },
         });
     }
     getRelationNodeCount(data) {
@@ -67,15 +65,15 @@ class kgBuilderApi extends BaseAPI {
     getRecommendGraph(data) {
         return this.post("/getRecommendGraph", data, {
             headers: {
-                'Content-Type': 'application/json'
-            }
+                "Content-Type": "application/json",
+            },
         });
     }
     createNode(data) {
         return this.post("/createNode", data, {
             headers: {
-                'Content-Type': 'application/json'
-            }
+                "Content-Type": "application/json",
+            },
         });
     }
     deleteNode(data) {
@@ -87,8 +85,8 @@ class kgBuilderApi extends BaseAPI {
     createLink(data) {
         return this.post("/createLink", data, {
             headers: {
-                'Content-Type': 'application/json'
-            }
+                "Content-Type": "application/json",
+            },
         });
     }
     updateLink(data) {
@@ -97,44 +95,49 @@ class kgBuilderApi extends BaseAPI {
     updateNodeName(data) {
         return this.post("/updateNodeName", data, {
             headers: {
-                'Content-Type': 'application/json'
-            }
+                "Content-Type": "application/json",
+            },
         });
     }
     batchCreateNode(data) {
         return this.post("/batchCreateNode", data, {
             headers: {
-                'Content-Type': 'application/json'
-            }
+                "Content-Type": "application/json",
+            },
         });
     }
     batchCreateChildNode(data) {
         return this.post("/batchCreateChildNode", data, {
             headers: {
-                'Content-Type': 'application/json'
-            }
+                "Content-Type": "application/json",
+            },
         });
     }
     batchCreateSameNode(data) {
         return this.post("/batchCreateSameNode", data, {
             headers: {
-                'Content-Type': 'application/json'
-            }
+                "Content-Type": "application/json",
+            },
         });
     }
     exportGraph(data) {
         return this.post("/exportGraph", data);
     }
     download(data) {
-        return this.get("/download/" + data,);
+        return this.get("/download/" + data);
     }
     updateCoordinateOfNode(data) {
         return this.post("/updateCoordinateOfNode", data, {
             headers: {
-                'Content-Type': 'application/json'
-            }
+                "Content-Type": "application/json",
+            },
         });
     }
-
+    // getRulesPage(data) {
+    //     return this.get("/rules/rulesPage", data);
+    // }
+    getRulesPage(data) {
+        return this.get("/rules/rulesPage", data);
+    }
 }
 export default new kgBuilderApi();

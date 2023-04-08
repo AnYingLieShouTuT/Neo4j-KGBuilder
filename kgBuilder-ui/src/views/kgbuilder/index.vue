@@ -187,8 +187,6 @@ export default {
     KgForm,
     NodeRicher,
     KgJson,
-    KgHelp,
-    // KgWanted,
   },
   data() {
     return {

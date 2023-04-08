@@ -24,11 +24,6 @@ const routes = [
         name: "kg",
         component: () => import("../views/kgbuilder/index_v1.vue")
     },
-    //   {
-    //     path: "/er",
-    //     name: "er",
-    //     component: () => import("../views/erbuilder/index.vue")
-    //   },
     {
         path: "/about",
         name: "About",

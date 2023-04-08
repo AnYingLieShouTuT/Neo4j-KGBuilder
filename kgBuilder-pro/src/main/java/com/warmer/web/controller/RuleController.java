@@ -9,8 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/rules")
-public class RuleController {
+public class RuleController extends BaseController {
 
     @Autowired
     private KgRulesService kgRulesService;
@@ -31,12 +30,15 @@ public class RuleController {
 //        }
 //    }
 
-    @GetMapping("/rulesPage/{pageCode}/{pageSize}")
-    public R<Page<KgRules>> getPageRules(@PathVariable(value = "pageCode") int pageCode,
-                                         @PathVariable(value = "pageSize") int pageSize) {
-        Page<KgRules> pageInfo = kgRulesService.getPageRules(pageCode, pageSize);
-        System.out.println(pageInfo.getTotal());
-        System.out.println("rule!!!!!!!!!!!!");
-        return R.success(pageInfo);
+    @ResponseBody
+    @RequestMapping(value = "/rulesPage")
+    public R<Page<KgRules>> getPageRules(int pageCode, int pageSize) {
+        try {
+            Page<KgRules> pageInfo = kgRulesService.getPageRules(pageCode, pageSize);
+            return R.success(pageInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error(e.getMessage());
+        }
     }
 }

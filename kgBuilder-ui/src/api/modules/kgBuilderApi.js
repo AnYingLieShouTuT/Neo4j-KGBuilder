@@ -137,7 +137,7 @@ class kgBuilderApi extends BaseAPI {
     //     return this.get("/rules/rulesPage", data);
     // }
     getRulesPage(data) {
-        return this.get("/rules/rulesPage", data);
+        return this.post("/rulesPage", data);
     }
 }
 export default new kgBuilderApi();

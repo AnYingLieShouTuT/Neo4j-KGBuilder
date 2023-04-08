@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class KgRules {
     private Integer id;
     private String rule;
+    private String level;
 }

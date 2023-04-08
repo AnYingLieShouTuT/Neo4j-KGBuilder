@@ -1,9 +1,9 @@
 <template>
   <div>
     <el-table :data="tableData" stripe style="width: 100%">
-      <el-table-column prop="date" label="id" width="180"> </el-table-column>
-      <el-table-column prop="name" label="规则" width="180"> </el-table-column>
-      <el-table-column prop="address" label="等级"> </el-table-column>
+      <el-table-column prop="id" label="id" width="180"> </el-table-column>
+      <el-table-column prop="rule" label="规则" width="180"> </el-table-column>
+      <el-table-column prop="level" label="等级" width="180"> </el-table-column>
     </el-table>
     <!--   element-ui分页组件-->
     <div class="block">
@@ -22,6 +22,7 @@
 </template>
 <script>
 import { kgBuilderApi } from "@/api";
+import axios from "axios";
 
 export default {
   name: "rules",
@@ -29,7 +30,7 @@ export default {
     return {
       tableData: [], //表格显示的数据
       page: 1,
-      size: "",
+      size: 0,
       total: 0,
       params: {
         page: 1,
@@ -41,16 +42,17 @@ export default {
   mounted() {},
   created() {
     // this.getAll();
+    console.log("created");
     this.getRules();
   },
   methods: {
     getRules: function () {
+      let that = this;
       let data = { pageCode: this.params.page, pageSize: this.params.size };
       kgBuilderApi.getRulesPage(data).then((result) => {
         console.log(result);
         if (result.code == 200) {
           console.log(result);
-          that = this;
           console.log("分页页面");
           console.log(result.data);
           console.log("分页后");
@@ -59,6 +61,31 @@ export default {
           console.log(this.total);
         }
       });
+      //   axios
+      //     .post(
+      //       "http://localhost:8080/rulesPage",
+      //       { params: data },
+      //       {
+      //         headers: {
+      //           "Access-Control-Allow-Origin": "*", //解决cors头问题
+      //           "Access-Control-Allow-Credentials": "true", //解决session问题
+      //           "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8", //将表单数据传递转化为form-data类型
+      //         },
+      //         withCredentials: true,
+      //       }
+      //     )
+      //     .then(() => {
+      //       if (result.code == 200) {
+      //         console.log(result);
+      //         that = this;
+      //         console.log("分页页面");
+      //         console.log(result.data);
+      //         console.log("分页后");
+      //         that.tableData = result.data.records;
+      //         that.total = result.data.total;
+      //         console.log(this.total);
+      //       }
+      //     });
     },
     getAll() {
       //发送异步请求

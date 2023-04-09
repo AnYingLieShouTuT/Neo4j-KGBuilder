@@ -2,7 +2,7 @@
   <!-- 导航栏 -->
   <div class="menu">
     <nav class="nav" id="topnav">
-      <h1 class="logo"><a href="/">KGBuilder</a></h1>
+      <h1 class="logo"><a href="/">EGBuilder</a></h1>
       <ul style="float: left; margin-left: 60px; padding: 10px">
         <template v-for="nav in navList">
           <li @mouseover="selectStyle(nav)">

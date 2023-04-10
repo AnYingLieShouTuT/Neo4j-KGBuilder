@@ -217,16 +217,18 @@ public class KGGraphRepository implements KGGraphDao {
             e.printStackTrace();
         }
     }
+
     @Override
-    public void quickCreateDomain(String domain,String nodeName) {
+    public void quickCreateDomain(String domain, String nodeName) {
         try {
             String cypherSql = String.format(
-                    "create (n:`%s`{entityType:0,name:'%s'}) return id(n)", domain,nodeName);
+                    "create (n:`%s`{entityType:0,name:'%s'}) return id(n)", domain, nodeName);
             Neo4jUtil.runCypherSql(cypherSql);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     /**
      * 获取/展开更多节点,找到和该节点有关系的节点
      */
@@ -264,23 +266,32 @@ public class KGGraphRepository implements KGGraphDao {
     }
 
     /**
-     * 创建单个节点
+     * 创建单个节点,在 Neo4j 数据库中创建或更新一个节点，并返回查询到的节点信息
      */
     @Override
     public HashMap<String, Object> createNode(String domain, NodeItem entity) {
-        HashMap<String, Object> rss = new HashMap<String, Object>();
-        List<HashMap<String, Object>> graphNodeList = new ArrayList<HashMap<String, Object>>();
+        HashMap<String, Object> rss = new HashMap<>();
+        //存储从 Neo4j 数据库中查询到的节点信息
+        List<HashMap<String, Object>> graphNodeList;
         try {
+            //如果 uuid 不等于 0，则说明 entity 对象已经存在于数据库中
             if (entity.getUuid() != 0) {
+                //通过 entity 对象的其他属性更新该节点。此时，通过 Neo4jUtil.getKeyValCyphersql(entity) 方法获取 Cypher SQL 语句的 SET 子句，
+                //然后将 SET 子句、domain 和 entity 对象的 uuid 属性值等作为参数，拼接出完整的 Cypher SQL 语句
                 String sqlKeyVal = Neo4jUtil.getKeyValCyphersql(entity);
                 String cypherSql = String.format("match (n:`%s`) where id(n)=%s set %s return n", domain,
                         entity.getUuid(), sqlKeyVal);
+                //通过 Neo4jUtil.getGraphNode(cypherSql) 方法执行该 SQL 语句，将查询到的节点信息存储在 graphNodeList 中
                 graphNodeList = Neo4jUtil.getGraphNode(cypherSql);
             } else {
+                //需要创建新的节点
                 entity.setColor("#ff4500");// 默认颜色
                 entity.setR(30);// 默认半径
+                //将 entity 对象转换为 JSON 格式的字符串
                 String propertiesString = Neo4jUtil.getFilterPropertiesJson(JsonHelper.toJSONString(entity));
+                //获取 Cypher SQL 语句的 WHERE 子句
                 String cypherSql = String.format("create (n:`%s` %s) return n", domain, propertiesString);
+                //将 domain 和 WHERE 子句拼接起来，组成完整的 Cypher SQL 语句，并通过 Neo4jUtil.getGraphNode(cypherSql) 方法执行该 SQL 语句，将查询到的节点信息存储在 graphNodeList 中
                 graphNodeList = Neo4jUtil.getGraphNode(cypherSql);
             }
             if (graphNodeList.size() > 0) {
@@ -297,6 +308,7 @@ public class KGGraphRepository implements KGGraphDao {
 
     /**
      * 自定义uuid,重复则返回节点，不存在则创建
+     *
      * @param domain
      * @param entity
      * @return
@@ -488,6 +500,7 @@ public class KGGraphRepository implements KGGraphDao {
 
         return rss;
     }
+
     /**
      * 更新关系
      *
@@ -513,7 +526,6 @@ public class KGGraphRepository implements KGGraphDao {
 
     /**
      * 删除节点(先删除关系再删除节点)
-     *
      */
     @Override
     public List<HashMap<String, Object>> deleteNode(String domain, long nodeId) {
@@ -534,7 +546,6 @@ public class KGGraphRepository implements KGGraphDao {
 
     /**
      * 删除关系
-     *
      */
     @Override
     public void deleteLink(String domain, long shipId) {
@@ -549,10 +560,10 @@ public class KGGraphRepository implements KGGraphDao {
     /**
      * 段落识别出的三元组生成图谱
      *
-     * @param domain 领域名称
-     * @param entityType 实体类型
+     * @param domain      领域名称
+     * @param entityType  实体类型
      * @param operateType 操作类型
-     * @param sourceId 节点id
+     * @param sourceId    节点id
      * @param rss         关系三元组
      *                    [[startname;ship;endname],[startname1;ship1;endname1],[startname2;ship2;endname2]]
      * @return node relationship
@@ -633,8 +644,9 @@ public class KGGraphRepository implements KGGraphDao {
             e.printStackTrace();
         }
     }
+
     @Override
-    public void batchUpdateGraphNodesCoordinate(String domain,List<NodeCoordinateItem> params) {
+    public void batchUpdateGraphNodesCoordinate(String domain, List<NodeCoordinateItem> params) {
         try {
             if (params != null && params.size() > 0) {
                 String nodeStr = Neo4jUtil.getFilterPropertiesJson(JsonHelper.toJSONString(params));
@@ -647,9 +659,9 @@ public class KGGraphRepository implements KGGraphDao {
             e.printStackTrace();
         }
     }
+
     /**
      * 批量导入csv
-     *
      */
     @Override
     public void batchInsertByCsv(String domain, String csvUrl, int isCreateIndex) {
@@ -667,7 +679,7 @@ public class KGGraphRepository implements KGGraphDao {
         loadRelCypher = " USING PERIODIC COMMIT 500 LOAD CSV FROM  '" + csvUrl + "' AS line " + " MATCH (m:`" + domain
                 + "`),(n:`" + domain + "`) WHERE m.name=line[0] AND n.name=line[1] " + " MERGE (m)-[r:" + type + "]->(n) "
                 + "	SET r.name=line[2];";
-        if(isCreateIndex==0){//已经创建索引的不能重新创建
+        if (isCreateIndex == 0) {//已经创建索引的不能重新创建
             Neo4jUtil.runCypherSql(addIndexCypher);
         }
         Neo4jUtil.runCypherSql(loadNodeCypher1);
@@ -685,6 +697,7 @@ public class KGGraphRepository implements KGGraphDao {
             e.printStackTrace();
         }
     }
+
     @Override
     public void updateNodeImg(String domain, long nodeId, String img) {
         try {
@@ -695,6 +708,7 @@ public class KGGraphRepository implements KGGraphDao {
             e.printStackTrace();
         }
     }
+
     @Override
     public void removeNodeImg(String domain, long nodeId) {
         try {
@@ -705,6 +719,7 @@ public class KGGraphRepository implements KGGraphDao {
             e.printStackTrace();
         }
     }
+
     @Override
     public void updateCoordinateOfNode(String domain, String uuid, Double fx, Double fy) {
         String cypher = null;

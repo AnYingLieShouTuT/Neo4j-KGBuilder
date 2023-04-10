@@ -49,7 +49,7 @@ public class KGManagerController extends BaseController {
         GraphPageRecord<KgDomain> resultRecord = new GraphPageRecord<KgDomain>();
         try {
             PageHelper.startPage(queryItem.getPageIndex(), queryItem.getPageSize(), true);
-            List<KgDomain> domainList = kgService.getDomainList(queryItem.getDomain(), queryItem.getType(),queryItem.getCommend());
+            List<KgDomain> domainList = kgService.getDomainList(queryItem.getDomain(), queryItem.getType(), queryItem.getCommend());
             PageInfo<KgDomain> pageInfo = new PageInfo<KgDomain>(domainList);
             long total = pageInfo.getTotal();
             resultRecord.setPageIndex(queryItem.getPageIndex());
@@ -106,14 +106,14 @@ public class KGManagerController extends BaseController {
 
     @ResponseBody
     @RequestMapping(value = "/createDomain")
-    public R<String> createDomain(String domain,Integer type) {
+    public R<String> createDomain(String domain, Integer type) {
         try {
             if (!StringUtil.isBlank(domain)) {
                 List<KgDomain> domainItem = kgService.getDomainByName(domain);
                 if (domainItem.size() > 0) {
                     return R.create(ReturnStatus.Error, "领域已存在");
                 } else {
-                   int domainId= kgService.quickCreateDomain(domain,type);// 保存到mysql
+                    int domainId = kgService.quickCreateDomain(domain, type);// 保存到mysql
                     kgGraphService.createDomain(domain);// 保存到图数据
                     return R.success(domainId);
                 }
@@ -165,9 +165,9 @@ public class KGManagerController extends BaseController {
     @RequestMapping(value = "/updateCoordinateOfNode")
     public R<String> updateCoordinateOfNode(@RequestBody NodeCoordinateSubmitItem request) {
         try {
-            String domain=request.getDomain();
+            String domain = request.getDomain();
             List<NodeCoordinateItem> nodes = request.getNodes();
-            kgGraphService.batchUpdateGraphNodesCoordinate(domain,nodes);
+            kgGraphService.batchUpdateGraphNodesCoordinate(domain, nodes);
             return R.success();
         } catch (Exception e) {
             e.printStackTrace();
@@ -178,7 +178,7 @@ public class KGManagerController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/createNode")
     public R<HashMap<String, Object>> createNode(@RequestBody NodeItem entity) {
-        HashMap<String, Object> graphNode = new HashMap<String, Object>();
+        HashMap<String, Object> graphNode;
         try {
             graphNode = kgGraphService.createNode(entity.getDomain(), entity);
             if (graphNode != null && graphNode.size() > 0) {
@@ -196,10 +196,10 @@ public class KGManagerController extends BaseController {
     @RequestMapping(value = "/batchCreateNode")
     public R<HashMap<String, Object>> batchCreateNode(@RequestBody BatchCreateNodeItem request) {
 
-        HashMap<String, Object> rss = new HashMap<String, Object>();
+        HashMap<String, Object> rss;
         try {
-            String[] tNames=request.getTargetNames().split(",");
-            rss = kgGraphService.batchCreateNode(request.getDomain(), request.getSourceName(), request.getRelation(),tNames);
+            String[] tNames = request.getTargetNames().split(",");
+            rss = kgGraphService.batchCreateNode(request.getDomain(), request.getSourceName(), request.getRelation(), tNames);
             return R.success(rss);
         } catch (Exception e) {
             e.printStackTrace();
@@ -212,9 +212,9 @@ public class KGManagerController extends BaseController {
     @RequestMapping(value = "/batchCreateChildNode")
     public R<HashMap<String, Object>> batchCreateChildNode(@RequestBody BatchCreateNodeItem request) {
 
-        HashMap<String, Object> rss = new HashMap<String, Object>();
+        HashMap<String, Object> rss;
         try {
-            String[] tNames=request.getTargetNames().split(",");
+            String[] tNames = request.getTargetNames().split(",");
             rss = kgGraphService.batchCreateChildNode(request.getDomain(), request.getSourceId(), request.getEntityType(), tNames, request.getRelation());
             return R.success(rss);
         } catch (Exception e) {
@@ -227,7 +227,7 @@ public class KGManagerController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/batchCreateSameNode")
     public R<List<HashMap<String, Object>>> batchCreateSameNode(@RequestBody BatchCreateNodeItem request) {
-        List<HashMap<String, Object>> rss = new ArrayList<HashMap<String, Object>>();
+        List<HashMap<String, Object>> rss;
         try {
             rss = kgGraphService.batchCreateSameNode(request.getDomain(), request.getEntityType(), request.getSourceNames());
             return R.success(rss);
@@ -305,26 +305,26 @@ public class KGManagerController extends BaseController {
     @RequestMapping(value = "/importGraph")
     public R<String> importGraph(@RequestParam(value = "file", required = true)
                                  @Validated @NotNull(message = "请上传有效的excel的文件") @Pattern(regexp = "^(?:\\w+\\.xlsx|\\w+\\.xls)$",
-                                    message = "请上传有效的excel的文件")
-                                             MultipartFile file,
-                                 HttpServletRequest request){
+            message = "请上传有效的excel的文件")
+                                 MultipartFile file,
+                                 HttpServletRequest request) {
         try {
             String label = request.getParameter("domain");
             Integer type = Integer.parseInt(request.getParameter("type"));
             List<KgDomain> domainList = kgService.getDomainByName(label);
-            int domainExist=0;
-            if(domainList!=null&&domainList.size()>0){
+            int domainExist = 0;
+            if (domainList != null && domainList.size() > 0) {
                 //导入已有图谱，更新图谱创建时间
                 KgDomain domainItem = domainList.get(0);
                 domainItem.setModifyTime(DateUtil.getDateNow());
                 kgService.updateDomain(domainItem);
-                domainExist=1;
-            }else{
+                domainExist = 1;
+            } else {
                 label = StringUtil.isBlank(label) ? UuidUtil.getUUID() : label;
-                kgService.quickCreateDomain(label,type);// 三元组
+                kgService.quickCreateDomain(label, type);// 三元组
             }
             if (type.equals(1)) {//三元组导入
-                kgGraphService.importBySyz(file, request, label,domainExist);
+                kgGraphService.importBySyz(file, request, label, domainExist);
             } else {
                 kgGraphService.importByCategory(file, request, label);
             }
@@ -338,8 +338,8 @@ public class KGManagerController extends BaseController {
 
     @ResponseBody
     @RequestMapping(value = "/exportGraph")
-    public Map<String,Object> exportGraph(HttpServletRequest request) {
-        Map<String,Object> res=new HashMap<>();
+    public Map<String, Object> exportGraph(HttpServletRequest request) {
+        Map<String, Object> res = new HashMap<>();
         String label = request.getParameter("domain");
         String filePath = config.getLocation();
         String fileName = UUID.randomUUID() + ".csv";
@@ -347,7 +347,7 @@ public class KGManagerController extends BaseController {
         String cypher = String.format(
                 "MATCH (n:`%s`) -[r]->(m:`%s`) return n.name as source,m.name as target,r.name as relation", label, label);
         List<HashMap<String, Object>> list = Neo4jUtil.getGraphTable(cypher);
-        if(list.size()==0){
+        if (list.size() == 0) {
             res.put("code", -1);
             res.put("message", "该领域没有任何有关系的实体!");
             return res;
@@ -456,13 +456,13 @@ public class KGManagerController extends BaseController {
                     sb.put("createUser", "tc");
                     sb.put("createTime", DateUtil.getDateNow());
                     submitItemList.add(sb);
-                    kgService.deleteNodeImage(domainId,Integer.parseInt(nodeId));
+                    kgService.deleteNodeImage(domainId, Integer.parseInt(nodeId));
                     kgService.saveNodeImage(submitItemList);
                     // 更新到图数据库,表明该节点有附件,加个标识,0=没有,1=有
                     kgGraphService.updateNodeImg(domainName, Long.parseLong(nodeId), imagePath);
                     return R.success("操作成功");
                 } else {
-                    kgService.deleteNodeImage(domainId,Integer.parseInt(nodeId));
+                    kgService.deleteNodeImage(domainId, Integer.parseInt(nodeId));
                     kgGraphService.removeNodeImg(domainName, Long.parseLong(nodeId));
                     return R.success("操作成功");
                 }

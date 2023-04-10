@@ -9,16 +9,13 @@
     v-show="menuBarShow"
   >
     <li class="el-dropdown-menu__item" @click="btnAddSingle">
-      <svg class="icon" aria-hidden="true">
-        <use xlink:href="#icon-jiedian"></use>
-      </svg>
       <span class="pl-15">添加节点</span>
     </li>
     <li class="el-dropdown-menu__item" @click="btnQuickAddNode">
-      <svg class="icon" aria-hidden="true">
-        <use xlink:href="#icon-add-rd"></use>
-      </svg>
       <span class="pl-15">快速添加</span>
+    </li>
+    <li class="el-dropdown-menu__item" @click="btnAddRule">
+      <span class="pl-15">添加规则</span>
     </li>
   </ul>
 </template>
@@ -26,25 +23,25 @@
 <script>
 export default {
   props: {
-    data: Object
+    data: Object,
   },
   data() {
     return {
       top: "0px",
       left: "0px",
-      menuBarShow: false
+      menuBarShow: false,
     };
   },
-  inject: ['quickAddNodes'],
+  inject: ["quickAddNodes"],
   components: {},
   computed: {
     blankMenuStyle() {
       return {
         position: "absolute",
-        top: this.top+'px',
-        left: this.left+'px'
+        top: this.top + "px",
+        left: this.left + "px",
       };
-    }
+    },
   },
   methods: {
     init(data) {
@@ -52,19 +49,22 @@ export default {
       this.left = data.left;
       this.menuBarShow = data.show;
     },
+    btnAddRule() {
+      this.$emit("addRule");
+    },
     btnAddSingle() {
-       this.$emit('changeCursor')
+      this.$emit("changeCursor");
     },
     btnQuickAddNode() {
-      this.quickAddNodes(this)
+      this.quickAddNodes(this);
     },
     menuBarClick() {
-      this.menuBarShow=false;
+      this.menuBarShow = false;
     },
     menuBarLeave() {
-     this.menuBarShow=false;
-    }
-  }
+      this.menuBarShow = false;
+    },
+  },
 };
 </script>
 <style></style>

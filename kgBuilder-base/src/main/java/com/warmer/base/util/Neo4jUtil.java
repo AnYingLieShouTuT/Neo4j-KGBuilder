@@ -64,7 +64,9 @@ public class Neo4jUtil implements AutoCloseable {
     }
 
     /**
-     * 返回节点集合，此方法不保留关系
+     * 返回节点集合，此方法不保留关系。
+     * 用于执行 Neo4j 图数据库中的一个 Cypher 查询语句，并将查询结果转换为一个 List，其中每个元素都是一个 HashMap 对象。
+     * 每个 HashMap 对象表示查询结果中的一条记录，其键值对分别对应着查询结果中的各个属性和属性值。
      *
      * @param cypherSql cypherSql
      */
@@ -92,7 +94,6 @@ public class Neo4jUtil implements AutoCloseable {
                             ents.add(rss);
                         }
                     }
-
                 }
             }
         } catch (Exception e) {
@@ -103,12 +104,13 @@ public class Neo4jUtil implements AutoCloseable {
 
     /**
      * 获取数据库索引
+     *
      * @return
      */
     public static List<HashMap<String, Object>> getGraphIndex() {
         List<HashMap<String, Object>> ents = new ArrayList<HashMap<String, Object>>();
         try (Session session = neo4jDriver.session()) {
-            String cypherSql="call db.indexes";
+            String cypherSql = "call db.indexes";
             Result result = session.run(cypherSql);
             if (result.hasNext()) {
                 List<Record> records = result.list();
@@ -118,10 +120,10 @@ public class Neo4jUtil implements AutoCloseable {
                     for (Pair<String, Value> pair : f) {
                         String key = pair.key();
                         Value value = pair.value();
-                        if(key.equalsIgnoreCase("labelsOrTypes")){
-                            String objects = value.asList().stream().map(n->n.toString()).collect(Collectors.joining(","));
+                        if (key.equalsIgnoreCase("labelsOrTypes")) {
+                            String objects = value.asList().stream().map(n -> n.toString()).collect(Collectors.joining(","));
                             rss.put(key, objects);
-                        }else{
+                        } else {
                             rss.put(key, value);
                         }
                     }
@@ -133,10 +135,11 @@ public class Neo4jUtil implements AutoCloseable {
         }
         return ents;
     }
+
     public static List<HashMap<String, Object>> getGraphLabels() {
         List<HashMap<String, Object>> ents = new ArrayList<HashMap<String, Object>>();
         try (Session session = neo4jDriver.session()) {
-            String cypherSql="call db.labels";
+            String cypherSql = "call db.labels";
             Result result = session.run(cypherSql);
             if (result.hasNext()) {
                 List<Record> records = result.list();
@@ -146,10 +149,10 @@ public class Neo4jUtil implements AutoCloseable {
                     for (Pair<String, Value> pair : f) {
                         String key = pair.key();
                         Value value = pair.value();
-                        if(key.equalsIgnoreCase("label")){
-                            String objects =value.toString().replace("\"","");
+                        if (key.equalsIgnoreCase("label")) {
+                            String objects = value.toString().replace("\"", "");
                             rss.put(key, objects);
-                        }else{
+                        } else {
                             rss.put(key, value);
                         }
                     }
@@ -161,13 +164,15 @@ public class Neo4jUtil implements AutoCloseable {
         }
         return ents;
     }
+
     /**
      * 删除索引
+     *
      * @param label
      */
     public static void deleteIndex(String label) {
         try (Session session = neo4jDriver.session()) {
-            String cypherSql=String.format("DROP INDEX ON :`%s`(name)",label);
+            String cypherSql = String.format("DROP INDEX ON :`%s`(name)", label);
             session.run(cypherSql);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -176,17 +181,19 @@ public class Neo4jUtil implements AutoCloseable {
 
     /**
      * 创建索引
+     *
      * @param label
      * @param prop
      */
-    public static void createIndex(String label,String prop) {
+    public static void createIndex(String label, String prop) {
         try (Session session = neo4jDriver.session()) {
-            String cypherSql=String.format("CREATE INDEX ON :`%s`(%s)",label,prop);
+            String cypherSql = String.format("CREATE INDEX ON :`%s`(%s)", label, prop);
             session.run(cypherSql);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
     }
+
     public static HashMap<String, Object> getSingleGraphNode(String cypherSql) {
         List<HashMap<String, Object>> ent = getGraphNode(cypherSql);
         if (ent.size() > 0) {

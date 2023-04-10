@@ -105,6 +105,7 @@ export default {
       widht: null,
       height: null,
       isAddLink: false,
+      isAddRule: false,
     };
   },
   watch: {
@@ -154,19 +155,30 @@ export default {
     //画布点击
     initContainerLeftClick(event) {
       let _this = this;
+      //隐藏添加节点菜单和连线编辑菜单
       _this.$refs.menu_blank.init({ show: false });
       _this.$refs.menu_link.init({ show: false });
+      //移除SVG容器上的"mousemove"事件监听器。
       _this.svg.on("mousemove", null);
+      //移除临时绘制的连线元素。
       d3.select("#drawLineTemp").remove();
       //_this.$refs.node_richer.close();
+      //如果当前鼠标不在节点或连线上，则隐藏节点详情面板和富文本编辑器。
       if (event.target.tagName != "circle" && event.target.tagName != "link") {
         d3.select("#nodeDetail").style("display", "none");
         d3.select("#richContainer").style("display", "none");
       }
       let cursor = document.getElementById("BOX-SVG").style.cursor;
+      //如果鼠标指针样式为"crosshair"，则将其重置为"default"，并创建一个新节点。todo:添加规则节点判断
       if (cursor == "crosshair") {
-        d3.select(".BOX-SVG").style("cursor", "default");
-        _this.createSingleNode(event.offsetX, event.offsetY);
+        if (_this.isAddRule == true) {
+          d3.select(".BOX-SVG").style("cursor", "default");
+          _this.isAddRule = false;
+          _this.createRuleNode(event.offsetX, event.offsetY);
+        } else {
+          d3.select(".BOX-SVG").style("cursor", "default");
+          _this.createSingleNode(event.offsetX, event.offsetY);
+        }
       }
       event.preventDefault();
     },
@@ -188,7 +200,7 @@ export default {
               // return Math.floor(Math.random() * (700 - 200)) ;
             })
             .id(function (d) {
-              console.log(d);
+              //   console.log(d);
               return d.uuid;
             })
         )
@@ -852,7 +864,6 @@ export default {
             defaultEvent: null,
             container: null,
           };
-          //console.log("dddd"+d.uuid)
         }
       });
       nodeEnter.on("mouseleave", function (d) {
@@ -918,12 +929,6 @@ export default {
             return "none";
           });
       });
-      //dblclick 会触发两次单击，所以在click里设置定时timer来控制双击
-      // nodeEnter.on("dblclick", function (d) {
-      //   console.log("双击")
-      //   d3.event.stopPropagation();
-      //     d3.event.preventDefault();
-      // });
       nodeEnter.on("click", function (d, i) {
         //console.log("node click");
         _this.svg.selectAll(".buttongroup").style("display", "block");
@@ -955,9 +960,7 @@ export default {
           }
           return "#fff";
         })
-        // .attr('dx', function(d){
-        //   return -1*(parseInt(d.r)-10)
-        // })//设置居中不用偏移
+        //设置居中不用偏移
         .attr("dy", function (d) {
           if (d.image) {
             return d.r + 20; //文字放在节点外边
@@ -987,9 +990,9 @@ export default {
         _this.selectNode.cname = d.name;
         const out_buttongroup_id = ".out_buttongroup_" + d.uuid;
         _this.svg.selectAll(".buttongroup").style("display", "none");
-        //_this.svg.selectAll(".buttongroup").classed("circle_none", true);
+        // _this.svg.selectAll(".buttongroup").classed("circle_none", true);
         _this.svg.selectAll(out_buttongroup_id).style("display", "block");
-        //_this.svg.selectAll(out_buttongroup_id).classed("circle_none", false);
+        // _this.svg.selectAll(out_buttongroup_id).classed("circle_none", false);
       });
       nodeTextEnter.call(
         d3
@@ -1177,6 +1180,10 @@ export default {
     },
     changeCursor() {
       d3.select(".BOX-SVG").style("cursor", "crosshair"); //进入新增模式，鼠标变成＋
+    },
+    addRule() {
+      d3.select(".BOX-SVG").style("cursor", "crosshair");
+      this.isAddRule = true;
     },
   },
 };

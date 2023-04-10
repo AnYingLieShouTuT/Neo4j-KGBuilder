@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 /**
  * json工具类
+ *
  * @author yindm
  */
 public class JsonHelper {
@@ -25,6 +26,7 @@ public class JsonHelper {
 
     /**
      * 反序列化成对象
+     *
      * @param json
      * @param clazz
      * @param <T>
@@ -37,6 +39,7 @@ public class JsonHelper {
 
     /**
      * 反序列化成List
+     *
      * @param json
      * @param clazz
      * @param <T>
@@ -50,6 +53,7 @@ public class JsonHelper {
 
     /**
      * 反序列化成对象
+     *
      * @param json
      * @param type
      * @param <T>
@@ -62,6 +66,7 @@ public class JsonHelper {
 
     /**
      * 反序列化成对象
+     *
      * @param json
      * @return
      * @throws JsonProcessingException
@@ -71,7 +76,8 @@ public class JsonHelper {
     }
 
     /**
-     * 序列化成对象
+     * 序列化成对象,将一个 Java 对象转换为 JSON 格式的字符串
+     *
      * @param value
      * @return
      * @throws JsonProcessingException
@@ -82,6 +88,7 @@ public class JsonHelper {
 
     /**
      * 对象转换成List
+     *
      * @param value
      * @param <T>
      * @return
@@ -92,6 +99,7 @@ public class JsonHelper {
 
     /**
      * 创建Json节点
+     *
      * @return
      */
     public static ObjectNode createNode() {
@@ -100,6 +108,7 @@ public class JsonHelper {
 
     /**
      * 创建JsonList
+     *
      * @return
      */
     public static ArrayNode createArray() {

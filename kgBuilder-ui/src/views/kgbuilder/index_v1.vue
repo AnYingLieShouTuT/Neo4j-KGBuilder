@@ -184,6 +184,7 @@ export default {
       deleteLinkName: this.deleteLinkName,
       quickAddNodes: this.btnQuickAddNode,
       createSingleNode: this.createSingleNode,
+      createRuleNode: this.createRuleNode,
       updateCoordinateOfNode: this.updateCoordinateOfNode,
       getNodeDetail: this.getNodeDetail,
     };
@@ -440,6 +441,26 @@ export default {
       kgBuilderApi.createNode(data).then((result) => {
         if (result.code == 200) {
           let newNode = result.data;
+          _.assignIn(newNode, {
+            x: left,
+            y: top,
+            fx: left,
+            fy: top,
+            r: parseInt(newNode.r),
+            image: "",
+          });
+          this.graphData.nodes.push(newNode);
+        }
+      });
+    },
+    //画布添加规则节点todo
+    createRuleNode(left, top) {
+      let data = { name: "", r: 30 };
+      data.domain = this.domain;
+      kgBuilderApi.createNode(data).then((result) => {
+        if (result.code == 200) {
+          let newNode = result.data;
+          //如果我们调用_.assignIn(obj1, obj2)，则会将obj2的所有属性复制到obj1中，并返回obj1
           _.assignIn(newNode, {
             x: left,
             y: top,

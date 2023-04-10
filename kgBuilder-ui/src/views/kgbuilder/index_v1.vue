@@ -189,6 +189,7 @@ export default {
     };
   },
   data() {
+    let self = this;
     return {
       style: null,
       width: null,
@@ -219,26 +220,6 @@ export default {
                 );
               },
               childrens: [],
-            },
-            {
-              title: "块",
-              icon: {
-                type: "text",
-                content: "块",
-              },
-              defaultEvent: (d, _this, d3) => {
-                this.$message({ message: "开发中", type: "success" });
-              },
-            },
-            {
-              title: "集",
-              icon: {
-                type: "text",
-                content: "集",
-              },
-              defaultEvent: (d, _this, d3) => {
-                this.$message({ message: "开发中", type: "success" });
-              },
             },
           ],
         },
@@ -272,11 +253,11 @@ export default {
             kgBuilderApi.getMoreRelationNode(data).then((result) => {
               if (result.code == 200) {
                 //把不存在于画布的节点添加到画布
-                _this.mergeNodeAndLink(result.data.node, result.data.relationship);
+                self.mergeNodeAndLink(result.data.node, result.data.relationship);
                 //重新绘制
                 //_this.updateGraph();
               } else {
-                _this.$message.error("展开失败 :" + item.executionTime);
+                self.$message.error("展开失败 :" + item.executionTime);
               }
             });
           },
@@ -329,112 +310,6 @@ export default {
             //_this.updateGraph();
           },
           childrens: [],
-        },
-        {
-          title: "哈哈这里也可以用外部图片",
-          icon: {
-            type: "url",
-            content:
-              "https://tvax2.sinaimg.cn/crop.0.0.1008.1008.50/006Y2wSTly8gurymhtku4j60s00s0gn602.jpg",
-          },
-          defaultEvent: (d, _this, d3) => {},
-          childrens: [
-            {
-              title: "点",
-              icon: {
-                type: "text",
-                content: "点",
-              },
-              defaultEvent: (d, _this, d3) => {
-                console.log("点");
-              },
-              childrens: [
-                {
-                  title: "点1",
-                  icon: {
-                    type: "text",
-                    content: "点1",
-                  },
-                  defaultEvent: (d, _this, d3) => {
-                    console.log("点1");
-                  },
-                  childrens: [
-                    {
-                      title: "点2",
-                      icon: {
-                        type: "text",
-                        content: "点2",
-                      },
-                      defaultEvent: (d, _this, d3) => {
-                        console.log("点");
-                      },
-                      childrens: [],
-                    },
-                    {
-                      title: "块2",
-                      icon: {
-                        type: "text2",
-                        content: "块",
-                      },
-                      defaultEvent: (d, _this, d3) => {
-                        console.log("块2");
-                      },
-                    },
-                    {
-                      title: "集2",
-                      icon: {
-                        type: "text",
-                        content: "集2",
-                      },
-                      defaultEvent: (d, _this, d3) => {
-                        console.log("集2");
-                      },
-                    },
-                  ],
-                },
-                {
-                  title: "块1",
-                  icon: {
-                    type: "text",
-                    content: "块1",
-                  },
-                  defaultEvent: (d, _this, d3) => {
-                    console.log("块1");
-                  },
-                },
-                {
-                  title: "集1",
-                  icon: {
-                    type: "text1",
-                    content: "集",
-                  },
-                  defaultEvent: (d, _this, d3) => {
-                    console.log("集1");
-                  },
-                },
-              ],
-            },
-            {
-              title: "块",
-              icon: {
-                type: "text",
-                content: "块",
-              },
-              defaultEvent: (d, _this, d3) => {
-                console.log("块");
-              },
-            },
-            {
-              title: "集",
-              icon: {
-                type: "text",
-                content: "集",
-              },
-              defaultEvent: (d, _this, d3) => {
-                console.log("集");
-              },
-            },
-          ],
         },
       ],
       _thisView: null,
@@ -821,14 +696,6 @@ export default {
         pageSize: this.pageSize,
       };
       let _this = this;
-      // axios.get('/static/kgData.json', {}).then(function (response) {
-      //   var data = response.data
-      //   console.log(data)
-      //   _this.graphData=data;
-      // //_this.graphData.nodes = data.node;
-      //     // _this.graphData.links =data.relationship;
-      // })
-      // d3.select(".graphContainer >svg").remove();
       kgBuilderApi.getDomainGraph(data).then((result) => {
         if (result.code == 200) {
           if (result.data != null) {
@@ -1018,7 +885,7 @@ export default {
       };
       kgBuilderApi.batchCreateNode(data).then((result) => {
         if (result.code == 200) {
-          //把不存在于画布的节点添加到画布
+          //把不存在于画布的节点添加到画布  todo
           this.mergeNodeAndLink(result.data.nodes, result.data.ships);
           //重新绘制
           //this.updateGraph();

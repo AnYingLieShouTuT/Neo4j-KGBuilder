@@ -1,10 +1,5 @@
 <template>
-  <div
-    v-loading="fullscreenLoading"
-    id="BOX-SVG"
-    class="BOX-SVG"
-    :style="styles"
-  >
+  <div v-loading="fullscreenLoading" id="BOX-SVG" class="BOX-SVG" :style="styles">
     <div
       id="SVG"
       class="SVG"
@@ -29,33 +24,33 @@ export default {
     "Dset",
     "createSingleNode",
     "updateCoordinateOfNode",
-    "getNodeDetail"
+    "getNodeDetail",
   ],
   components: {
     menuLink,
-    menuBlank
+    menuBlank,
   },
   props: {
     styles: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     initData: {
       type: Object,
-      default: {}
+      default: {},
     },
     ringFunction: {
       type: Array,
-      default: []
+      default: [],
     },
     domain: {
       type: String,
-      default: 0
+      default: 0,
     },
     domainId: {
       type: Number,
-      default: ""
-    }
+      default: "",
+    },
   },
   data() {
     return {
@@ -66,7 +61,7 @@ export default {
       zoom: d3
         .zoom()
         .scaleExtent([-10, 10])
-        .on("zoom", function() {
+        .on("zoom", function () {
           d3.select("#link_menubar").style("display", "none");
           d3.select("#nodeDetail").style("display", "none");
           d3.selectAll(".node").attr("transform", d3.event.transform);
@@ -84,7 +79,7 @@ export default {
         uuid: "",
         cname: "",
         fx: "",
-        fy: ""
+        fy: "",
       },
       // d3属性
       svg: null,
@@ -101,15 +96,15 @@ export default {
         to: "",
         isDrawing: false,
         defaultEvent: null,
-        container: null
+        container: null,
       },
       graph: {
         nodes: [],
-        links: []
+        links: [],
       },
       widht: null,
       height: null,
-      isAddLink: false
+      isAddLink: false,
     };
   },
   watch: {
@@ -127,8 +122,8 @@ export default {
         this.fullscreenLoading = false;
       },
       deep: true,
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   mounted() {
     const _this = this;
@@ -151,7 +146,7 @@ export default {
       let menuBar = {
         left: event.clientX - 300,
         top: event.clientY - 140,
-        show: true
+        show: true,
       };
       _this.$refs.menu_blank.init(menuBar);
       event.preventDefault();
@@ -181,18 +176,19 @@ export default {
       this.svg = graphContainer.append("svg");
       this.svg.attr("width", this.width);
       this.svg.attr("height", this.height);
-      this.svg.attr("preserveAspectRatio", "xMidYMidmeet");
+      this.svg.attr("preserveAspectRatio", "xMidYMidmeet"); //SVG元素的中心与容器的中心对齐。
       this.simulation = d3
         .forceSimulation()
         .force(
           "link",
           d3
             .forceLink()
-            .distance(function(d) {
+            .distance(function (d) {
               return 60;
               // return Math.floor(Math.random() * (700 - 200)) ;
             })
-            .id(function(d) {
+            .id(function (d) {
+              console.log(d);
               return d.uuid;
             })
         )
@@ -209,7 +205,7 @@ export default {
       let _this = this;
       this.svg.on(
         "click",
-        function() {
+        function () {
           d3.selectAll(".buttongroup").classed("circle_none", true);
           d3.selectAll("g[id^='circle_menu_']").style("display", "none");
         },
@@ -223,7 +219,7 @@ export default {
       const lks = this.graph.links;
       const nodes = this.graph.nodes;
       const links = [];
-      nodes.forEach(function(n) {
+      nodes.forEach(function (n) {
         if (n.center === 1 || n.center === "1") {
           n.fx = _this.width / 2;
           n.fy = _this.height / 2;
@@ -244,12 +240,12 @@ export default {
           n.r = parseFloat(n.r);
         }
       });
-      lks.forEach(function(m) {
-        const sourceNode = nodes.filter(function(n) {
+      lks.forEach(function (m) {
+        const sourceNode = nodes.filter(function (n) {
           return n.uuid === m.sourceId;
         })[0];
         if (typeof sourceNode === "undefined") return;
-        const targetNode = nodes.filter(function(n) {
+        const targetNode = nodes.filter(function (n) {
           return n.uuid === m.targetId;
         })[0];
         if (typeof targetNode === "undefined") return;
@@ -259,24 +255,23 @@ export default {
       this.addNodeButton();
       // 连线多个弯曲
       if (links.length > 0) {
-        _.each(links, function(link) {
+        _.each(links, function (link) {
           const same = _.filter(links, {
             source: link.source,
-            target: link.target
+            target: link.target,
           });
           const sameAlt = _.filter(links, {
             source: link.target,
-            target: link.source
+            target: link.source,
           });
           const sameAll = same.concat(sameAlt);
-          _.each(sameAll, function(s, i) {
+          _.each(sameAll, function (s, i) {
             s.sameIndex = i + 1;
             s.sameTotal = sameAll.length;
             s.sameTotalHalf = s.sameTotal / 2;
             s.sameUneven = s.sameTotal % 2 !== 0;
             s.sameMiddleLink =
-              s.sameUneven === true &&
-              Math.ceil(s.sameTotalHalf) === s.sameIndex;
+              s.sameUneven === true && Math.ceil(s.sameTotalHalf) === s.sameIndex;
             s.sameLowerHalf = s.sameIndex <= s.sameTotalHalf;
             s.sameArcDirection = s.sameLowerHalf ? 0 : 1;
             s.sameIndexCorrected = s.sameLowerHalf
@@ -285,13 +280,13 @@ export default {
           });
         });
         const maxSame = _.chain(links)
-          .sortBy(function(x) {
+          .sortBy(function (x) {
             return x.sameTotal;
           })
           .last()
           .value().sameTotal;
 
-        _.each(links, function(link) {
+        _.each(links, function (link) {
           link.maxSameHalf = Math.round(maxSame / 2);
         });
       }
@@ -311,7 +306,7 @@ export default {
       d3.selectAll(".nodeButton >g").remove();
       let nodeButton = this.nodeButtonGroup
         .selectAll(".nodeButton")
-        .data(nodes, function(d) {
+        .data(nodes, function (d) {
           return d;
         });
       nodeButton.exit().remove();
@@ -330,21 +325,19 @@ export default {
       const nodeTextEnter = this.drawNodeText(nodeText);
       nodeText = nodeTextEnter.merge(nodeText);
       // 更新节点标识
-      let nodeSymbol = this.nodeSymbolGroup
-        .selectAll("path")
-        .data(nodes, function(d) {
-          return d.uuid;
-        });
+      let nodeSymbol = this.nodeSymbolGroup.selectAll("path").data(nodes, function (d) {
+        return d.uuid;
+      });
       nodeSymbol.exit().remove();
       const nodeSymbolEnter = this.drawNodeSymbol(nodeSymbol);
       nodeSymbol = nodeSymbolEnter.merge(nodeSymbol);
-      nodeSymbol.attr("fill", d => {
+      nodeSymbol.attr("fill", (d) => {
         if (d.color) {
           return d.color;
         }
         return "#25BC9E";
       });
-      nodeSymbol.attr("display", function(d) {
+      nodeSymbol.attr("display", function (d) {
         if (typeof d.hasFile !== "undefined" && d.hasFile > 0) {
           return "block";
         }
@@ -390,38 +383,38 @@ export default {
         link.attr("d", linkArc);
         // 更新节点坐标
         node
-          .attr("cx", function(d) {
+          .attr("cx", function (d) {
             return d.x;
           })
-          .attr("cy", function(d) {
+          .attr("cy", function (d) {
             return d.y;
           });
         // 更新节点操作按钮组坐标
         nodeButton
-          .attr("cx", function(d) {
+          .attr("cx", function (d) {
             return d.x;
           })
-          .attr("cy", function(d) {
+          .attr("cy", function (d) {
             return d.y;
           });
 
-        nodeButton.attr("transform", function(d) {
+        nodeButton.attr("transform", function (d) {
           return "translate(" + d.x + "," + d.y + ") scale(1)";
         });
         // 更新文字坐标
         nodeText
-          .attr("x", function(d) {
+          .attr("x", function (d) {
             return d.x;
           })
-          .attr("y", function(d) {
+          .attr("y", function (d) {
             return d.y;
           });
         // 更新回形针坐标
-        nodeSymbol.attr("transform", function(d) {
+        nodeSymbol.attr("transform", function (d) {
           return "translate(" + (d.x + 8) + "," + (d.y - 30) + ") scale(1)";
         });
         linkText.attr("dy", 5);
-        linkTextList.attr("transform", function(d) {
+        linkTextList.attr("transform", function (d) {
           if (d.target.x < d.source.x) {
             const bbox = this.getBBox();
             const rx = bbox.x + bbox.width / 2;
@@ -436,11 +429,11 @@ export default {
       // 计算出最小和最大的X，Y
       // 去除拖拽跳动问题
       if (this.scale == null) {
-        this.graph.nodes.filter(res => res.uuid);
-        const xExtent = d3.extent(d3.values(this.graph.nodes), function(n) {
+        this.graph.nodes.filter((res) => res.uuid);
+        const xExtent = d3.extent(d3.values(this.graph.nodes), function (n) {
           return n.x;
         });
-        const yExtent = d3.extent(d3.values(this.graph.nodes), function(n) {
+        const yExtent = d3.extent(d3.values(this.graph.nodes), function (n) {
           return n.y;
         });
         const configwidth = this.width;
@@ -488,7 +481,7 @@ export default {
       const nodes = _this.graph.nodes;
       if (!_this.svg) return;
       const nodeButton = _this.svg.append("defs");
-      nodes.forEach(function(m) {
+      nodes.forEach(function (m) {
         _this.createMenuButton(
           nodeButton,
           m,
@@ -499,14 +492,7 @@ export default {
         );
       });
     },
-    createMenuButton(
-      nodeButton,
-      m,
-      menuItems,
-      level,
-      parentMenuLength,
-      actionIndex
-    ) {
+    createMenuButton(nodeButton, m, menuItems, level, parentMenuLength, actionIndex) {
       const _this = this;
       //构建按钮组所占大小，均分一个圆，每份占1，[1,1,1,1,1,1]
       let menuGroup = [];
@@ -556,7 +542,7 @@ export default {
         .enter()
         .append("g")
         .attr("cursor", "pointer")
-        .attr("class", function(d, i) {
+        .attr("class", function (d, i) {
           const id =
             "menu_" +
             m.uuid +
@@ -570,13 +556,10 @@ export default {
         });
       let innerR = parseInt(m.r) + 40 * level;
       let ountR = parseInt(m.r) + 40 * (level + 1);
-      const arc = d3
-        .arc()
-        .innerRadius(innerR)
-        .outerRadius(ountR);
+      const arc = d3.arc().innerRadius(innerR).outerRadius(ountR);
       buttonEnter
         .append("path")
-        .attr("d", function(d) {
+        .attr("d", function (d) {
           return arc(d);
         })
         .attr("fill", "#CCE4F7")
@@ -614,14 +597,12 @@ export default {
           buttonEnter
             .append("circle")
             .attr("r", 15)
-            .attr("transform", function(d) {
+            .attr("transform", function (d) {
               return "translate(" + arc.centroid(d) + ")";
             })
-            .attr("fill", function(d, i) {
+            .attr("fill", function (d, i) {
               if (i == index + actionIndex) {
-                return (
-                  "url(#icon_" + m.uuid + "_level_" + level + "_" + index + ")"
-                );
+                return "url(#icon_" + m.uuid + "_level_" + level + "_" + index + ")";
               } else {
                 d3.select(this).remove();
               }
@@ -630,10 +611,10 @@ export default {
           buttonEnter
             .append("text")
             .attr("text-anchor", "middle")
-            .attr("transform", function(d) {
+            .attr("transform", function (d) {
               return "translate(" + arc.centroid(d) + ")";
             })
-            .text(function(d, i) {
+            .text(function (d, i) {
               if (i == index + actionIndex) {
                 return item.title;
               } else {
@@ -643,14 +624,13 @@ export default {
             .attr("font-size", 10);
         }
         let _this = this;
-        buttonEnter.on("click", function(d, i) {
+        buttonEnter.on("click", function (d, i) {
           //console.log(d)
           let currentItem = menuItems[i - actionIndex];
           if (currentItem.childrens && currentItem.childrens.length > 0) {
             let levelGroup = "#circle_menu_" + m.uuid + "_level_" + (level + 1);
             d3.selectAll(levelGroup).style("display", "block");
-            let btn =
-              "g[class^='menu_" + m.uuid + "_level_" + (level + 1) + "']";
+            let btn = "g[class^='menu_" + m.uuid + "_level_" + (level + 1) + "']";
             //console.log(btn)
             d3.selectAll(btn).style("display", "none");
             let selectBtn =
@@ -683,7 +663,7 @@ export default {
                 .attr("stroke", "#FBB613")
                 .attr("stroke-width", 2)
                 .attr("marker-end", "url(#arrow)");
-              _this.svg.on("mousemove", function() {
+              _this.svg.on("mousemove", function () {
                 var m = d3.mouse(this);
                 _this.movingLine.container.attr("x2", m[0]).attr("y2", m[1]);
               });
@@ -766,39 +746,23 @@ export default {
       d.y = d3.event.y;
       d.fx = d3.event.x;
       d.fy = d3.event.y;
-      // let targetNodeIds = this.graph.links
-      //   .filter(n => n.sourceId == d.uuid)
-      //   .map(m => m.targetId);
-      // if (targetNodeIds && targetNodeIds.length > 0) {
-      //   targetNodeIds.forEach(x => {
-      //     this.graph.nodes
-      //       .filter(n => n.uuid == x)
-      //       .map(m => {
-      //         m.fx = m.fx + vx;
-      //         m.fy = m.fy + vy;
-      //         m.x = m.x + vx;
-      //         m.y = m.y + vy;
-      //         return m;
-      //       });
-      //   });
-      // }
     },
     dragEnded(d) {
       if (!d3.event.active) this.simulation.alphaTarget(0.3);
       let moveNodes = [];
       moveNodes.push({ uuid: d.uuid, fx: d.fx, fy: d.fy });
       let relevantNodes = this.graph.links
-        .filter(n => n.sourceId == d.uuid)
-        .map(m => m.targetId);
+        .filter((n) => n.sourceId == d.uuid)
+        .map((m) => m.targetId);
       let arr = []; //去重复后的新数组
       arr = relevantNodes.filter((element, index, self) => {
         return self.indexOf(element) === index;
       });
       if (arr && arr.length > 0) {
-        arr.forEach(targetId => {
+        arr.forEach((targetId) => {
           let targetNodes = this.graph.nodes
-            .filter(n => n.uuid == targetId)
-            .map(m => {
+            .filter((n) => n.uuid == targetId)
+            .map((m) => {
               let item = { uuid: m.uuid, fx: m.x, fy: m.y };
               return item;
             });
@@ -808,44 +772,27 @@ export default {
       //console.log(moveNodes);
       //批量更新本次移动的节点坐标
       this.updateCoordinateOfNode(moveNodes);
-      // 节点重叠菜单
-      // const MinX = parseFloat(d.x) - 40;
-      // const MaX = parseFloat(d.x) + 40;
-      // const MinY = parseFloat(d.y) - 40;
-      // const MaY = parseFloat(d.y) + 40;
-      // this.graph.nodes.forEach(item => {
-      //   if (
-      //     MinX < item.x &&
-      //     item.x < MaX &&
-      //     MinY < item.y &&
-      //     item.y < MaY &&
-      //     item.id !== d.uuid
-      //   ) {
-      //     //节点重叠处理逻辑
-      //     console.log("重叠了");
-      //   }
-      // });
     },
     // 绘制节点
     drawNode(node) {
       const _this = this;
       const gradient = node.enter().append("g");
       const nodeEnter = gradient.append("circle");
-      const defs = gradient.append("defs").attr("id", function(d) {
+      const defs = gradient.append("defs").attr("id", function (d) {
         return "imgdef" + d.uuid;
       });
       const catpattern = defs
         .append("pattern")
-        .attr("id", function(d) {
+        .attr("id", function (d) {
           return "catpattern" + d.uuid;
         })
         .attr("height", 1)
         .attr("width", 1);
       catpattern
         .append("image")
-        .attr("width", d => d.r * 2)
-        .attr("height", d => d.r * 2)
-        .attr("xlink:href", function(d) {
+        .attr("width", (d) => d.r * 2)
+        .attr("height", (d) => d.r * 2)
+        .attr("xlink:href", function (d) {
           if (d.image) {
             if (d.image.indexOf("http") > -1) {
               return d.image;
@@ -854,11 +801,11 @@ export default {
             }
           }
         });
-      nodeEnter.attr("r", function(d) {
+      nodeEnter.attr("r", function (d) {
         return d.r ? parseInt(d.r) : 25;
       });
       nodeEnter
-        .attr("fill", function(d) {
+        .attr("fill", function (d) {
           if (d.image) {
             return "url(#catpattern" + d.uuid + ")";
           } else {
@@ -868,17 +815,17 @@ export default {
             return "#21bb9e";
           }
         })
-        .attr("class", d => {
+        .attr("class", (d) => {
           return "circle_" + d.uuid;
         });
       nodeEnter.style("opacity", 1);
       nodeEnter.style("stroke-opacity", 0.6);
       nodeEnter
         .append("title") // 为每个节点设置title
-        .text(function(d) {
+        .text(function (d) {
           return d.name;
         });
-      nodeEnter.on("mouseenter", function(d) {
+      nodeEnter.on("mouseenter", function (d) {
         const aa = d3.select(this)._groups[0][0];
         if (aa.classList.contains("selected")) return;
         d3.select(this)
@@ -894,7 +841,7 @@ export default {
             domain: _this.domain,
             sourceId: _this.movingLine.from,
             targetId: _this.movingLine.to,
-            ship: ""
+            ship: "",
           };
           d3.select("#drawLineTemp").remove();
           _this.movingLine.defaultEvent(data, _this, d3);
@@ -903,12 +850,12 @@ export default {
             to: "",
             isDrawing: false,
             defaultEvent: null,
-            container: null
+            container: null,
           };
           //console.log("dddd"+d.uuid)
         }
       });
-      nodeEnter.on("mouseleave", function(d) {
+      nodeEnter.on("mouseleave", function (d) {
         const aa = d3.select(this)._groups[0][0];
         if (aa.classList.contains("selected")) return;
         d3.select(this).style("stroke-width", "0");
@@ -918,24 +865,24 @@ export default {
         d3.selectAll("text[class^='LinkText_']").style("display", "block");
         clearTimeout(_this.timer);
       });
-      nodeEnter.on("mouseover", function(d) {
+      nodeEnter.on("mouseover", function (d) {
         const e = window.event;
-        _this.timer = setTimeout(function() {
+        _this.timer = setTimeout(function () {
           d3.select("#richContainer").style("display", "block");
           _this.getNodeDetail(d.uuid, e.pageX + 30, e.pageY);
         }, 2000);
         //todo鼠标放上去只显示相关节点，其他节点和连线隐藏
         d3.selectAll(".node").style("fill-opacity", 0.5);
         var relvantNodeIds = [];
-        var relvantNodes = _this.graph.links.filter(function(n) {
+        var relvantNodes = _this.graph.links.filter(function (n) {
           return n.sourceId == d.uuid || n.targetId == d.uuid;
         });
-        relvantNodes.forEach(function(item) {
+        relvantNodes.forEach(function (item) {
           relvantNodeIds.push(item.sourceId);
           relvantNodeIds.push(item.targetId);
         });
         //显示相关的节点
-        _this.nodeGroup.selectAll("circle").style("fill-opacity", function(c) {
+        _this.nodeGroup.selectAll("circle").style("fill-opacity", function (c) {
           if (relvantNodeIds.indexOf(c.uuid) > -1) {
             return 1.0;
           }
@@ -943,32 +890,28 @@ export default {
         //透明所有节点文字
         d3.selectAll(".nodeText").style("fill-opacity", 0.5);
         //显示相关的节点文字
-        _this.nodeTextGroup
-          .selectAll("text")
-          .style("fill-opacity", function(c) {
-            if (relvantNodeIds.indexOf(c.uuid) > -1) {
-              return 1.0;
-            }
-          });
+        _this.nodeTextGroup.selectAll("text").style("fill-opacity", function (c) {
+          if (relvantNodeIds.indexOf(c.uuid) > -1) {
+            return 1.0;
+          }
+        });
         //透明所有连线
         //d3.selectAll('.line').style('stroke-opacity', 0.1)
         d3.selectAll("path[class^='Links_']").style("display", "block");
         //显示相关的连线
-        _this.linkGroup
-          .selectAll("path[class^='Links_']")
-          .style("display", function(c) {
-            if (c.lk.targetId === d.uuid || c.lk.sourceId === d.uuid) {
-              return "block";
-            }
-            return "none";
-          });
+        _this.linkGroup.selectAll("path[class^='Links_']").style("display", function (c) {
+          if (c.lk.targetId === d.uuid || c.lk.sourceId === d.uuid) {
+            return "block";
+          }
+          return "none";
+        });
         //透明所有连线文字
         //d3.selectAll('.lineText').style('fill-opacity', 0.1)
         d3.selectAll("text[class^='LinkText_']").style("display", "none");
         //显示相关的连线文字
         _this.linkTextGroup
           .selectAll("text[class^='LinkText_']")
-          .style("display", function(c) {
+          .style("display", function (c) {
             if (c.lk.targetId === d.uuid || c.lk.sourceId === d.uuid) {
               return "block";
             }
@@ -981,7 +924,7 @@ export default {
       //   d3.event.stopPropagation();
       //     d3.event.preventDefault();
       // });
-      nodeEnter.on("click", function(d, i) {
+      nodeEnter.on("click", function (d, i) {
         //console.log("node click");
         _this.svg.selectAll(".buttongroup").style("display", "block");
         d3.selectAll("g[id^='circle_menu_']").style("display", "none");
@@ -1006,7 +949,7 @@ export default {
         .enter()
         .append("g")
         .append("text")
-        .style("fill", function(d) {
+        .style("fill", function (d) {
           if (d.image) {
             return "#000000";
           }
@@ -1015,7 +958,7 @@ export default {
         // .attr('dx', function(d){
         //   return -1*(parseInt(d.r)-10)
         // })//设置居中不用偏移
-        .attr("dy", function(d) {
+        .attr("dy", function (d) {
           if (d.image) {
             return d.r + 20; //文字放在节点外边
           }
@@ -1023,7 +966,7 @@ export default {
         })
         .attr("font-family", "微软雅黑")
         .attr("text-anchor", "middle"); //设置文字居中
-      nodeTextEnter.text(function(d) {
+      nodeTextEnter.text(function (d) {
         let text = d.name;
         const len = text.length;
         if (d.image) {
@@ -1039,7 +982,7 @@ export default {
           }
         }
       });
-      nodeTextEnter.on("click", function(d, i) {
+      nodeTextEnter.on("click", function (d, i) {
         _this.selectNode.uuid = d.uuid;
         _this.selectNode.cname = d.name;
         const out_buttongroup_id = ".out_buttongroup_" + d.uuid;
@@ -1061,10 +1004,7 @@ export default {
     drawNodeSymbol(nodeSymbol) {
       const symbol_path =
         "M566.92736 550.580907c30.907733-34.655573 25.862827-82.445653 25.862827-104.239787 0-108.086613-87.620267-195.805867-195.577173-195.805867-49.015467 0-93.310293 18.752853-127.68256 48.564907l-0.518827-0.484693-4.980053 4.97664c-1.744213 1.64864-3.91168 2.942293-5.59104 4.72064l0.515413 0.484693-134.69696 133.727573L216.439467 534.8352l0 0 137.478827-136.31488c11.605333-10.410667 26.514773-17.298773 43.165013-17.298773 36.051627 0 65.184427 29.197653 65.184427 65.24928 0 14.032213-5.33504 26.125653-12.73856 36.829867l-131.754667 132.594347 0.515413 0.518827c-10.31168 11.578027-17.07008 26.381653-17.07008 43.066027 0 36.082347 29.16352 65.245867 65.184427 65.245867 16.684373 0 31.460693-6.724267 43.035307-17.07008l0.515413 0.512M1010.336427 343.49056c0-180.25472-145.882453-326.331733-325.911893-326.331733-80.704853 0-153.77408 30.22848-210.418347 79.0528l0.484693 0.64512c-12.352853 11.834027-20.241067 28.388693-20.241067 46.916267 0 36.051627 29.16352 65.245867 65.211733 65.245867 15.909547 0 29.876907-6.36928 41.192107-15.844693l0.38912 0.259413c33.624747-28.030293 76.301653-45.58848 123.511467-45.58848 107.99104 0 195.549867 87.6544 195.549867 195.744427 0 59.815253-27.357867 112.71168-69.51936 148.503893l0 0-319.25248 317.928107 0 0c-35.826347 42.2912-88.654507 69.710507-148.340053 69.710507-107.956907 0-195.549867-87.68512-195.549867-195.805867 0-59.753813 27.385173-112.646827 69.515947-148.43904l-92.18048-92.310187c-65.69984 59.559253-107.700907 144.913067-107.700907 240.749227 0 180.28544 145.885867 326.301013 325.915307 326.301013 95.218347 0 180.02944-41.642667 239.581867-106.827093l0.13312 0.129707 321.061547-319.962453-0.126293-0.13312C968.69376 523.615573 1010.336427 438.71232 1010.336427 343.49056L1010.336427 343.49056 1010.336427 343.49056zM1010.336427 343.49056"; // 定义回形针形状
-      const nodeSymbolEnter = nodeSymbol
-        .enter()
-        .append("path")
-        .attr("d", symbol_path);
+      const nodeSymbolEnter = nodeSymbol.enter().append("path").attr("d", symbol_path);
       nodeSymbolEnter.call(
         d3
           .drag()
@@ -1080,13 +1020,13 @@ export default {
         .enter()
         .append("g")
         .append("use") //  为每个节点组添加一个 use 子元素
-        .attr("r", function(d) {
+        .attr("r", function (d) {
           return parseInt(d.r);
         })
-        .attr("xlink:href", function(d) {
+        .attr("xlink:href", function (d) {
           return "#out_circle" + d.uuid;
         }) //  指定 use 引用的内容
-        .attr("class", function(d, i) {
+        .attr("class", function (d, i) {
           return "buttongroup out_buttongroup_" + d.uuid;
         })
         .style("display", "none");
@@ -1121,20 +1061,20 @@ export default {
         .attr("pointer-events", "all")
         .attr("stroke-width", 1.5)
         .attr("stroke", "#FBB613") //'#FBB613'
-        .attr("id", function(d) {
+        .attr("id", function (d) {
           return "invis_" + d.lk.uuid;
         })
-        .attr("class", d => {
+        .attr("class", (d) => {
           return "Links_" + d.lk.uuid;
         })
         .attr("fill", "none")
         // 箭头
-        .attr("marker-end", function(d) {
+        .attr("marker-end", function (d) {
           let marker = "url(#arrow)";
           return marker;
         });
       // 连线鼠标滑入
-      linkEnter.on("mouseenter", function(d) {
+      linkEnter.on("mouseenter", function (d) {
         d3.select(".Links_" + d.lk.uuid)
           .style("stroke-width", "10")
           .attr("stroke", "#e4e2e2")
@@ -1146,22 +1086,22 @@ export default {
           left: e.pageX - 300,
           top: e.pageY - 120,
           show: true,
-          sdata: _this.selectNode
+          sdata: _this.selectNode,
         };
         _this.$refs.menu_link.init(link);
       });
       // 连线鼠标离开
-      linkEnter.on("mouseleave", function(d) {
+      linkEnter.on("mouseleave", function (d) {
         _this.editLinkState = false;
         d3.select(".Links_" + d.lk.uuid)
           .style("stroke-width", 1.5)
-          .attr("stroke", d => {
+          .attr("stroke", (d) => {
             if (d.color) {
               return d.color;
             }
             return "#FBB613";
           })
-          .attr("marker-end", d => {
+          .attr("marker-end", (d) => {
             return "url(#arrow)";
           });
       });
@@ -1174,30 +1114,30 @@ export default {
       const linkTextEnter = links
         .enter()
         .append("g")
-        .attr("class", function(d) {
+        .attr("class", function (d) {
           return "TextLink_" + d.lk.uuid;
         });
       linkTextEnter
         .append("text")
-        .attr("class", function(d) {
+        .attr("class", function (d) {
           return "LinkText_" + d.lk.uuid;
         })
         .append("textPath")
         .attr("filter", "url(#Linktext)")
         .attr("startOffset", "50%")
         .attr("text-anchor", "middle")
-        .attr("xlink:href", function(d) {
+        .attr("xlink:href", function (d) {
           return "#invis_" + d.lk.uuid;
         })
         .style("font-family", "SimSun")
         .style("fill", "#434343")
         .style("stroke", "#434343")
         .style("font-size", 13)
-        .text(function(d) {
+        .text(function (d) {
           return d.lk.name;
         });
       // 连线鼠标滑入
-      linkTextEnter.on("mouseenter", function(d) {
+      linkTextEnter.on("mouseenter", function (d) {
         const e = window.event;
         _this.selectNode.uuid = d.lk.uuid;
         _this.selectNode.cname = d.lk.name;
@@ -1205,11 +1145,11 @@ export default {
           left: e.pageX - 300,
           top: e.pageY - 120,
           show: true,
-          sdata: _this.selectNode
+          sdata: _this.selectNode,
         };
         _this.$refs.menu_link.init(link);
       });
-      linkTextEnter.on("click", function(d) {
+      linkTextEnter.on("click", function (d) {
         console.log("连线文字点击");
       });
       const linkTextSS = linkTextEnter.insert("filter", "text");
@@ -1237,8 +1177,8 @@ export default {
     },
     changeCursor() {
       d3.select(".BOX-SVG").style("cursor", "crosshair"); //进入新增模式，鼠标变成＋
-    }
-  }
+    },
+  },
 };
 </script>
 

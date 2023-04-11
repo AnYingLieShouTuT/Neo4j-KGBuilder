@@ -6,33 +6,33 @@ spring:
       max-file-size: 100000000
       maxRequestSize: 200000000
   thymeleaf:
-    cache : false
+    cache: false
     mode: HTML5
   neo4j:
-      #url: bolt://localhost:7687  #3.x
-      url: neo4j://localhost:7687 #4.x
-      username: neo4j
-      password: zhanglei
+    #url: bolt://localhost:7687  #3.x
+    url: neo4j://localhost:7687 #4.x
+    username: neo4j
+    password: zhanglei
   datasource:
-      url: jdbc:mysql://localhost:3306/kg?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-      driverClassName: com.mysql.cj.jdbc.Driver
-      username: root
-      password: root
-      type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://localhost:3306/kg?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    type: com.zaxxer.hikari.HikariDataSource
 mybatis:
   typeAliasesPackage: com.warmer.kgmaker.entity
 #  mapperLocations: classpath*:/mapping/*.xml
 #配置分页插件pagehelper
 pagehelper:
-    helperDialect: mysql
-    reasonable: true
-    supportMethodsArguments: true
-    params: count=countSql
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
 # 配置MyBatis日志
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml, classpath*:/mapping/*.xml
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     call-setters-on-nulls: true
 #--------七牛云配置
 qiniu:
@@ -46,8 +46,8 @@ qiniu:
       name: file.miaoleyan.com
   prefixName: /nndt
 #--------七牛云配置
-img:  #//如果是Windows情况下，格式是 D:\\blog\\image\\   linx 格式"/home/blog/image/";
-   location : D:\\blog\\image\\
+img: #//如果是Windows情况下，格式是 D:\\blog\\image\\   linx 格式"/home/blog/image/";
+  location: D:\\blog\\image\\
 file:
-  serverurl:  http://localhost:8089
-  location : D:\\kgmanager\\csv\\   #如果是Windows情况下，格式是 D:\\kgmanager\\csv\\   linx 格式"/home/kgmanager/csv/";
+  serverurl: http://localhost:8089
+  location: D:\\kgmanager\\csv\\   #如果是Windows情况下，格式是 D:\\kgmanager\\csv\\   linx 格式"/home/kgmanager/csv/";

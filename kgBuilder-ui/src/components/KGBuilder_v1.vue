@@ -7,7 +7,12 @@
       @contextmenu.prevent="initContainerRightClick"
     />
     <menuLink ref="menu_link" />
-    <menuBlank ref="menu_blank" @changeCursor="changeCursor" />
+    <menuBlank
+      ref="menu_blank"
+      @changeCursor="changeCursor"
+      @addRule="addRule"
+      :rules="ruleList"
+    />
   </div>
 </template>
 <script>
@@ -22,7 +27,9 @@ export default {
   inject: [
     "_thisKey",
     "Dset",
+    // "ruleList",
     "createSingleNode",
+    "createRuleNode",
     "updateCoordinateOfNode",
     "getNodeDetail",
   ],
@@ -51,7 +58,19 @@ export default {
       type: Number,
       default: "",
     },
+    // ruleList: {
+    //   type: Array,
+    //   default() {
+    //     return [];
+    //   }
+    // },
+    ruleList: {
+      type: Array,
+      default: () => [],
+      required: true,
+    },
   },
+  created() {},
   data() {
     return {
       timer: null,
@@ -105,6 +124,7 @@ export default {
       widht: null,
       height: null,
       isAddLink: false,
+      // rules: [],
       isAddRule: false,
     };
   },
@@ -125,6 +145,10 @@ export default {
       deep: true,
       immediate: true,
     },
+    // ruleData: function (newVal, oldVal) {
+    //   this.rules = newVal; //newVal即是chartData
+    //   // this.drawChart();
+    // },
   },
   mounted() {
     const _this = this;
@@ -137,6 +161,8 @@ export default {
       this.height = x;
       _this.initGraph();
     });
+    // console.log("KgBuilder");
+    // console.log(this.ruleList);
   },
   methods: {
     //画布右击
@@ -171,12 +197,19 @@ export default {
       let cursor = document.getElementById("BOX-SVG").style.cursor;
       //如果鼠标指针样式为"crosshair"，则将其重置为"default"，并创建一个新节点。todo:添加规则节点判断
       if (cursor == "crosshair") {
+        // console.log("添加");
+        //添加规则
         if (_this.isAddRule == true) {
+          //   console.log("添加规则");
           d3.select(".BOX-SVG").style("cursor", "default");
           _this.isAddRule = false;
+          return;
           _this.createRuleNode(event.offsetX, event.offsetY);
         } else {
+          //添加节点
+          //   console.log("添加节点");
           d3.select(".BOX-SVG").style("cursor", "default");
+          //   return;
           _this.createSingleNode(event.offsetX, event.offsetY);
         }
       }
@@ -358,6 +391,7 @@ export default {
       this.simulation.nodes(nodes).on("tick", ticked);
       this.simulation.force("link").links(links);
       this.simulation.alphaTarget(1).restart();
+
       // 连线弯曲配置
       function linkArc(d) {
         const dx = d.target.x - d.source.x;
@@ -388,8 +422,10 @@ export default {
           d.target.y;
         return dd;
       }
+
       const linkTextList = this.linkTextGroup.selectAll("g");
       const linkText = this.linkTextGroup.selectAll("g >text");
+
       // 监听布局，更新
       function ticked() {
         link.attr("d", linkArc);
@@ -437,6 +473,7 @@ export default {
           }
         });
       }
+
       // 配置缩放
       // 计算出最小和最大的X，Y
       // 去除拖拽跳动问题
@@ -1181,7 +1218,10 @@ export default {
     changeCursor() {
       d3.select(".BOX-SVG").style("cursor", "crosshair"); //进入新增模式，鼠标变成＋
     },
-    addRule() {
+    //todo
+    addRule(data) {
+      // console.log(this.ruleList);
+      console.log(data);
       d3.select(".BOX-SVG").style("cursor", "crosshair");
       this.isAddRule = true;
     },
@@ -1194,6 +1234,7 @@ export default {
   width: 100%;
   height: 100%;
 }
+
 .SVG {
   width: 100%;
   height: 100%;
@@ -1210,6 +1251,7 @@ text {
   text-overflow: ellipsis;
   vertical-align: middle;
 }
+
 circle {
   cursor: pointer;
 }
@@ -1217,11 +1259,13 @@ circle {
 .circle_none {
   display: none;
 }
+
 .nodetext {
   font-size: 12px;
   font-family: SimSun;
   fill: #000000;
 }
+
 .sase {
   background: #ffffff;
 }

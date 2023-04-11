@@ -117,6 +117,7 @@
             :domain="domain"
             :domainId="domainId"
             :ring-function="RingFunction"
+            :ruleList="ruleList"
             @editForm="editForm"
           />
         </div>
@@ -166,6 +167,7 @@ import KgHelp from "@/views/kgbuilder/components/kg_help";
 import html2canvas from "html2canvas";
 import kgbuilder from "@/components/KGBuilder_v1";
 import { EventBus } from "@/utils/event-bus.js";
+
 export default {
   name: "kgBuilderv1",
   components: {
@@ -179,6 +181,7 @@ export default {
     return {
       _thisKey: this._thisKey,
       Dset: this.Dset,
+      ruleList: this.ruleList,
       updateLinkName: this.updateLinkName,
       editLinkName: this.editLinkName,
       deleteLinkName: this.deleteLinkName,
@@ -192,6 +195,7 @@ export default {
   data() {
     let self = this;
     return {
+      ruleList: [],
       style: null,
       width: null,
       height: null,
@@ -354,6 +358,7 @@ export default {
   },
   mounted() {},
   created() {
+    this.getRuleList();
     this.getDomain();
     this.$nextTick(() => {
       this.width = document.getElementsByClassName("graphContainer")[0].offsetWidth;
@@ -373,6 +378,14 @@ export default {
     },
     Dset(item) {
       this.d3 = item;
+    },
+    getRuleList() {
+      let _this = this;
+      kgBuilderApi.getRulesALL().then((result) => {
+        if (result.code == 200) {
+          _this.ruleList = result.data;
+        }
+      });
     },
     prev() {
       if (this.pageModel.pageIndex > 1) {
@@ -961,10 +974,12 @@ export default {
 .graphContainer {
   height: 100vh -50px;
 }
+
 .mind-box {
   height: calc(100vh - 85px);
   overflow: hidden;
 }
+
 .mind-l {
   width: 300px;
   float: left;
@@ -972,6 +987,7 @@ export default {
   height: 100%;
   border-right: 1px solid #d3e2ec;
 }
+
 .ml-ht {
   padding-top: 20px;
   line-height: 50px;
@@ -981,9 +997,11 @@ export default {
   color: #333;
   border-bottom: 1px solid #d3e2ec;
 }
+
 .ml-a-box {
   margin: 10px;
 }
+
 .ml-a {
   display: inline-block;
   min-width: 46px;
@@ -995,6 +1013,7 @@ export default {
   box-sizing: border-box;
   transition: 0.3s;
 }
+
 .ml-a span {
   max-width: 190px;
   display: inline-block;
@@ -1003,35 +1022,43 @@ export default {
   text-overflow: ellipsis;
   vertical-align: middle;
 }
+
 .ml-a-all {
   display: block;
   margin: 10px 10px 0;
   text-align: center;
 }
+
 .ml-a span:empty:before {
   content: "閺堫亜鎳￠崥锟�";
   color: #adadad;
 }
+
 .ml-a small {
   color: #999;
 }
+
 .ml-a:hover {
   background: #f4f4f4;
 }
+
 .ml-a.cur,
 .ml-a.cur small {
   background: #156498;
   color: #fff;
 }
+
 .ml-btn-box {
   text-align: right;
   padding: 0 10px;
   margin-bottom: 20px;
 }
+
 .ml-btn {
   padding: 0 5px;
   color: #156498;
 }
+
 .mind-con {
   height: calc(100vh - 40px);
   overflow: hidden;
@@ -1041,43 +1068,52 @@ export default {
   flex-direction: column;
   padding: 5px;
 }
+
 .mind-top {
   /* line-height: 70px;
   height: 70px; */
   padding: 0 22px;
   border-bottom: 1px solid #ededed;
 }
+
 .mt-m {
   color: #666;
   margin-right: 30px;
 }
+
 .mt-m i {
   font-size: 18px;
   color: #333;
   font-weight: 700;
   font-style: normal;
 }
+
 .mb-con .search,
 .mind-top .search {
   border: 1px solid #e2e2e2;
 }
+
 .svg-a-sm {
   font-size: 14px;
   color: #156498;
   margin-right: 30px;
   cursor: pointer;
 }
+
 .mind-cen {
   height: calc(100% - 70px);
 }
+
 .half-auto {
   height: 40%;
 }
+
 .mind-bottom {
   height: 490px;
   box-sizing: border-box;
   border-top: 1px solid #ededed;
 }
+
 .ss-d {
   display: inline-block;
   vertical-align: middle;
@@ -1085,40 +1121,51 @@ export default {
   border-radius: 50%;
   background: #dedede;
 }
+
 .sd {
   margin: 2px;
 }
+
 .sd-active {
   color: red !important;
   background: none !important;
 }
+
 .btn-line + .btn-line {
   margin-left: 10px;
 }
+
 .co {
   color: #ee8407 !important;
 }
+
 a {
   text-decoration: none;
 }
+
 .a {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .fl {
   float: left;
 }
+
 .fr {
   float: right;
   margin: 7px;
 }
+
 .tl {
   text-align: left;
 }
+
 .pl-20 {
   padding-left: 20px;
 }
+
 text {
   cursor: pointer;
   max-width: 25px;
@@ -1128,29 +1175,36 @@ text {
   text-overflow: ellipsis;
   vertical-align: middle;
 }
+
 circle {
   cursor: pointer;
 }
+
 #graphcontainerdiv {
   background: #fff;
 }
+
 .el-color-picker__panel {
   left: 812px !important;
 }
+
 .wange-toolbar {
   border: 1px solid #ccc;
 }
+
 .wangeditor-form {
   border: 1px solid #ccc;
   height: 350px;
   min-height: 340px;
 }
+
 .el-tag {
   max-width: 80px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .mind-fj-box {
   display: inline-block;
   width: 290px;
@@ -1158,23 +1212,27 @@ circle {
   border: 1px solid #e6e6e6;
   box-shadow: 0 0 8px rgba(206, 205, 201, 0.38);
 }
+
 .mind-fj-p {
   color: #666;
   line-height: 24px;
   padding: 5px;
   background: rgba(255, 255, 255, 0.85);
 }
+
 .mind-carousel + .mind-fj-p .el-scrollbar__wrap {
   height: auto;
   max-height: 220px;
   min-height: 0;
 }
+
 .carous-img {
   height: 100%;
   background: rgba(0, 0, 0, 0.1);
   line-height: 197px;
   text-align: center;
 }
+
 .carous-img img {
   max-width: 100%;
   max-height: 100%;
@@ -1194,12 +1252,14 @@ circle {
   background: rgba(198, 226, 255, 0.2);
   display: none;
 }
+
 .node_pd {
   padding: 4px;
   font-size: 13px;
   font-family: -webkit-body;
   font-weight: 600;
 }
+
 .operatetips {
   position: absolute;
   right: 10px;
@@ -1210,6 +1270,7 @@ circle {
   border: 2px #ee7942 solid;
   border-radius: 4px;
 }
+
 .jsoncontainer {
   position: absolute;
   right: 30%;
@@ -1222,12 +1283,14 @@ circle {
   border-radius: 4px;
   background: #fff;
 }
+
 .cypher_toolbar {
   line-height: 70px;
   height: 85px;
   padding: 0 22px;
   border-bottom: 1px solid #ededed;
 }
+
 .homelist {
   font-size: 18px;
   color: #282828;
@@ -1243,9 +1306,11 @@ circle {
   overflow: hidden;
   position: relative;
 }
+
 ul {
   padding: 0px;
 }
+
 .icon {
   width: 1em;
   height: 1em;
@@ -1253,6 +1318,7 @@ ul {
   fill: currentColor;
   overflow: hidden;
 }
+
 .el-button {
   display: inline-block;
   line-height: 1;
@@ -1274,6 +1340,7 @@ ul {
   font-size: 14px;
   border-radius: 4px;
 }
+
 .search {
   position: relative;
   width: 220px;
@@ -1281,6 +1348,7 @@ ul {
   border-radius: 32px;
   overflow: hidden;
 }
+
 .search .el-input__inner {
   box-sizing: border-box;
   padding-left: 15px;
@@ -1292,6 +1360,7 @@ ul {
   border: none;
   transition: background 0.3s;
 }
+
 .search .el-button--default {
   position: absolute;
   right: 1px;
@@ -1304,24 +1373,29 @@ ul {
   border: none;
   z-index: 1;
 }
+
 .search .el-button--default:hover {
   color: #156498;
   background: transparent;
   border: none;
 }
+
 .top .search {
   margin-left: 30px;
   background: rgba(0, 0, 0, 0.25);
   display: none;
 }
+
 .circle_none {
   display: none;
 }
+
 .dibmr {
   padding: 4px;
   display: inline-block;
   line-height: 30px;
 }
+
 .tag-ml-5 {
   margin: 5px;
   cursor: pointer;

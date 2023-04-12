@@ -285,6 +285,49 @@ public class KGGraphRepository implements KGGraphDao {
                 graphNodeList = Neo4jUtil.getGraphNode(cypherSql);
             } else {
                 //需要创建新的节点
+                entity.setIsRule(0);// 普通节点
+                entity.setRuleId(-1);// 规则编号
+                entity.setColor("#ff4500");// 默认颜色
+                entity.setR(30);// 默认半径
+                //将 entity 对象转换为 JSON 格式的字符串
+                String propertiesString = Neo4jUtil.getFilterPropertiesJson(JsonHelper.toJSONString(entity));
+                //获取 Cypher SQL 语句的 WHERE 子句
+                String cypherSql = String.format("create (n:`%s` %s) return n", domain, propertiesString);
+                //将 domain 和 WHERE 子句拼接起来，组成完整的 Cypher SQL 语句，并通过 Neo4jUtil.getGraphNode(cypherSql) 方法执行该 SQL 语句，将查询到的节点信息存储在 graphNodeList 中
+                System.out.println(cypherSql);
+                graphNodeList = Neo4jUtil.getGraphNode(cypherSql);
+            }
+            if (graphNodeList.size() > 0) {
+                rss = graphNodeList.get(0);
+                return rss;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return rss;
+    }
+
+    @Override
+    public HashMap<String, Object> createRuleNode(String domain, NodeItem entity) {
+        HashMap<String, Object> rss = new HashMap<>();
+        //存储从 Neo4j 数据库中查询到的节点信息
+        List<HashMap<String, Object>> graphNodeList;
+        try {
+            //如果 uuid 不等于 0，则说明 entity 对象已经存在于数据库中
+            if (entity.getUuid() != 0) {
+                //通过 entity 对象的其他属性更新该节点。此时，通过 Neo4jUtil.getKeyValCyphersql(entity) 方法获取 Cypher SQL 语句的 SET 子句，
+                //然后将 SET 子句、domain 和 entity 对象的 uuid 属性值等作为参数，拼接出完整的 Cypher SQL 语句
+                String sqlKeyVal = Neo4jUtil.getKeyValCyphersql(entity);
+                String cypherSql = String.format("match (n:`%s`) where id(n)=%s set %s return n", domain,
+                        entity.getUuid(), sqlKeyVal);
+                //通过 Neo4jUtil.getGraphNode(cypherSql) 方法执行该 SQL 语句，将查询到的节点信息存储在 graphNodeList 中
+                graphNodeList = Neo4jUtil.getGraphNode(cypherSql);
+            } else {
+                //需要创建新的节点
+                entity.setIsRule(0);// 规则节点
+                entity.setRuleId(-1);// 规则编号
                 entity.setColor("#ff4500");// 默认颜色
                 entity.setR(30);// 默认半径
                 //将 entity 对象转换为 JSON 格式的字符串

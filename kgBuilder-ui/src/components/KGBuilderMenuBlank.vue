@@ -32,8 +32,8 @@
             >
               <span style="float: left">{{ rule.rule }}</span>
               <span style="float: right; color: #8492a6; font-size: 13px">{{
-                rule.level
-              }}</span>
+                  rule.level
+                }}</span>
             </el-option>
           </el-select>
         </el-form-item>
@@ -98,10 +98,10 @@ export default {
           type: "warning",
         });
       } else {
-        this.dialogFormVisible = false;
-        this.form = null;
         //   console.log(this.form.id);
         this.$emit("addRule", this.form);
+        this.form = null;
+        this.dialogFormVisible = false;
       }
     },
     btnAddSingle() {

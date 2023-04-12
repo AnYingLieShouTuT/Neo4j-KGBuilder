@@ -17,26 +17,43 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item>
-          <div v-if="uploadParam.type==1">
-             <div>导入csv或者excel，三元组结构:节点-节点-关系如果是csv,注意字符集为utf-8无bom格式<br/>【不会的用记事本打开，然后另存为，选择utf-8 无bom】)</div>
-              <el-carousel >
-                <el-carousel-item v-for="item in [require('@/assets/sanyuanzuimport1.png'),require('@/assets/sanyuanzuimport2.png')]" :key="item">
-                  <img  :src="item" />
-                </el-carousel-item>
-              </el-carousel>
+          <div v-if="uploadParam.type == 1">
+            <div>
+              导入csv或者excel，三元组结构:节点-节点-关系如果是csv,注意字符集为utf-8无bom格式<br />【不会的用记事本打开，然后另存为，选择utf-8
+              无bom】
             </div>
-            <div v-else style="max-height:calc(100vh - 80px);over-flow-y:scroll">
-              <div>支持合并单元格，设置颜色，设置关系需在节点后以###拼接，只识别一组关系</div>
-              <el-carousel height="450px">
-              <el-carousel-item v-for="item in [require('@/assets/treeimport1.png'),require('@/assets/treeimport2.png')]" :key="item">
-                  <img :src="item"  style="height: 500px;"/>
-                </el-carousel-item>
-              </el-carousel>
+            <el-carousel>
+              <el-carousel-item
+                v-for="item in [
+                  require('@/assets/sanyuanzuimport1.png'),
+                  require('@/assets/sanyuanzuimport2.png'),
+                ]"
+                :key="item"
+              >
+                <img :src="item" />
+              </el-carousel-item>
+            </el-carousel>
+          </div>
+          <div v-else style="max-height: calc(100vh - 80px); over-flow-y: scroll">
+            <div>
+              支持合并单元格，设置颜色，设置关系需在节点后以###拼接，只识别一组关系
             </div>
+            <el-carousel height="450px">
+              <el-carousel-item
+                v-for="item in [
+                  require('@/assets/treeimport1.png'),
+                  require('@/assets/treeimport2.png'),
+                ]"
+                :key="item"
+              >
+                <img :src="item" style="height: 500px" />
+              </el-carousel-item>
+            </el-carousel>
+          </div>
         </el-form-item>
         <el-form-item label="图谱领域" label-width="120px">
           <el-input
-            style="width:100%"
+            style="width: 100%"
             v-model="uploadParam.domain"
             placeholder="请输入内容"
           >
@@ -53,10 +70,7 @@
             :on-success="uploadExcelSuccess"
             :auto-upload="false"
           >
-            <el-button
-              slot="trigger"
-              class="btn-bo"
-            >
+            <el-button slot="trigger" class="btn-bo">
               <i class="el-icon-upload"></i>
               选择文件
             </el-button>
@@ -73,7 +87,7 @@
       <el-form>
         <el-form-item label="图谱领域" label-width="120px">
           <el-autocomplete
-            style="width:100%"
+            style="width: 100%"
             v-model="uploadParam.domain"
             placeholder="请输入内容"
             ><!--:fetch-suggestions="querySearch"-->
@@ -94,7 +108,7 @@
         <el-tab-pane label="属性编辑" name="propEdit">
           <el-form :model="graphData">
             <el-form-item label="节点名称" label-width="120px">
-              <el-input v-model="graphData.name" style="width:324px"></el-input>
+              <el-input v-model="graphData.name" style="width: 324px"></el-input>
             </el-form-item>
             <el-form-item label="选择颜色" label-width="120px">
               <el-color-picker
@@ -105,7 +119,7 @@
               </el-color-picker>
             </el-form-item>
             <el-form-item label="节点半径" label-width="120px">
-              <el-slider :min="25" v-model="graphData.r" style="width:324px"></el-slider>
+              <el-slider :min="25" v-model="graphData.r" style="width: 324px"></el-slider>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -127,9 +141,7 @@
                 :auto-upload="true"
                 :limit="1"
               >
-                <el-button slot="trigger" size="small" type="primary"
-                  >选择</el-button
-                >
+                <el-button slot="trigger" size="small" type="primary">选择 </el-button>
               </el-upload>
             </el-form-item>
             <el-form-item label="网络地址" label-width="120px">
@@ -140,10 +152,7 @@
             </el-form-item>
             <el-form-item label="已选图片" label-width="120px">
               <ul class="el-upload-list el-upload-list--picture-card">
-                <li
-                  v-for="item in nodeImageList"
-                  class="el-upload-list__item is-success"
-                >
+                <li v-for="item in nodeImageList" class="el-upload-list__item is-success">
                   <img
                     :src="imageUrlFormat(item)"
                     alt=""
@@ -161,67 +170,56 @@
                       ></i>
                     </span>
                     <span class="el-upload-list__item-delete">
-                      <i
-                        class="el-icon-delete"
-                        @click="imageHandleRemove(item)"
-                      ></i>
+                      <i class="el-icon-delete" @click="imageHandleRemove(item)"></i>
                     </span>
                   </span>
                 </li>
               </ul>
             </el-form-item>
           </el-form>
+          <!-- 添加富文本 -->
         </el-tab-pane>
         <el-tab-pane label="添加描述" name="richTextEdit">
-          <div
-            ref="editorToolbar"
-            class="wange-toolbar"
-          ></div>
-          <div
-            ref="editorContent"
-            class="wangeditor-form"
-          ></div>
+          <div ref="editorToolbar" class="wange-toolbar"></div>
+          <div ref="editorContent" class="wangeditor-form"></div>
         </el-tab-pane>
       </el-tabs>
       <div slot="footer" class="dialog-footer">
         <el-button
           v-show="propActiveName == 'propImage'"
           type="primary"
+          plain
           @click="saveNodeImage"
           class="btn-line cur"
-          >保存</el-button
-        >
+          >保存
+        </el-button>
         <el-button
           v-show="propActiveName == 'richTextEdit'"
           @click="saveNodeContent"
           type="primary"
+          plain
           class="btn-line cur"
-          >保存</el-button
-        >
+          >保存
+        </el-button>
         <el-button
           v-show="propActiveName == 'propEdit' && graphData.uuid != 0"
           type="primary"
           @click="createNode"
-          >更新</el-button
-        >
+          >更新
+        </el-button>
         <el-button
           v-show="propActiveName == 'propEdit' && graphData.uuid == 0"
           type="primary"
           @click="createNode"
-          >创建</el-button
-        >
+          >创建
+        </el-button>
         <el-button @click="resetSubmit">取消</el-button>
       </div>
-    </div>
-    <!--段落识别-->
-    <div v-show="operate == 'recognition'" class="pd-20">
-      <div class="mb-l">段落识别</div>
-      开发中。。。
     </div>
     <!--添加下级-->
     <div v-show="operate == 'batchAddChild'" class="pd-20">
       <div class="mb-l">添加下级</div>
-      <el-form ref="form"  label-width="120px">
+      <el-form ref="form" label-width="120px">
         <el-form-item label="关系">
           <el-input v-model="batchCreateData.relation"></el-input>
         </el-form-item>
@@ -234,12 +232,11 @@
           <el-button @click="resetSubmit">取消</el-button>
         </el-form-item>
       </el-form>
-
     </div>
     <!--批量添加-->
     <div v-show="operate == 'batchAdd'">
-      <div  class="mb-l">批量添加</div>
-      <el-form ref="form"  label-width="120px">
+      <div class="mb-l">批量添加</div>
+      <el-form ref="form" label-width="120px">
         <el-form-item label="源节点名称">
           <el-input v-model="batchCreateData.sourceNodeName"></el-input>
           <span class="mb-label">（只能添加一个）</span>
@@ -257,12 +254,11 @@
           <el-button @click="resetSubmit">取消</el-button>
         </el-form-item>
       </el-form>
-      </div>
     </div>
     <!--添加同级-->
     <div v-show="operate == 'batchAddSame'" class="pd-20">
       <div class="mb-l">添加同级</div>
-      <el-form ref="form"  label-width="120px">
+      <el-form ref="form" label-width="120px">
         <el-form-item label="源节点名称">
           <el-input v-model="batchCreateData.sourceNodeName"></el-input>
           <span class="mb-label">（多个以英文逗号隔开）</span>
@@ -277,104 +273,96 @@
 </template>
 
 <script>
-import wangEditor from 'wangeditor'
+import wangEditor from "wangeditor";
 import { kgBuilderApi } from "@/api";
+
 export default {
   props: {
-    data: Object
+    data: Object,
   },
   data() {
     return {
-      domainId:0,
-      uploadHeader:{
+      domainId: 0,
+      uploadHeader: {
         // 'Content-Type': 'multipart/form-data'
       },
-      uploadGraphUrl:  process.env.VUE_APP_BASE_API+"/importGraph",
+      uploadGraphUrl: process.env.VUE_APP_BASE_API + "/importGraph",
       direction: "rtl",
       drawerShow: false,
       operate: "",
-      batchCreateData:{
-        sourceUuid:'',
-        sourceName: '',
-        targetNames: '',
-        relation: ''
+      batchCreateData: {
+        sourceUuid: "",
+        sourceName: "",
+        targetNames: "",
+        relation: "",
       },
       propActiveName: "propEdit",
       contentActiveName: "propImage",
-      uploadFileUrl: process.env.VUE_APP_BASE_API+"/file/upload",
-      graphData:{
-        uuid: '0',
+      uploadFileUrl: process.env.VUE_APP_BASE_API + "/file/upload",
+      graphData: {
+        uuid: "0",
         color: "ff4500",
         name: "",
         r: 30,
         x: "",
-        y: ""
+        y: "",
       },
-       predefineColors: [
-        "#ff4500",
-        "#ff8c00",
-        "#90ee90",
-        "#00ced1",
-        "#1e90ff",
-        "#c71585"
-      ],
-      editorContent:"",
+      predefineColors: ["#ff4500", "#ff8c00", "#90ee90", "#00ced1", "#1e90ff", "#c71585"],
+      editorContent: "",
       uploadImageParam: {},
       nodeImageList: [],
       netImageUrl: "",
-      uploadParam: { domain: "", type: '1' },
+      uploadParam: { domain: "", type: "1" },
     };
   },
   components: {},
   methods: {
-    init(drawerShow,operate,domain) {
+    init(drawerShow, operate, domain) {
       this.operate = operate;
       this.drawerShow = drawerShow;
-       this.uploadParam.domain=domain;
-        this.propActiveName="propEdit";
+      this.uploadParam.domain = domain;
+      this.propActiveName = "propEdit";
     },
-    initNode(drawerShow,operate,node,domainId) {
+    initNode(drawerShow, operate, node, domainId) {
       this.operate = operate;
       this.drawerShow = drawerShow;
-      this.domainId=domainId;
-      this.graphData=node;
-       this.propActiveName="propEdit";
+      this.domainId = domainId;
+      this.graphData = node;
+      this.propActiveName = "propEdit";
     },
-    initBatchAddChild(drawerShow,operate,node,domain) {
+    initBatchAddChild(drawerShow, operate, node, domain) {
       this.operate = operate;
       this.drawerShow = drawerShow;
-      this.domain=domain;
-      this.batchCreateData.sourceUuid=node.uuid;
-       this.propActiveName="propEdit";
+      this.domain = domain;
+      this.batchCreateData.sourceUuid = node.uuid;
+      this.propActiveName = "propEdit";
     },
-    batchCreateNode(){
-      this.init(false,"");
-       this.$emit("batchCreateNode",this.batchCreateData);
+    batchCreateNode() {
+      this.init(false, "");
+      this.$emit("batchCreateNode", this.batchCreateData);
     },
-    batchCreateChildNode(){
-      this.init(false,"");
-       this.$emit("batchCreateChildNode",this.batchCreateData);
+    batchCreateChildNode() {
+      this.init(false, "");
+      this.$emit("batchCreateChildNode", this.batchCreateData);
     },
-     batchCreateSameNode(){
-      this.init(false,"");
-       this.$emit("batchCreateSameNode",this.batchCreateData);
+    batchCreateSameNode() {
+      this.init(false, "");
+      this.$emit("batchCreateSameNode", this.batchCreateData);
     },
-    createNode(){
-      this.init(false,"");
-      this.$emit("createNode",this.graphData);
+    createNode() {
+      this.init(false, "");
+      this.$emit("createNode", this.graphData);
     },
-    initImage(imageList){
-      this.nodeImageList=imageList;
+    initImage(imageList) {
+      this.nodeImageList = imageList;
     },
-    initContent(content){
-      this.editorContent=content;
+    initContent(content) {
+      this.editorContent = content;
     },
-    bthRecognition(){
-
-    },
+    bthRecognition() {},
     resetSubmit() {
-      this.drawerShow=false;
-       this.propActiveName="propEdit"
+      this.drawerShow = false;
+      this.propActiveName = "propEdit";
     },
     //节点上传图片
     saveNodeImage() {
@@ -382,20 +370,20 @@ export default {
         domainId: this.domainId,
         nodeId: this.graphData.uuid,
         //imageList: JSON.stringify(this.nodeImageList)
-        imagePath: this.nodeImageList[0].file
+        imagePath: this.nodeImageList[0].file,
       };
-      this.init(false,"");
-      this.$emit("saveNodeImage",data);
+      this.init(false, "");
+      this.$emit("saveNodeImage", data);
     },
     //上传富文本
     saveNodeContent() {
       let data = {
         domainId: this.domainId,
         nodeId: this.graphData.uuid,
-        content: this.editorContent
+        content: this.editorContent,
       };
-      this.init(false,"");
-      this.$emit("saveNodeContent",data);
+      this.init(false, "");
+      this.$emit("saveNodeContent", data);
     },
     //预览图片
     handlePictureCardPreview(item) {
@@ -405,16 +393,15 @@ export default {
     //添加网络图片
     addNetImage() {
       if (this.netImageUrl != "") {
-        if(this.nodeImageList.length==0){
+        if (this.nodeImageList.length == 0) {
           this.nodeImageList.push({ file: this.netImageUrl, imageType: 1 });
           this.netImageUrl = "";
-        }else{
-           this.$message({
-          message: '一个节点只能使用一张图片,如果有多张图片，可以添加到富文本中',
-          type: 'warning'
-        });
+        } else {
+          this.$message({
+            message: "一个节点只能使用一张图片,如果有多张图片，可以添加到富文本中",
+            type: "warning",
+          });
         }
-
       }
     },
     //移除图片
@@ -423,17 +410,17 @@ export default {
     },
     //图片格式化
     imageUrlFormat(item) {
-      if(item.file.indexOf("http")===0){
+      if (item.file.indexOf("http") === 0) {
         return item.file;
-      }else{
-        return process.env.VUE_APP_BASE_API+item.file;
+      } else {
+        return process.env.VUE_APP_BASE_API + item.file;
       }
     },
-    beforeUpload(){
-      if(this.nodeImageList.length>0){
-         this.$message({
-          message: '一个节点只能使用一张图片,如果有多张图片，可以添加到富文本中',
-          type: 'warning'
+    beforeUpload() {
+      if (this.nodeImageList.length > 0) {
+        this.$message({
+          message: "一个节点只能使用一张图片,如果有多张图片，可以添加到富文本中",
+          type: "warning",
         });
       }
     },
@@ -441,7 +428,7 @@ export default {
       if (res.success == 1) {
         for (let i = 0; i < res.results.length; i++) {
           let fileItem = res.results[i];
-          if(this.nodeImageList.length==0){
+          if (this.nodeImageList.length == 0) {
             this.nodeImageList.push({ file: fileItem.url, imageType: 0 });
           }
         }
@@ -450,75 +437,85 @@ export default {
       }
     },
     initEditor() {
-      if (this.editor != null) return;
-      let _this=this;
-      this.editor = new wangEditor(this.$refs.editorToolbar, this.$refs.editorContent)
-      this.editor.config.onchange = function(html) {
-        _this.editorContent = html;
+      if (this.editor != null) return; // 如果编辑器已经创建，则直接返回
+      let _this = this;
+      // 创建wangEditor对象，传入工具栏容器和内容容器的dom元素对象
+      this.editor = new wangEditor(this.$refs.editorToolbar, this.$refs.editorContent);
+      // 配置编辑器的参数和回调函数
+      this.editor.config.onchange = function (html) {
+        console.log(1);
+        _this.editorContent = html; // 将编辑器中的内容保存到组件的data中
       };
-      this.editor.config.uploadFileName = "file";
-      //this.editor.config.uploadImgHeaders = headers;
-      this.editor.config.uploadImgServer = process.env.VUE_APP_BASE_API+"/file/upload"; // 上传图片到服务器
+      this.editor.config.uploadFileName = "file"; // 上传图片时的文件名
+      this.editor.config.uploadImgServer = process.env.VUE_APP_BASE_API + "/file/upload"; // 上传图片的服务器地址
       this.editor.config.uploadImgHooks = {
         // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
         // （但是，服务器端返回的必须是一个 JSON 格式字符串！！！否则会报错）
-        customInsert: function(insertImg, res, editor) {
-          // 图片上传并返回结果，自定义插入图片的事件（而不是编辑器自动插入图片！！！）
+        customInsert: function (insertImg, res, editor) {
+          // 图片上传并返回结果，自定义插入图片的事件
           // insertImg 是插入图片的函数，editor 是编辑器对象，result 是服务器端返回的结果
           for (let i = 0; i < res.results.length; i++) {
             let fileItem = res.results[i];
-            insertImg(process.env.VUE_APP_BASE_API+fileItem.url);
+            insertImg(process.env.VUE_APP_BASE_API + fileItem.url); // 将上传的图片插入到编辑器中
           }
-        }
+        },
       };
-      this.editor.create();
+      this.editor.create(); // 创建编辑器
+    },
+    ShowContent() {
+      alert(this.editor.txt.html());
+      //alert(this.editor.txt.text())
     },
     propHandleClick(tab) {
       if (tab.name == "richTextEdit") {
         this.initEditor();
         this.editorContent = "";
-        this.$emit("initNodeContent",{domainId:this.domainId,nodeId:this.graphData.uuid});
-
+        this.$emit("initNodeContent", {
+          domainId: this.domainId,
+          nodeId: this.graphData.uuid,
+        });
       }
       if (tab.name == "propImage") {
         this.nodeImageList = [];
-        this.$emit("initNodeImage",{domainId:this.domainId,nodeId:this.graphData.uuid});
+        this.$emit("initNodeImage", {
+          domainId: this.domainId,
+          nodeId: this.graphData.uuid,
+        });
       }
     },
     exportCsv() {
       let data = { domain: this.uploadParam.domain };
-      kgBuilderApi.exportGraph(data).then(result => {
+      kgBuilderApi.exportGraph(data).then((result) => {
         if (result.code == 200) {
           this.exportFormVisible = false;
-          window.open(process.env.VUE_APP_BASE_API+result.csvUrl);
+          window.open(process.env.VUE_APP_BASE_API + result.csvUrl);
         }
       });
     },
     submitUpload() {
       this.$refs.uploadExcel.submit();
       //关闭窗口
-       this.init(false,"");
-       //刷新领域标签
-       this.$emit("getDomain",1);
+      this.init(false, "");
+      //刷新领域标签
+      this.$emit("getDomain", 1);
     },
     uploadExcelSuccess() {
       this.$refs.uploadExcel.clearFiles();
       this.uploadParam.domain = "";
       this.$message({
         message: "操作成功",
-        type: "success"
+        type: "success",
       });
     },
-
-
-  }
+  },
 };
 </script>
 <style>
-.pd-20{
+.pd-20 {
   padding: 20px;
 }
+
 .el-drawer__body {
-    padding: 20px;
+  padding: 20px;
 }
 </style>

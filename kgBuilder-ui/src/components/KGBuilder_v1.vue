@@ -27,7 +27,6 @@ export default {
   inject: [
     "_thisKey",
     "Dset",
-    // "ruleList",
     "createSingleNode",
     "createRuleNode",
     "updateCoordinateOfNode",
@@ -58,12 +57,6 @@ export default {
       type: Number,
       default: "",
     },
-    // ruleList: {
-    //   type: Array,
-    //   default() {
-    //     return [];
-    //   }
-    // },
     ruleList: {
       type: Array,
       default: () => [],
@@ -124,8 +117,8 @@ export default {
       widht: null,
       height: null,
       isAddLink: false,
-      // rules: [],
       isAddRule: false,
+      ruleData: null,
     };
   },
   watch: {
@@ -145,10 +138,6 @@ export default {
       deep: true,
       immediate: true,
     },
-    // ruleData: function (newVal, oldVal) {
-    //   this.rules = newVal; //newVal即是chartData
-    //   // this.drawChart();
-    // },
   },
   mounted() {
     const _this = this;
@@ -203,8 +192,8 @@ export default {
           //   console.log("添加规则");
           d3.select(".BOX-SVG").style("cursor", "default");
           _this.isAddRule = false;
-          return;
-          _this.createRuleNode(event.offsetX, event.offsetY);
+          // return;
+          _this.createRuleNode(event.offsetX, event.offsetY, _this.ruleData);
         } else {
           //添加节点
           //   console.log("添加节点");
@@ -837,11 +826,13 @@ export default {
         })
         .attr("height", 1)
         .attr("width", 1);
+
       catpattern
         .append("image")
         .attr("width", (d) => d.r * 2)
         .attr("height", (d) => d.r * 2)
         .attr("xlink:href", function (d) {
+          //   console.log(d);
           if (d.image) {
             if (d.image.indexOf("http") > -1) {
               return d.image;
@@ -919,7 +910,7 @@ export default {
           d3.select("#richContainer").style("display", "block");
           _this.getNodeDetail(d.uuid, e.pageX + 30, e.pageY);
         }, 2000);
-        //todo鼠标放上去只显示相关节点，其他节点和连线隐藏
+        //鼠标放上去只显示相关节点，其他节点和连线隐藏
         d3.selectAll(".node").style("fill-opacity", 0.5);
         var relvantNodeIds = [];
         var relvantNodes = _this.graph.links.filter(function (n) {
@@ -984,7 +975,7 @@ export default {
       );
       return nodeEnter;
     },
-    // 绘制节点文字
+    // 绘制节点文字todo
     drawNodeText(nodeText) {
       const _this = this;
       const nodeTextEnter = nodeText
@@ -995,14 +986,14 @@ export default {
           if (d.image) {
             return "#000000";
           }
-          return "#fff";
+          return "#000000";
         })
         //设置居中不用偏移
         .attr("dy", function (d) {
-          if (d.image) {
-            return d.r + 20; //文字放在节点外边
-          }
-          return 4; //文字是站在水平半径这条线上的，所以向下偏移一些，具体值应该是文字高度的一半
+          //   if (d.image) {
+          //     return d.r + 20; //文字放在节点外边
+          //   }
+          return d.r + 20; //return 4文字是站在水平半径这条线上的，所以向下偏移一些，具体值应该是文字高度的一半
         })
         .attr("font-family", "微软雅黑")
         .attr("text-anchor", "middle"); //设置文字居中
@@ -1221,9 +1212,10 @@ export default {
     //todo
     addRule(data) {
       // console.log(this.ruleList);
-      console.log(data);
+      // console.log(data);
       d3.select(".BOX-SVG").style("cursor", "crosshair");
       this.isAddRule = true;
+      this.ruleData = data;
     },
   },
 };

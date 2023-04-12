@@ -193,6 +193,23 @@ public class KGManagerController extends BaseController {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/createRuleNode")
+    public R<HashMap<String, Object>> createRuleNode(@RequestBody NodeItem entity) {
+        HashMap<String, Object> graphNode;
+        try {
+            graphNode = kgGraphService.createRuleNode(entity.getDomain(), entity);
+            if (graphNode != null && graphNode.size() > 0) {
+                return R.success(graphNode);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error(e.getMessage());
+        }
+        return R.error("操作失败");
+
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/batchCreateNode")
     public R<HashMap<String, Object>> batchCreateNode(@RequestBody BatchCreateNodeItem request) {
 
@@ -478,6 +495,7 @@ public class KGManagerController extends BaseController {
     @RequestMapping(value = "/saveNodeContent")
     public R<String> saveNodeContent(@RequestBody Map<String, Object> params) {
         try {
+            System.out.println(params);
             String username = "tc";
             int domainId = (int) params.get("domainId");
             String nodeId = params.get("nodeId").toString();

@@ -1,5 +1,6 @@
 package com.warmer.web.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.warmer.web.entity.KgRules;
 import com.warmer.web.mapper.KgRulesMapper;
@@ -26,5 +27,10 @@ public class KgRulesImpl implements KgRulesService {
     @Override
     public List<KgRules> getAllRules() {
         return kgRulesMapper.selectList(null);
+    }
+
+    @Override
+    public KgRules getRule(int id) {
+        return kgRulesMapper.selectOne(new QueryWrapper<KgRules>().eq("id", id));
     }
 }

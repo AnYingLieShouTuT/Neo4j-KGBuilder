@@ -9,9 +9,11 @@ import com.warmer.web.config.WebAppConfig;
 import com.warmer.web.entity.KgDomain;
 import com.warmer.web.entity.KgNodeDetail;
 import com.warmer.web.entity.KgNodeDetailFile;
+import com.warmer.web.entity.KgRules;
 import com.warmer.web.model.NodeItem;
 import com.warmer.web.request.*;
 import com.warmer.web.service.KgGraphService;
+import com.warmer.web.service.KgRulesService;
 import com.warmer.web.service.KnowledgeGraphService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,6 +38,8 @@ public class KGManagerController extends BaseController {
     private KgGraphService kgGraphService;
     @Autowired
     private KnowledgeGraphService kgService;
+    @Autowired
+    private KgRulesService kgRulesService;
 
 
     @GetMapping("/")
@@ -192,6 +196,12 @@ public class KGManagerController extends BaseController {
 
     }
 
+    /**
+     * 创建规则节点
+     *
+     * @param entity
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/createRuleNode")
     public R<HashMap<String, Object>> createRuleNode(@RequestBody NodeItem entity) {
@@ -199,6 +209,8 @@ public class KGManagerController extends BaseController {
         try {
             graphNode = kgGraphService.createRuleNode(entity.getDomain(), entity);
             if (graphNode != null && graphNode.size() > 0) {
+                KgRules kgRules = kgRulesService.getRule((int) entity.getRuleId());
+                
                 return R.success(graphNode);
             }
         } catch (Exception e) {

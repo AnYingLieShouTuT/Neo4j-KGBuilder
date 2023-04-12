@@ -982,6 +982,7 @@ export default {
         .enter()
         .append("g")
         .append("text")
+        // .append("tspan")
         .style("fill", function (d) {
           if (d.image) {
             return "#000000";
@@ -990,17 +991,26 @@ export default {
         })
         //设置居中不用偏移
         .attr("dy", function (d) {
-          //   if (d.image) {
-          //     return d.r + 20; //文字放在节点外边
-          //   }
           return d.r + 20; //return 4文字是站在水平半径这条线上的，所以向下偏移一些，具体值应该是文字高度的一半
         })
         .attr("font-family", "微软雅黑")
         .attr("text-anchor", "middle"); //设置文字居中
+      //   nodeText
+      //     .append("tspan")
+      //     .text("这是一段带有换行符的中文文本，")
+      //     .attr("x", 10)
+      //     .attr("dy", 20);
       nodeTextEnter.text(function (d) {
+        //todo
         let text = d.name;
         const len = text.length;
+
         if (d.image) {
+          return d.name;
+        } else if (d.isRule == 1 || d.isRule == 2) {
+          //   d.name = "相除得到\n最多能放多\n少汉字";
+
+          //   return null;
           return d.name;
         } else {
           //取圆的半径r，两边各空出5px,然后求出文字能放的最大长度(parseInt(d.r)-5)*2,一个文字占16px(系统默认font-size=16px),
@@ -1013,6 +1023,7 @@ export default {
           }
         }
       });
+
       nodeTextEnter.on("click", function (d, i) {
         _this.selectNode.uuid = d.uuid;
         _this.selectNode.cname = d.name;
@@ -1030,6 +1041,11 @@ export default {
           .on("end", this.dragEnded)
       );
       return nodeTextEnter;
+    },
+    //使用正则表达式来将一行中文添加换行符号，作为规则名称显示
+    addLineBreaks(str, maxLen) {
+      var reg = new RegExp(".{1," + maxLen + "}", "g");
+      return str.match(reg).join("\n");
     },
     // 给节点画上标识
     drawNodeSymbol(nodeSymbol) {

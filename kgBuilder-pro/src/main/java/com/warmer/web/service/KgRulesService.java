@@ -10,4 +10,6 @@ public interface KgRulesService {
     Page<KgRules> getPageRules(int pageCode, int pageSize);
 
     List<KgRules> getAllRules();
+
+    KgRules getRule(int id);
 }

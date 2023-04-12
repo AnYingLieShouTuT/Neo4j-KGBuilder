@@ -326,8 +326,8 @@ public class KGGraphRepository implements KGGraphDao {
                 graphNodeList = Neo4jUtil.getGraphNode(cypherSql);
             } else {
                 //需要创建新的节点
-                entity.setIsRule(0);// 规则节点
-                entity.setRuleId(-1);// 规则编号
+//                entity.setIsRule(0);// 规则节点
+//                entity.setRuleId(-1);// 规则编号
                 entity.setColor("#ff4500");// 默认颜色
                 entity.setR(30);// 默认半径
                 //将 entity 对象转换为 JSON 格式的字符串

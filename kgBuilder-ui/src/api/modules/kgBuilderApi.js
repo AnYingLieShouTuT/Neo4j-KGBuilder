@@ -138,6 +138,14 @@ class kgBuilderApi extends BaseAPI {
     });
   }
 
+  batchCreateRuleChildNode(data) {
+    return this.post("/batchCreateRuleChildNode", data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
   batchCreateSameNode(data) {
     return this.post("/batchCreateSameNode", data, {
       headers: {

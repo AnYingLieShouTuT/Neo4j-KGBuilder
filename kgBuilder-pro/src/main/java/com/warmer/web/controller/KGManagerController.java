@@ -209,8 +209,6 @@ public class KGManagerController extends BaseController {
         try {
             graphNode = kgGraphService.createRuleNode(entity.getDomain(), entity);
             if (graphNode != null && graphNode.size() > 0) {
-                KgRules kgRules = kgRulesService.getRule((int) entity.getRuleId());
-                
                 return R.success(graphNode);
             }
         } catch (Exception e) {
@@ -232,7 +230,6 @@ public class KGManagerController extends BaseController {
             return R.success(rss);
         } catch (Exception e) {
             e.printStackTrace();
-
             return R.error(e.getMessage());
         }
     }
@@ -249,6 +246,55 @@ public class KGManagerController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
 
+            return R.error(e.getMessage());
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/batchCreateRuleChildNode")
+    public R<HashMap<String, Object>> batchCreateRuleChildNode(@RequestBody BatchCreateRuleNodeItem request) {
+        HashMap<String, Object> rss = new HashMap<>();
+//        rss.put()
+        try {
+//            String[] p = request.getTargetNames().split(",");
+            KgRules kgRules = kgRulesService.getRule(request.getRuleId());
+            List<String> andRules = new ArrayList<>();
+            List<String> orRules = new ArrayList<>();
+            List<String> notRules = new ArrayList<>();
+            HashMap<String, Object> andRss;
+            HashMap<String, Object> orRss;
+            HashMap<String, Object> notRss;
+            RuleUtils.parseRules(kgRules.getRule(), andRules, orRules, notRules);
+            if (andRules.size() != 0) {
+                andRss = kgGraphService.batchCreateChildNode(request.getDomain(), request.getSourceId(), request.getEntityType(), andRules.toArray(new String[0]), "and");
+                rss.put("nodes", andRss.get("nodes"));
+                rss.put("ships", andRss.get("ships"));
+            }
+//            if (orRules.size() != 0) {
+//                orRss = kgGraphService.batchCreateChildNode(request.getDomain(), request.getSourceId(), request.getEntityType(), orRules.toArray(new String[0]), "and");
+//
+//                List<HashMap<String, Object>> nodes = (List<HashMap<String, Object>>) rss.get("nodes");
+//                List<HashMap<String, Object>> ships = (List<HashMap<String, Object>>) rss.get("ships");
+//                nodes.addAll((Collection<? extends HashMap<String, Object>>) orRss.get("nodes"));
+//                ships.addAll((Collection<? extends HashMap<String, Object>>) orRss.get("ships"));
+//                rss.put("nodes", nodes);
+//                rss.put("ships", ships);
+//            }
+//            if (notRules.size() != 0) {
+//                notRss = kgGraphService.batchCreateChildNode(request.getDomain(), request.getSourceId(), request.getEntityType(), notRules.toArray(new String[0]), "and");
+//
+//                List<HashMap<String, Object>> nodes = (List<HashMap<String, Object>>) rss.get("nodes");
+//                List<HashMap<String, Object>> ships = (List<HashMap<String, Object>>) rss.get("ships");
+//                nodes.addAll((Collection<? extends HashMap<String, Object>>) notRss.get("nodes"));
+//                ships.addAll((Collection<? extends HashMap<String, Object>>) notRss.get("ships"));
+//                rss.put("nodes", nodes);
+//                rss.put("ships", ships);
+//            }
+//            rss = kgGraphService.batchCreateChildNode(request.getDomain(), request.getSourceId(), request.getEntityType(), tNames, request.getRelation());
+            System.out.println(rss);
+            return R.success(rss);
+        } catch (Exception e) {
+            e.printStackTrace();
             return R.error(e.getMessage());
         }
     }

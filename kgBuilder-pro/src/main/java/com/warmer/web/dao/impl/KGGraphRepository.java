@@ -1,5 +1,6 @@
 package com.warmer.web.dao.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.warmer.base.util.JsonHelper;
 import com.warmer.base.util.Neo4jUtil;
 import com.warmer.web.dao.KGGraphDao;
@@ -447,7 +448,12 @@ public class KGGraphRepository implements KGGraphDao {
         List<HashMap<String, Object>> nodes = new ArrayList<HashMap<String, Object>>();
         List<HashMap<String, Object>> ships = new ArrayList<HashMap<String, Object>>();
         try {
-            String cypherSqlFmt = "create (n:`%s`{name:'%s',color:'#ff4500',r:30}) return n";
+            String cypherSqlFmt;
+            if (StrUtil.equals(relation, "and", true) || StrUtil.equals(relation, "or", true) || StrUtil.equals(relation, "not", true)) {
+                cypherSqlFmt = "create (n:`%s`{name:'%s',color:'#2B4AFF',r:30,isRule:2}) return n";
+            } else {
+                cypherSqlFmt = "create (n:`%s`{name:'%s',color:'#ff4500',r:30}) return n";
+            }
             String cypherSql = String.format("match (n:`%s`) where id(n)=%s return n", domain, sourceId);
             List<HashMap<String, Object>> sourceNodeList = Neo4jUtil.getGraphNode(cypherSql);
             if (sourceNodeList.size() > 0) {

@@ -91,12 +91,12 @@
           <a href="javascript:void(0)" @click="exportGraph" class="svg-a-sm">
             <i class="el-icon-download">导出</i>
           </a>
-          <a href="javascript:void(0)" @click="requestFullScreen" class="svg-a-sm">
+          <!-- <a href="javascript:void(0)" @click="requestFullScreen" class="svg-a-sm">
             <i class="el-icon-monitor">全屏</i>
-          </a>
-          <a href="javascript:void(0)" @click="help" class="svg-a-sm">
+          </a> -->
+          <!-- <a href="javascript:void(0)" @click="help" class="svg-a-sm">
             <i class="el-icon-info">帮助</i>
-          </a>
+          </a> -->
         </div>
       </div>
       <!-- 头部over -->
@@ -470,6 +470,7 @@ export default {
     createRuleNode(left, top, ruleData) {
       //   console.log(ruleData);
       let data = { name: ruleData.rule, r: 30, ruleId: ruleData.id, isRule: 1 };
+      let batchData = { ruleId: ruleData.id, domain: this.domain };
       data.domain = this.domain;
       kgBuilderApi.createNodeOfRule(data).then((result) => {
         if (result.code == 200) {
@@ -484,6 +485,21 @@ export default {
             image: "",
           });
           this.graphData.nodes.push(newNode);
+
+          //批量创建原子指标
+          batchData.sourceId = newNode.uuid;
+          kgBuilderApi.batchCreateRuleChildNode(batchData).then((result) => {
+            if (result.code == 200) {
+              console.log(result);
+              //把不存在于画布的节点添加到画布
+              this.mergeNodeAndLink(result.data.nodes, result.data.ships);
+              //重新绘制
+              this.$message({
+                message: "操作成功",
+                type: "success",
+              });
+            }
+          });
         }
       });
     },
@@ -920,7 +936,7 @@ export default {
       };
       kgBuilderApi.batchCreateNode(data).then((result) => {
         if (result.code == 200) {
-          //把不存在于画布的节点添加到画布  todo
+          //把不存在于画布的节点添加到画布
           this.mergeNodeAndLink(result.data.nodes, result.data.ships);
           //重新绘制
           //this.updateGraph();

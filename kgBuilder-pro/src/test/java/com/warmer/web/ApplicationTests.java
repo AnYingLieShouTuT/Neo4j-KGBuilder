@@ -80,7 +80,9 @@ class ApplicationTests {
 
     @Test
     void ruleSplit() {
-        String ruleString = "rule1 AND rule2 OR rule3 NOT rule4 AND rule5 OR rule6";
+        String ruleString = "rule1";
+//        String ruleString = "连续7天出现奶量=0 and 落实反馈不合作=是 and 可控奶款<融资余额=是";
+//        String ruleString = "rule1 AND rule2 OR rule3 NOT rule4 AND rule5 OR rule6";
         List<String> andRules = new ArrayList<>();
         List<String> orRules = new ArrayList<>();
         List<String> notRules = new ArrayList<>();

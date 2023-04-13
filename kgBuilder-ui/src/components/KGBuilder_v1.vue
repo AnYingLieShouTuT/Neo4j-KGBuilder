@@ -698,7 +698,7 @@ export default {
                 .attr("x2", po[0])
                 .attr("y2", po[1])
                 .style("opacity", 1)
-                .attr("stroke", "#FBB613")
+                .attr("stroke", "#999")
                 .attr("stroke-width", 2)
                 .attr("marker-end", "url(#arrow)");
               _this.svg.on("mousemove", function () {
@@ -1009,13 +1009,12 @@ export default {
           return d.name;
         } else if (d.isRule == 1 || d.isRule == 2) {
           //   d.name = "相除得到\n最多能放多\n少汉字";
-
           //   return null;
           return d.name;
         } else {
           //取圆的半径r，两边各空出5px,然后求出文字能放的最大长度(parseInt(d.r)-5)*2,一个文字占16px(系统默认font-size=16px),
           //相除得到最多能放多少汉字，font-size换算比有待考证，文字两边和圆边框的间距忽大忽小，有缘者来优化
-          let dr = ((parseInt(d.r) - 5) * 2) / 16;
+          let dr = ((parseInt(d.r) - 5) * 5) / 16;
           if (dr < len) {
             return text.substring(0, dr) + "...";
           } else {
@@ -1089,15 +1088,16 @@ export default {
         .append("marker")
         .attr("id", "arrow")
         .attr("markerUnits", "strokeWidth")
-        .attr("markerWidth", "6") //
-        .attr("markerHeight", "6")
+        .attr("markerWidth", "12") //
+        .attr("markerHeight", "12")
         .attr("viewBox", "0 -5 10 10")
-        .attr("refX", "37") // 13
+        .attr("refX", "26") // 13
         .attr("refY", "0")
         .attr("orient", "auto")
         .append("path")
         .attr("d", arrow_path)
-        .attr("fill", "#fce6d4");
+        .attr("fill", "#999")
+        .attr("stroke-opacity", 0.6);
     },
     // 构建连线，绑定事件
     drawLink(link) {
@@ -1107,7 +1107,7 @@ export default {
         .append("path")
         .attr("pointer-events", "all")
         .attr("stroke-width", 1.5)
-        .attr("stroke", "#FBB613") //'#FBB613'
+        .attr("stroke", "#999") //'#FBB613'
         .attr("id", function (d) {
           return "invis_" + d.lk.uuid;
         })
@@ -1146,7 +1146,7 @@ export default {
             if (d.color) {
               return d.color;
             }
-            return "#FBB613";
+            return "#999";
           })
           .attr("marker-end", (d) => {
             return "url(#arrow)";

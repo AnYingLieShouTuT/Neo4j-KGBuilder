@@ -122,6 +122,42 @@
           />
         </div>
       </el-scrollbar>
+      <el-dialog
+        title="修改规则状态"
+        :visible.sync="dialogFormVisible"
+        :append-to-body="true"
+      >
+        <el-form>
+          <el-form-item label="规则状态" label-width="120px">
+            <el-select v-model="status" placeholder="请选择状态" class="my-select">
+              <!-- <el-option
+                v-for="rule in rules"
+                :key="rule.id"
+                :value="rule.id"
+                :label="rule.rule"
+              >
+                <span style="float: left">{{ rule.rule }}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px">{{
+                  rule.level
+                }}</span>
+              </el-option> -->
+              <!-- <el-option :key="1" :value="1">成立</el-option>
+              <el-option :key="0" :value="0">不成立</el-option> -->
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" plain @click="btnChangeRuleStatus">确 定</el-button>
+        </div>
+      </el-dialog>
       <!-- 中部over -->
       <div class="svg-set-box"></div>
       <!-- 底部 -->
@@ -195,6 +231,19 @@ export default {
   data() {
     let self = this;
     return {
+      dialogFormVisible: false,
+      status: 0,
+      changeNode: null,
+      options: [
+        {
+          value: 1,
+          label: "成立",
+        },
+        {
+          value: 0,
+          label: "不成立",
+        },
+      ],
       ruleList: [],
       style: null,
       width: null,
@@ -312,6 +361,18 @@ export default {
           },
           defaultEvent: (data, _this, d3) => {
             this.createLink(data);
+            //_this.updateGraph();
+          },
+          childrens: [],
+        },
+        {
+          title: "修改状态",
+          icon: {
+            type: "text",
+            content: "修改状态",
+          },
+          defaultEvent: (data, _this, d3) => {
+            this.editRuleStatus(data);
             //_this.updateGraph();
           },
           childrens: [],
@@ -466,10 +527,16 @@ export default {
         }
       });
     },
-    //画布添加规则节点todo
+    //画布添加规则节点
     createRuleNode(left, top, ruleData) {
       //   console.log(ruleData);
-      let data = { name: ruleData.rule, r: 30, ruleId: ruleData.id, isRule: 1 };
+      let data = {
+        name: ruleData.rule,
+        r: 30,
+        ruleId: ruleData.id,
+        isRule: 1,
+        ruleStatus: 0, //默认不满足
+      };
       let batchData = { ruleId: ruleData.id, domain: this.domain };
       data.domain = this.domain;
       kgBuilderApi.createNodeOfRule(data).then((result) => {
@@ -490,7 +557,7 @@ export default {
           batchData.sourceId = newNode.uuid;
           kgBuilderApi.batchCreateRuleChildNode(batchData).then((result) => {
             if (result.code == 200) {
-              console.log(result);
+              //   console.log(result);
               //把不存在于画布的节点添加到画布
               this.mergeNodeAndLink(result.data.nodes, result.data.ships);
               //重新绘制
@@ -599,6 +666,61 @@ export default {
           this.graphData.links.push(newShip);
         }
       });
+    },
+    //编辑规则状态todo
+    editRuleStatus(data) {
+      console.log(data);
+      this.changeNode = data;
+      if (data.isRule != 1 && data.isRule != 2) {
+        this.$message({
+          showClose: true,
+          message: "规则节点才可以修改状态！",
+          type: "warning",
+        });
+        return;
+      }
+      this.status = data.ruleStatus;
+      this.dialogFormVisible = true;
+      //   kgBuilderApi.createLink(data).then((result) => {
+      //     if (result.code == 200) {
+      //       let newShip = result.data;
+      //       this.graphData.links.push(newShip);
+      //     }
+      //   });
+    },
+    //提交节点修改todo
+    btnChangeRuleStatus(data) {
+      console.log(data);
+      console.log(this.changeNode);
+      let _this = this;
+      this.dialogFormVisible = false;
+      if (this.status == this.changeNode.ruleStatus) {
+        this.$message({
+          showClose: true,
+          message: "未修改状态！",
+        });
+      } else {
+        let changeData = {
+          domain: _this.domain,
+          nodeId: _this.changeNode.uuid,
+          status: _this.status,
+        };
+        kgBuilderApi.updateRuleStatus(changeData).then((result) => {
+          if (result.code == 200) {
+            // let newShip = result.data;
+            this.$message({
+              showClose: true,
+              message: "修改成功！",
+              type: "success",
+            });
+            for (let i = 0; i < _this.graphData.nodes.length; i++) {
+              if (_this.graphData.nodes[i].uuid == changeData.nodeId) {
+                _this.graphData.nodes[i].ruleStatus = changeData.status;
+              }
+            }
+          }
+        });
+      }
     },
     //更新连线名称
     updateLinkName(sdata) {
@@ -1417,5 +1539,12 @@ ul {
   margin: 5px;
   cursor: pointer;
   float: left;
+}
+.my-select {
+  width: 100%;
+}
+
+.my-select .el-input {
+  width: 90%;
 }
 </style>

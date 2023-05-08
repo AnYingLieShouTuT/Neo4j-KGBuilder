@@ -85,6 +85,16 @@ public interface KGGraphDao {
     HashMap<String, Object> updateNodeName(String domain, String nodeId, String nodeName);
 
     /**
+     * 修改规则节点状态
+     *
+     * @param domain
+     * @param nodeId
+     * @param status
+     * @return
+     */
+    HashMap<String, Object> updateRuleStatus(String domain, String nodeId, String status);
+
+    /**
      * 创建单个节点
      *
      * @param domain

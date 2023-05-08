@@ -15,25 +15,19 @@
       <span class="pl-15">添加规则</span>
     </li>
     <el-dialog title="选择规则" :visible.sync="dialogFormVisible" :append-to-body="true">
-      <el-form :model="form">
+      <el-form>
         <el-form-item label="规则" :label-width="formLabelWidth">
-          <el-select
-            v-model="form"
-            placeholder="请选择规则"
-            class="my-select"
-            filterable
-            required
-          >
+          <el-select v-model="ruleId" placeholder="请选择规则" class="my-select">
             <el-option
               v-for="rule in rules"
               :key="rule.id"
-              :value="rule"
+              :value="rule.id"
               :label="rule.rule"
             >
               <span style="float: left">{{ rule.rule }}</span>
               <span style="float: right; color: #8492a6; font-size: 13px">{{
-                  rule.level
-                }}</span>
+                rule.level
+              }}</span>
             </el-option>
           </el-select>
         </el-form-item>
@@ -67,6 +61,7 @@ export default {
       formLabelWidth: "120px",
       dialogFormVisible: false,
       form: null,
+      ruleId: null,
     };
   },
   mounted() {
@@ -91,16 +86,24 @@ export default {
       this.menuBarShow = data.show;
     },
     btnAddRule() {
-      if (this.form == null || this.form.id == null) {
+      let _this = this;
+      if (this.ruleId == null) {
         this.$message({
           showClose: true,
           message: "请选择规则！",
           type: "warning",
         });
       } else {
-        //   console.log(this.form.id);
+        for (var i = 0; i < _this.rules.length; i++) {
+          if (_this.rules[i].id == _this.ruleId) {
+            console.log(_this.rules[i]);
+            _this.form = _this.rules[i];
+          }
+        }
+        // console.log(this.form.id);
         this.$emit("addRule", this.form);
         this.form = null;
+        this.ruleId = null;
         this.dialogFormVisible = false;
       }
     },

@@ -1140,6 +1140,7 @@ export default {
       // 连线鼠标离开
       linkEnter.on("mouseleave", function (d) {
         _this.editLinkState = false;
+        // _this.$refs.menu_link.linkMenuBarLeave;
         d3.select(".Links_" + d.lk.uuid)
           .style("stroke-width", 1.5)
           .attr("stroke", (d) => {

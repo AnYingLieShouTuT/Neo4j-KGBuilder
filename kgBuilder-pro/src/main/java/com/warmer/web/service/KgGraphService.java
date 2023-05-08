@@ -82,6 +82,8 @@ public interface KgGraphService {
      */
     HashMap<String, Object> updateNodeName(String domain, String nodeId, String nodeName);
 
+    HashMap<String, Object> updateRuleStatus(String domain, String nodeId, String status);
+
     /**
      * 创建单个节点
      *

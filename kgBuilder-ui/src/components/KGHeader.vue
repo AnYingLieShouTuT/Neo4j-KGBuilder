@@ -83,7 +83,8 @@ export default {
 .menu {
   height: 76px;
   width: 100%;
-  background-color: #000;
+  background-color: #fff;
+  border-bottom: 1px solid #eaecef;
 }
 .nav {
   height: 80px;
@@ -93,15 +94,17 @@ export default {
 .nav li {
   float: left;
   position: relative;
+  margin-right: 20px;
 }
 .nav li a {
-  color: #bdbdbd;
+  color: #000;
   padding: 0 10px;
   display: inline-block;
   text-decoration: none;
 }
 .nav li a:hover {
-  color: #fff;
+  /* color: #fff; */
+  border-bottom: 2px solid #1989fa;
 }
 .nav li .sub-nav {
   position: absolute;

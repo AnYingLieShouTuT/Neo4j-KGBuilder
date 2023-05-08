@@ -166,6 +166,24 @@ public class KGManagerController extends BaseController {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/updateRuleStatus")
+    public R<HashMap<String, Object>> updateRuleStatus(String domain, String nodeId, Long status) {
+        HashMap<String, Object> graphNodeList = new HashMap<String, Object>();
+        try {
+            if (!StringUtil.isBlank(domain)) {
+                graphNodeList = kgGraphService.updateRuleStatus(domain, nodeId, String.valueOf(status));
+                if (graphNodeList.size() > 0) {
+                    return R.success(graphNodeList);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error(e.getMessage());
+        }
+        return R.error("操作失败");
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/updateCoordinateOfNode")
     public R<String> updateCoordinateOfNode(@RequestBody NodeCoordinateSubmitItem request) {
         try {
@@ -291,7 +309,7 @@ public class KGManagerController extends BaseController {
 //                rss.put("ships", ships);
 //            }
 //            rss = kgGraphService.batchCreateChildNode(request.getDomain(), request.getSourceId(), request.getEntityType(), tNames, request.getRelation());
-            System.out.println(rss);
+//            System.out.println(rss);
             return R.success(rss);
         } catch (Exception e) {
             e.printStackTrace();

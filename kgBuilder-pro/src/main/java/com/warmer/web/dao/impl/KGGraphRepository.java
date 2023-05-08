@@ -267,6 +267,31 @@ public class KGGraphRepository implements KGGraphDao {
     }
 
     /**
+     * 修改规则节点状态
+     *
+     * @param domain
+     * @param nodeId
+     * @param status
+     * @return
+     */
+    @Override
+    public HashMap<String, Object> updateRuleStatus(String domain, String nodeId, String status) {
+        HashMap<String, Object> result = new HashMap<String, Object>();
+        List<HashMap<String, Object>> graphNodeList = new ArrayList<HashMap<String, Object>>();
+        try {
+            String cypherSql = String.format("MATCH (n:`%s`) where id(n)=%s set n.ruleStatus=%s return n", domain, nodeId,
+                    status);
+            graphNodeList = Neo4jUtil.getGraphNode(cypherSql);
+            if (graphNodeList.size() > 0) {
+                return graphNodeList.get(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
      * 创建单个节点,在 Neo4j 数据库中创建或更新一个节点，并返回查询到的节点信息
      */
     @Override
@@ -310,6 +335,13 @@ public class KGGraphRepository implements KGGraphDao {
         return rss;
     }
 
+    /**
+     * 创建规则节点
+     *
+     * @param domain
+     * @param entity
+     * @return
+     */
     @Override
     public HashMap<String, Object> createRuleNode(String domain, NodeItem entity) {
         HashMap<String, Object> rss = new HashMap<>();
@@ -449,8 +481,9 @@ public class KGGraphRepository implements KGGraphDao {
         List<HashMap<String, Object>> ships = new ArrayList<HashMap<String, Object>>();
         try {
             String cypherSqlFmt;
+            //规则节点
             if (StrUtil.equals(relation, "and", true) || StrUtil.equals(relation, "or", true) || StrUtil.equals(relation, "not", true)) {
-                cypherSqlFmt = "create (n:`%s`{name:'%s',color:'#2B4AFF',r:30,isRule:2}) return n";
+                cypherSqlFmt = "create (n:`%s`{name:'%s',color:'#2B4AFF',r:30,isRule:2,ruleStatus:0}) return n";
             } else {
                 cypherSqlFmt = "create (n:`%s`{name:'%s',color:'#ff4500',r:30}) return n";
             }

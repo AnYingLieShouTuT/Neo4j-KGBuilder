@@ -11,6 +11,7 @@ public class NodeItem {
     private Integer r;//半径
     private long isRule;//是否是规则节点，0-普通节点 1-规则节点 2-原子指标
     private long ruleId;//规则编号
+    private long ruleStatus;//规则状态，0-不满足，1-满足
 
     public NodeItem() {
 

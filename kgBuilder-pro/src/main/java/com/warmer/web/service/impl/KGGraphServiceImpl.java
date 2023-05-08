@@ -90,6 +90,11 @@ public class KGGraphServiceImpl implements KgGraphService {
     }
 
     @Override
+    public HashMap<String, Object> updateRuleStatus(String domain, String nodeId, String status) {
+        return kgRepository.updateRuleStatus(domain, nodeId, status);
+    }
+
+    @Override
     public HashMap<String, Object> createNode(String domain, NodeItem entity) {
         return kgRepository.createNode(domain, entity);
     }

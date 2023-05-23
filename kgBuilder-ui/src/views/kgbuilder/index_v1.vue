@@ -25,14 +25,14 @@
               class="svg-a-sm"
               v-show="pageModel.pageIndex > 1"
               @click="prev"
-              >上一页</a
+            >上一页</a
             >
             <a
               href="javascript:void(0)"
               class="svg-a-sm"
               v-show="pageModel.pageIndex < pageModel.totalPage"
               @click="next"
-              >下一页</a
+            >下一页</a
             >
           </div>
         </div>
@@ -72,7 +72,7 @@
                 :type="m.isActive ? 'success' : ''"
                 class="tag-ml-5"
                 @click="setMatchSize(m)"
-                >{{ m.size }}</el-tag
+              >{{ m.size }}</el-tag
               >
             </span>
           </span>
@@ -105,7 +105,7 @@
         <div id="nodeDetail" class="node_detail">
           <h5>详细数据</h5>
           <span class="node_pd" v-for="(m, k) in nodeDetail" :key="k"
-            >{{ k }}:{{ m }}</span
+          >{{ k }}:{{ m }}</span
           >
         </div>
         <!-- 中部图谱画布 -->
@@ -303,7 +303,7 @@ export default {
             content: "#icon-salescenter-fill",
           },
           defaultEvent: (d, _this, d3) => {
-            let data = { domain: _this.domain, nodeId: d.uuid };
+            let data = {domain: _this.domain, nodeId: d.uuid};
             kgBuilderApi.getMoreRelationNode(data).then((result) => {
               if (result.code == 200) {
                 //把不存在于画布的节点添加到画布
@@ -324,7 +324,7 @@ export default {
             content: "#icon-ashbin-fill",
           },
           defaultEvent: (d, _this, d3) => {
-            let data = { domain: _this.domain, nodeId: d.uuid };
+            let data = {domain: _this.domain, nodeId: d.uuid};
             kgBuilderApi.deleteNode(data).then((result) => {
               if (result.code == 200) {
                 //let rShips = result.data;
@@ -383,10 +383,10 @@ export default {
       tooltip: null,
       nodeDetail: null,
       pageSizeList: [
-        { size: 500, isActive: true },
-        { size: 1000, isActive: false },
-        { size: 2000, isActive: false },
-        { size: 5000, isActive: false },
+        {size: 500, isActive: true},
+        {size: 1000, isActive: false},
+        {size: 2000, isActive: false},
+        {size: 5000, isActive: false},
       ],
       domain: "",
       domainId: 0,
@@ -417,7 +417,8 @@ export default {
       return domain;
     },
   },
-  mounted() {},
+  mounted() {
+  },
   created() {
     this.getDomain();
     this.$nextTick(() => {
@@ -495,13 +496,13 @@ export default {
     saveNodeContent(data) {
       kgBuilderApi.saveNodeContent(JSON.stringify(data)).then((result) => {
         if (result.code == 200) {
-          this.$message({ message: "操作成功", type: "success" });
+          this.$message({message: "操作成功", type: "success"});
         }
       });
     },
     //画布直接添加节点
     createSingleNode(left, top) {
-      let data = { name: "", r: 30 };
+      let data = {name: "", r: 30};
       data.domain = this.domain;
       kgBuilderApi.createNode(data).then((result) => {
         if (result.code == 200) {
@@ -528,7 +529,7 @@ export default {
         isRule: 1,
         ruleStatus: 0, //默认不满足
       };
-      let batchData = { ruleId: ruleData.id, domain: this.domain };
+      let batchData = {ruleId: ruleData.id, domain: this.domain};
       data.domain = this.domain;
       kgBuilderApi.createNodeOfRule(data).then((result) => {
         if (result.code == 200) {
@@ -562,8 +563,9 @@ export default {
       });
     },
     updateCoordinateOfNode(nodes) {
-      let data = { domain: this.domain, nodes: nodes };
-      kgBuilderApi.updateCoordinateOfNode(data).then((result) => {});
+      let data = {domain: this.domain, nodes: nodes};
+      kgBuilderApi.updateCoordinateOfNode(data).then((result) => {
+      });
     },
     //删除节点
     deleteNode(out_buttongroup_id) {
@@ -575,7 +577,7 @@ export default {
           type: "warning",
         })
         .then(function () {
-          let data = { domain: _this.domain, nodeId: _this.selectNode.nodeId };
+          let data = {domain: _this.domain, nodeId: _this.selectNode.nodeId};
           kgBuilderApi.deleteNode(data).then((result) => {
             if (result.code == 200) {
               _this.svg.selectAll(out_buttongroup_id).remove();
@@ -626,7 +628,7 @@ export default {
           type: "warning",
         })
         .then(function () {
-          let data = { domain: _this.domain, shipId: sdata.uuid };
+          let data = {domain: _this.domain, shipId: sdata.uuid};
           kgBuilderApi.deleteLink(data).then((result) => {
             if (result.code == 200) {
               let j = -1;
@@ -739,7 +741,8 @@ export default {
             }
           });
         })
-        .catch(function () {});
+        .catch(function () {
+        });
     },
     //更新节点名称
     updateNodeName(d) {
@@ -752,7 +755,7 @@ export default {
         })
         .then(function (res) {
           let value = res.value;
-          let data = { domain: _this.domain, nodeId: d.uuid, nodeName: value };
+          let data = {domain: _this.domain, nodeId: d.uuid, nodeName: value};
           kgBuilderApi.updateNodeName(data).then((result) => {
             if (result.code == 200) {
               if (d.uuid != 0) {
@@ -779,7 +782,7 @@ export default {
     },
     //初始化节点富文本内容
     initNodeContent(data) {
-      let param = { domainId: data.domainId, nodeId: data.nodeId };
+      let param = {domainId: data.domainId, nodeId: data.nodeId};
       kgBuilderApi.getNodeContent(param).then((response) => {
         if (response.code == 200) {
           if (response.data) {
@@ -792,7 +795,7 @@ export default {
     },
     //初始化节点添加的图片
     initNodeImage(data) {
-      let param = { domainId: data.domainId, nodeId: data.nodeId };
+      let param = {domainId: data.domainId, nodeId: data.nodeId};
       kgBuilderApi.getNodeImage(param).then((response) => {
         if (response.code == 200) {
           if (response.data) {
@@ -812,7 +815,7 @@ export default {
     },
     //一次性获取富文本和图片
     getNodeDetail(nodeId, left, top) {
-      let data = { domainId: this.domainId, nodeId: nodeId };
+      let data = {domainId: this.domainId, nodeId: nodeId};
       kgBuilderApi.getNodeDetail(data).then((result) => {
         if (result.code == 200) {
           if (result.data) {
@@ -863,7 +866,7 @@ export default {
       kgBuilderApi.getDomainGraph(data).then((result) => {
         if (result.code == 200) {
           if (result.data != null) {
-            _this.graphData = { nodes: [], links: [] };
+            _this.graphData = {nodes: [], links: []};
             _this.graphData.nodes = result.data.node;
             _this.graphData.links = result.data.relationship;
           }
@@ -872,7 +875,7 @@ export default {
     },
     //展开更多节点
     getMoreNode() {
-      let data = { domain: this.domain, nodeId: this.selectNode.nodeId };
+      let data = {domain: this.domain, nodeId: this.selectNode.nodeId};
       kgBuilderApi.getMoreRelationNode(data).then((result) => {
         if (result.code == 200) {
           //把不存在于画布的节点添加到画布
@@ -898,7 +901,7 @@ export default {
         }
       )
         .then(function (res) {
-          let data = { domainId: id, domain: value };
+          let data = {domainId: id, domain: value};
           kgBuilderApi.deleteDomain(data).then((result) => {
             if (result.code == 200) {
               this.getDomain();
@@ -921,7 +924,7 @@ export default {
       })
         .then((res) => {
           value = res.value;
-          let data = { domain: value, type: 0 };
+          let data = {domain: value, type: 0};
           kgBuilderApi.createDomain(data).then((result) => {
             if (result.code == 200) {
               this.getDomain();
@@ -930,7 +933,8 @@ export default {
             }
           });
         })
-        .catch(() => {});
+        .catch(() => {
+        });
     },
     //获取领域标签
     getLabels(data) {
@@ -998,7 +1002,7 @@ export default {
         this.$message.warning("请选择一个领域");
         return;
       }
-      let data = { domain: this.domain };
+      let data = {domain: this.domain};
       kgBuilderApi.exportGraph(data).then((result) => {
         if (result.code == 200) {
           window.location.href = result.fileName;
@@ -1531,6 +1535,7 @@ ul {
   cursor: pointer;
   float: left;
 }
+
 .my-select {
   width: 100%;
 }

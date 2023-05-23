@@ -7,12 +7,19 @@ import "element-ui/lib/theme-chalk/index.css";
 import axios from "axios";
 import components from './components/index'
 
+Vue.prototype.$stringFormat = function stringFormat(formatted, args) {
+    for (let i = 0; i < args.length; i++) {
+        let regexp = new RegExp('\\{' + i + '\\}', 'gi')
+        formatted = formatted.replace(regexp, args[i])
+    }
+    return formatted
+}
 Vue.prototype.$http = axios; //正确的使用
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 Vue.use(components)
 new Vue({
-  router,
-  store,
-  render: h => h(App)
+    router,
+    store,
+    render: h => h(App)
 }).$mount("#app");

@@ -174,16 +174,22 @@ class kgBuilderApi extends BaseAPI {
         });
     }
 
-    // getRulesPage(data) {
-    //     return this.get("/rules/rulesPage", data);
+    // getRulesALL() {
+    //     return this.post("/rulesAll");
     // }
-    getRulesALL() {
-        return this.post("/rulesAll");
+
+    getWarningIndexPage(data) {
+        return this.post("/warningIndexPage", data);
     }
 
-    getRulesPage(data) {
-        return this.post("/rulesPage", data);
+    getAtomicIndexPage(data) {
+        return this.post("/atomicIndexPage", data);
     }
+
+    getEventArgumentPage(data) {
+        return this.post("/eventArgumentPage", data);
+    }
+
 }
 
 export default new kgBuilderApi();

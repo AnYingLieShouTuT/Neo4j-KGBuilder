@@ -195,14 +195,14 @@
 </template>
 <script>
 import _ from "lodash";
-import { kgBuilderApi } from "@/api";
+import {kgBuilderApi} from "@/api";
 import KgForm from "@/views/kgbuilder/components/kg_form";
 import NodeRicher from "@/views/kgbuilder/components/node_richer";
 import KgJson from "@/views/kgbuilder/components/kg_json";
 import KgHelp from "@/views/kgbuilder/components/kg_help";
 import html2canvas from "html2canvas";
 import kgbuilder from "@/components/KGBuilder_v1";
-import { EventBus } from "@/utils/event-bus.js";
+import {EventBus} from "@/utils/event-bus.js";
 
 export default {
   name: "kgBuilderv1",
@@ -419,7 +419,6 @@ export default {
   },
   mounted() {},
   created() {
-    this.getRuleList();
     this.getDomain();
     this.$nextTick(() => {
       this.width = document.getElementsByClassName("graphContainer")[0].offsetWidth;
@@ -439,14 +438,6 @@ export default {
     },
     Dset(item) {
       this.d3 = item;
-    },
-    getRuleList() {
-      let _this = this;
-      kgBuilderApi.getRulesALL().then((result) => {
-        if (result.code == 200) {
-          _this.ruleList = result.data;
-        }
-      });
     },
     prev() {
       if (this.pageModel.pageIndex > 1) {

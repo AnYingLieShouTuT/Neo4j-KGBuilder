@@ -11,7 +11,7 @@
     <li class="el-dropdown-menu__item" @click="btnAddSingle">
       <span class="pl-15">添加节点</span>
     </li>
-    <li class="el-dropdown-menu__item" @click="dialogFormVisible = true">
+    <!-- <li class="el-dropdown-menu__item" @click="dialogFormVisible = true">
       <span class="pl-15">添加规则</span>
     </li>
     <el-dialog title="选择规则" :visible.sync="dialogFormVisible" :append-to-body="true">
@@ -36,7 +36,7 @@
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" plain @click="btnAddRule">确 定</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
     <li class="el-dropdown-menu__item" @click="btnQuickAddNode">
       <span class="pl-15">快速添加</span>
     </li>
@@ -59,9 +59,9 @@ export default {
       left: "0px",
       menuBarShow: false,
       formLabelWidth: "120px",
-      dialogFormVisible: false,
+      //   dialogFormVisible: false,
       form: null,
-      ruleId: null,
+      //   ruleId: null,
     };
   },
   mounted() {
@@ -85,28 +85,28 @@ export default {
       this.left = data.left;
       this.menuBarShow = data.show;
     },
-    btnAddRule() {
-      let _this = this;
-      if (this.ruleId == null) {
-        this.$message({
-          showClose: true,
-          message: "请选择规则！",
-          type: "warning",
-        });
-      } else {
-        for (var i = 0; i < _this.rules.length; i++) {
-          if (_this.rules[i].id == _this.ruleId) {
-            console.log(_this.rules[i]);
-            _this.form = _this.rules[i];
-          }
-        }
-        // console.log(this.form.id);
-        this.$emit("addRule", this.form);
-        this.form = null;
-        this.ruleId = null;
-        this.dialogFormVisible = false;
-      }
-    },
+    // btnAddRule() {
+    //   let _this = this;
+    //   if (this.ruleId == null) {
+    //     this.$message({
+    //       showClose: true,
+    //       message: "请选择规则！",
+    //       type: "warning",
+    //     });
+    //   } else {
+    //     for (var i = 0; i < _this.rules.length; i++) {
+    //       if (_this.rules[i].id == _this.ruleId) {
+    //         console.log(_this.rules[i]);
+    //         _this.form = _this.rules[i];
+    //       }
+    //     }
+    //     // console.log(this.form.id);
+    //     this.$emit("addRule", this.form);
+    //     this.form = null;
+    //     this.ruleId = null;
+    //     // this.dialogFormVisible = false;
+    //   }
+    // },
     btnAddSingle() {
       this.$emit("changeCursor");
     },

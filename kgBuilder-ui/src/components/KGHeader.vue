@@ -34,15 +34,19 @@ export default {
       navList: [
         {
           title: "首页",
-          icon: "glyphicon glyphicon-cog",
           linkUrl: "/",
           active: false,
           childrens: [],
         },
         {
-          title: "规则库",
-          icon: "glyphicon glyphicon-th-list",
-          linkUrl: "/rules",
+          title: "原子指标",
+          linkUrl: "/atomicIndex",
+          active: false,
+          childrens: [],
+        },
+        {
+          title: "预警指标",
+          linkUrl: "/warningIndex",
           active: false,
           childrens: [],
         },

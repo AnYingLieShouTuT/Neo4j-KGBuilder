@@ -1,7 +1,21 @@
 <template>
   <div>
     <el-row type="flex" class="row-bg" justify="center">
-      <el-col :span="16"
+      <el-col :span="20">
+        <h1 class="title">
+          预警指标
+          <el-button
+            size="medium"
+            @click="addAtomicIndex()"
+            type="primary"
+            style="margin-left: 20px"
+            >添加</el-button
+          >
+        </h1>
+      </el-col>
+    </el-row>
+    <el-row type="flex" class="row-bg" justify="center">
+      <el-col :span="20"
         ><div class="grid-content">
           <el-table
             :data="tableData"
@@ -11,7 +25,10 @@
           >
             <el-table-column prop="id" label="id" width="50" align="center">
             </el-table-column>
-            <el-table-column prop="rule" label="规则" width=""> </el-table-column>
+            <el-table-column prop="indexName" label="预警指标" width="">
+            </el-table-column>
+            <el-table-column prop="indexJudgeMethod" label="指标判断标准" width="">
+            </el-table-column>
             <el-table-column
               prop="level"
               label="等级"
@@ -61,7 +78,7 @@
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
               :current-page="this.params.page"
-              :page-sizes="[1, 10, 20, 50, 100]"
+              :page-sizes="[5, 10, 50, 100]"
               :page-size="this.params.size"
               layout="total, sizes, prev, pager, next, jumper"
               :total="this.total"
@@ -73,8 +90,7 @@
   </div>
 </template>
 <script>
-import { kgBuilderApi } from "@/api";
-import axios from "axios";
+import {kgBuilderApi} from "@/api";
 
 export default {
   name: "rules",
@@ -86,7 +102,7 @@ export default {
       total: 0,
       params: {
         page: 1,
-        size: 5,
+        size: 10,
       },
     };
   },
@@ -99,7 +115,7 @@ export default {
     getRules: function () {
       let that = this;
       let data = { pageCode: this.params.page, pageSize: this.params.size };
-      kgBuilderApi.getRulesPage(data).then((result) => {
+      kgBuilderApi.getWarningIndexPage(data).then((result) => {
         if (result.code == 200) {
           that.tableData = result.data.records;
           that.total = result.data.total;
@@ -126,14 +142,6 @@ export default {
     filterLevel(value, row) {
       return row.level === value;
     },
-    // tableRowClassName({ row, rowIndex }) {
-    //   if (row.level === "一级") {
-    //     return "first-row";
-    //   } else if (row.level === "二级") {
-    //     return "second-row";
-    //   }
-    //   return "";
-    // },
   },
 };
 </script>
@@ -143,5 +151,15 @@ export default {
 }
 .el-table .second-row {
   background: #faecd8;
+}
+.title {
+  float: left;
+  width: 260px;
+  font-size: 26px;
+  height: 50px;
+  line-height: 50px;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
 }
 </style>

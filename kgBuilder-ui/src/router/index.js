@@ -10,9 +10,14 @@ const routes = [
         component: () => import("../views/kgbuilder/index_v1.vue")
     },
     {
-        path: "/rules",
-        name: "rules",
-        component: () => import("../views/kgbuilder/rules.vue")
+        path: "/warningIndex",
+        name: "warningIndex",
+        component: () => import("../views/kgbuilder/warningIndex.vue")
+    },
+    {
+        path: "/atomicIndex",
+        name: "atomicIndex",
+        component: () => import("../views/kgbuilder/atomicIndex.vue")
     },
     {
         path: "/builder",

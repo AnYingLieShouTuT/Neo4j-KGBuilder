@@ -50,6 +50,18 @@ export default {
           active: false,
           childrens: [],
         },
+        {
+          title: "事件",
+          linkUrl: "/event",
+          active: false,
+          childrens: [],
+        },
+        {
+          title: "事件论元",
+          linkUrl: "/eventArgument",
+          active: false,
+          childrens: [],
+        },
       ],
     };
   },

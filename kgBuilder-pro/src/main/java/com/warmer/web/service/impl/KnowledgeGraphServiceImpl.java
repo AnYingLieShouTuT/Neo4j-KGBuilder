@@ -17,6 +17,7 @@ public class KnowledgeGraphServiceImpl implements KnowledgeGraphService {
 
     @Autowired
     KnowledgeGraphDao knowledgeGraphDao;
+
     @Override
     public List<KgDomain> getDomains() {
         return knowledgeGraphDao.getDomains();
@@ -28,8 +29,8 @@ public class KnowledgeGraphServiceImpl implements KnowledgeGraphService {
     }
 
     @Override
-    public List<KgDomain> getDomainList(String domainName,Integer type,Integer commend) {
-        return knowledgeGraphDao.getDomainList(domainName,type,commend);
+    public List<KgDomain> getDomainList(String domainName, Integer type, Integer commend) {
+        return knowledgeGraphDao.getDomainList(domainName, type, commend);
     }
 
     @Override
@@ -41,16 +42,16 @@ public class KnowledgeGraphServiceImpl implements KnowledgeGraphService {
     }
 
     @Override
-    public Integer quickCreateDomain(String domain,Integer type) {
+    public Integer quickCreateDomain(String domain, Integer type) {
         KgDomain item = new KgDomain();
         item.setName(domain);
         item.setNodeCount(0);
         item.setShipCount(0);
-        item.setCreateUser("tc");
+        item.setCreateUser("zl");
         item.setCommend(0);
         item.setType(type);
         item.setStatus(1);
-       return  saveDomain(item);
+        return saveDomain(item);
     }
 
     @Override
@@ -95,16 +96,16 @@ public class KnowledgeGraphServiceImpl implements KnowledgeGraphService {
 
     @Override
     public List<KgNodeDetailFile> getNodeImageList(Integer domainId, Integer nodeId) {
-        return knowledgeGraphDao.getNodeImageList(domainId,nodeId);
+        return knowledgeGraphDao.getNodeImageList(domainId, nodeId);
     }
 
     @Override
     public List<KgNodeDetail> getNodeContent(Integer domainId, Integer nodeId) {
-        return knowledgeGraphDao.getNodeContent(domainId,nodeId);
+        return knowledgeGraphDao.getNodeContent(domainId, nodeId);
     }
 
     @Override
     public void deleteNodeImage(Integer domainId, Integer nodeId) {
-        knowledgeGraphDao.deleteNodeImage(domainId,nodeId);
+        knowledgeGraphDao.deleteNodeImage(domainId, nodeId);
     }
 }

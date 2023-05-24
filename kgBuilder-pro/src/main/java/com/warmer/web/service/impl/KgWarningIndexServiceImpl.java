@@ -31,7 +31,7 @@ public class KgWarningIndexServiceImpl implements KgWarningIndexService {
     }
 
     @Override
-    public KgWarningIndex getWarningIndex(int id) {
+    public KgWarningIndex getWarningIndexById(int id) {
         return kgWarningIndexMapper.selectOne(new QueryWrapper<KgWarningIndex>().eq("id", id));
     }
 }

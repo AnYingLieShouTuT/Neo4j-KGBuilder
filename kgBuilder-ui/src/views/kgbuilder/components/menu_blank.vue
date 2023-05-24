@@ -26,13 +26,13 @@
 <script>
 export default {
   props: {
-    data: Object
+    data: Object,
   },
   data() {
     return {
       top: "0px",
       left: "0px",
-      menuBarShow: false
+      menuBarShow: false,
     };
   },
   components: {},
@@ -40,10 +40,10 @@ export default {
     blankMenuStyle() {
       return {
         position: "absolute",
-        top: this.top+'px',
-        left: this.left+'px'
+        top: this.top + "px",
+        left: this.left + "px",
       };
-    }
+    },
   },
   methods: {
     init(data) {
@@ -58,12 +58,12 @@ export default {
       this.$emit("btnQuickAddNode");
     },
     menuBarClick() {
-      this.menuBarShow=false;
+      this.menuBarShow = false;
     },
     menuBarLeave() {
-     this.menuBarShow=false;
-    }
-  }
+      this.menuBarShow = false;
+    },
+  },
 };
 </script>
 <style></style>

@@ -1,15 +1,20 @@
 package com.warmer.web;
 
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.warmer.base.util.Neo4jUtil;
-import com.warmer.base.util.RuleUtils;
 import com.warmer.web.entity.KgDomain;
 import com.warmer.web.service.KgGraphService;
 import com.warmer.web.service.KnowledgeGraphService;
+import com.warmer.web.utils.TraverseJSONUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @SpringBootTest
@@ -79,17 +84,64 @@ class ApplicationTests {
     }
 
     @Test
-    void ruleSplit() {
-        String ruleString = "rule1";
-//        String ruleString = "连续7天出现奶量=0 and 落实反馈不合作=是 and 可控奶款<融资余额=是";
-//        String ruleString = "rule1 AND rule2 OR rule3 NOT rule4 AND rule5 OR rule6";
-        List<String> andRules = new ArrayList<>();
-        List<String> orRules = new ArrayList<>();
-        List<String> notRules = new ArrayList<>();
-        RuleUtils.parseRules(ruleString, andRules, orRules, notRules);
-        System.out.println("AND rules: " + andRules);
-        System.out.println("OR rules: " + orRules);
-        System.out.println("NOT rules: " + notRules);
+    void eventTest() {
+//        String result = "{\"变更\":{\"时间\":\"未提及\",\"牧场名\":\"迈宁意信牧场\",\"变更人姓名\":\"未提及\",\"法定代表人发生变更是否对融资业务产生重大影响\":\"客户公司迟迟未走经营者变更手续\",\"新的变更人是否提供保证\":\"车宜媛已提供连带担保，且与父亲共同经营牧场\"}}";
+        String result = "{\"变更\":{\"时间\":\"未提及\",\"牧场名\":\"迈宁意信牧场\",\"变更人姓名\":\"未提及\",\"法定代表人发生变更是否对融资业务产生重大影响\":\"客户公司迟迟未走经营者变更手续\",\"新的变更人是否提供保证\":\"车宜媛已提供连带担保，且与父亲共同经营牧场\"}}";
+//        JSONObject jsonObject = JSONUtil.parseObj(result);
+//        String eventType = jsonObject.getStr("变更");
+//        JSONObject eventArgument = JSONUtil.parseObj(eventType);
+//        System.out.println(eventArgument.getStr("时间"));
+        TraverseJSONUtil.traverseJsonObject(JSONUtil.parseObj(result));
     }
+
+    @Test
+    void jsonTest() {
+        String input = "{\"时间\":\"未提及\",\"去世人姓名\":\"车兰轮\",\"去世人身份\":\"法定代表人\",\"去世原因\":\"病逝\"}";
+
+        String parsedJson = TraverseJSONUtil.parse(input);
+        System.out.println(parsedJson);
+    }
+
+    @Test
+    void TestJSON() {
+        String eventExtractResult = "{\"去世\":{\"时间\":\"未提及\",\"去世人姓名\":\"车兰轮\",\"去世人身份\":\"法定代表人\",\"去世原因\":\"病逝\"}}";
+        JSONObject jsonObj = JSONUtil.parseObj(eventExtractResult);
+
+        String eventType;
+        JSONObject eventArgument = null;
+        for (Map.Entry<String, Object> entry : jsonObj.entrySet()) {
+            eventType = entry.getKey();
+            if (entry.getValue() instanceof JSONObject) {
+                eventArgument = (JSONObject) entry.getValue();
+            }
+
+            System.out.println(eventType + "::" + eventArgument);
+//            NodeItem nodeItem = new NodeItem();
+//            nodeItem.setName(key);
+//            HashMap<String, Object> node = kgGraphService.createNode(domain, nodeItem);
+//                System.out.println(node);//{r=30, color=#ff4500, uuid=154}
+
+        }
+        if (eventArgument != null) {
+            for (Map.Entry<String, Object> entry : eventArgument.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                System.out.println("$$$" + key + ": " + value);
+            }
+        }
+//        if (value instanceof JSONObject) {
+//                for (java.util.Map.Entry<String, Object> entry1 : jsonObj.entrySet()) {
+//                    String key1 = entry1.getKey();
+//                    Object value1 = entry1.getValue();
+//                    System.out.println("$$$" + key1 + ": " + value1);
+////                        HashMap<String, Object> childNode = kgGraphService.batchCreateChildNode(domain, node.get("uuid").toString()
+////                                , 0, Arrays.copyOf(new String[]{key1}, 1), value1.toString());
+////                        rss.putAll(childNode);
+//                }
+//                else {
+//                    System.out.println(key + ": " + value);
+//                }
+    }
+
 
 }

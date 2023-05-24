@@ -171,14 +171,14 @@
 <script>
 import _ from "lodash";
 import * as d3 from "d3";
-import { kgBuilderApi } from "@/api";
+import {kgBuilderApi} from "@/api";
 import MenuBlank from "@/views/kgbuilder/components/menu_blank";
 import MenuLink from "@/views/kgbuilder/components/menu_link";
 import KgForm from "@/views/kgbuilder/components/kg_form";
 import NodeRicher from "@/views/kgbuilder/components/node_richer";
 import KgJson from "@/views/kgbuilder/components/kg_json";
-import KgHelp from "@/views/kgbuilder/components/kg_help";
 import html2canvas from "html2canvas";
+
 export default {
   name: "kgBuilder",
   components: {

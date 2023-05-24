@@ -20,10 +20,20 @@ const routes = [
         component: () => import("../views/kgbuilder/atomicIndex.vue")
     },
     {
-        path: "/builder",
-        name: "builder",
-        component: () => import("../views/kgbuilder/index.vue")
+        path: "/event",
+        name: "event",
+        component: () => import("../views/kgbuilder/event.vue")
     },
+    {
+        path: "/eventArgument",
+        name: "eventArgument",
+        component: () => import("../views/kgbuilder/eventArgument.vue")
+    },
+    // {
+    //     path: "/builder",
+    //     name: "builder",
+    //     component: () => import("../views/kgbuilder/index.vue")
+    // },
     {
         path: "/kg",
         name: "kg",

@@ -11,34 +11,11 @@
     <li class="el-dropdown-menu__item" @click="btnAddSingle">
       <span class="pl-15">添加节点</span>
     </li>
-    <!-- <li class="el-dropdown-menu__item" @click="dialogFormVisible = true">
-      <span class="pl-15">添加规则</span>
-    </li>
-    <el-dialog title="选择规则" :visible.sync="dialogFormVisible" :append-to-body="true">
-      <el-form>
-        <el-form-item label="规则" :label-width="formLabelWidth">
-          <el-select v-model="ruleId" placeholder="请选择规则" class="my-select">
-            <el-option
-              v-for="rule in rules"
-              :key="rule.id"
-              :value="rule.id"
-              :label="rule.rule"
-            >
-              <span style="float: left">{{ rule.rule }}</span>
-              <span style="float: right; color: #8492a6; font-size: 13px">{{
-                rule.level
-              }}</span>
-            </el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" plain @click="btnAddRule">确 定</el-button>
-      </div>
-    </el-dialog> -->
     <li class="el-dropdown-menu__item" @click="btnQuickAddNode">
       <span class="pl-15">快速添加</span>
+    </li>
+    <li class="el-dropdown-menu__item" @click="btnAddEvent">
+      <span class="pl-15">添加事件</span>
     </li>
   </ul>
 </template>
@@ -47,11 +24,6 @@
 export default {
   props: {
     data: Object,
-    rules: {
-      type: Array,
-      default: () => [],
-      required: true,
-    },
   },
   data() {
     return {
@@ -59,15 +31,10 @@ export default {
       left: "0px",
       menuBarShow: false,
       formLabelWidth: "120px",
-      //   dialogFormVisible: false,
       form: null,
-      //   ruleId: null,
     };
   },
-  mounted() {
-    // console.log("MenuBlank")
-    // console.log(this.rules);
-  },
+  mounted() {},
   inject: ["quickAddNodes"],
   components: {},
   computed: {
@@ -85,28 +52,19 @@ export default {
       this.left = data.left;
       this.menuBarShow = data.show;
     },
-    // btnAddRule() {
-    //   let _this = this;
-    //   if (this.ruleId == null) {
-    //     this.$message({
-    //       showClose: true,
-    //       message: "请选择规则！",
-    //       type: "warning",
-    //     });
-    //   } else {
-    //     for (var i = 0; i < _this.rules.length; i++) {
-    //       if (_this.rules[i].id == _this.ruleId) {
-    //         console.log(_this.rules[i]);
-    //         _this.form = _this.rules[i];
-    //       }
-    //     }
-    //     // console.log(this.form.id);
-    //     this.$emit("addRule", this.form);
-    //     this.form = null;
-    //     this.ruleId = null;
-    //     // this.dialogFormVisible = false;
-    //   }
-    // },
+    btnAddEvent() {
+      this.$prompt("", "请输入事件抽取结果", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputType: "textarea",
+        closeOnClickModal: false,
+      })
+        .then(({ value }) => {
+          //   console.log(value);
+          this.$emit("addEventNode", value);
+        })
+        .catch(() => {});
+    },
     btnAddSingle() {
       this.$emit("changeCursor");
     },

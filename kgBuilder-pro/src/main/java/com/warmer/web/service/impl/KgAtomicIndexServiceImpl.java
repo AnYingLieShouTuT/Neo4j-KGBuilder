@@ -31,7 +31,7 @@ public class KgAtomicIndexServiceImpl implements KgAtomicIndexService {
     }
 
     @Override
-    public KgAtomicIndex getAtomicIndex(int id) {
+    public KgAtomicIndex getAtomicIndexById(int id) {
         return kgAtomicIndexMapper.selectOne(new QueryWrapper<KgAtomicIndex>().eq("id", id));
     }
 }

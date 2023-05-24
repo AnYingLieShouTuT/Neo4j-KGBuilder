@@ -1,14 +1,12 @@
 package com.warmer.web.dao.impl;
 
-import cn.hutool.core.util.StrUtil;
+import com.warmer.base.util.GraphPageRecord;
 import com.warmer.base.util.JsonHelper;
 import com.warmer.base.util.Neo4jUtil;
+import com.warmer.base.util.StringUtil;
 import com.warmer.web.dao.KGGraphDao;
 import com.warmer.web.model.NodeItem;
-
 import com.warmer.web.request.GraphQuery;
-import com.warmer.base.util.GraphPageRecord;
-import com.warmer.base.util.StringUtil;
 import com.warmer.web.request.NodeCoordinateItem;
 import org.springframework.stereotype.Repository;
 
@@ -212,7 +210,7 @@ public class KGGraphRepository implements KGGraphDao {
     public void createDomain(String domain) {
         try {
             String cypherSql = String.format(
-                    "create (n:`%s`{entityType:0,name:''}) return id(n)", domain);
+                    "create (n:`%s`{name:''}) return id(n)", domain);
             Neo4jUtil.runCypherSql(cypherSql);
         } catch (Exception e) {
             e.printStackTrace();
@@ -311,8 +309,8 @@ public class KGGraphRepository implements KGGraphDao {
                 graphNodeList = Neo4jUtil.getGraphNode(cypherSql);
             } else {
                 //需要创建新的节点
-                entity.setIsRule(0);// 普通节点
-                entity.setRuleId(-1);// 规则编号
+//                entity.setIsRule(0);// 普通节点
+//                entity.setRuleId(-1);// 规则编号
                 entity.setColor("#ff4500");// 默认颜色
                 entity.setR(30);// 默认半径
                 //将 entity 对象转换为 JSON 格式的字符串
@@ -320,7 +318,6 @@ public class KGGraphRepository implements KGGraphDao {
                 //获取 Cypher SQL 语句的 WHERE 子句
                 String cypherSql = String.format("create (n:`%s` %s) return n", domain, propertiesString);
                 //将 domain 和 WHERE 子句拼接起来，组成完整的 Cypher SQL 语句，并通过 Neo4jUtil.getGraphNode(cypherSql) 方法执行该 SQL 语句，将查询到的节点信息存储在 graphNodeList 中
-                System.out.println(cypherSql);
                 graphNodeList = Neo4jUtil.getGraphNode(cypherSql);
             }
             if (graphNodeList.size() > 0) {
@@ -359,8 +356,6 @@ public class KGGraphRepository implements KGGraphDao {
                 graphNodeList = Neo4jUtil.getGraphNode(cypherSql);
             } else {
                 //需要创建新的节点
-//                entity.setIsRule(0);// 规则节点
-//                entity.setRuleId(-1);// 规则编号
                 entity.setColor("#ff4500");// 默认颜色
                 entity.setR(30);// 默认半径
                 //将 entity 对象转换为 JSON 格式的字符串
@@ -464,6 +459,7 @@ public class KGGraphRepository implements KGGraphDao {
         return rss;
     }
 
+
     /**
      * 批量创建下级节点
      *
@@ -481,12 +477,12 @@ public class KGGraphRepository implements KGGraphDao {
         List<HashMap<String, Object>> ships = new ArrayList<HashMap<String, Object>>();
         try {
             String cypherSqlFmt;
-            //规则节点
-            if (StrUtil.equals(relation, "and", true) || StrUtil.equals(relation, "or", true) || StrUtil.equals(relation, "not", true)) {
-                cypherSqlFmt = "create (n:`%s`{name:'%s',color:'#2B4AFF',r:30,isRule:2,ruleStatus:0}) return n";
-            } else {
-                cypherSqlFmt = "create (n:`%s`{name:'%s',color:'#ff4500',r:30}) return n";
-            }
+//            //规则节点
+//            if (StrUtil.equals(relation, "and", true) || StrUtil.equals(relation, "or", true) || StrUtil.equals(relation, "not", true)) {
+//                cypherSqlFmt = "create (n:`%s`{name:'%s',color:'#2B4AFF',r:30,isRule:2,ruleStatus:0}) return n";
+//            } else {
+            cypherSqlFmt = "create (n:`%s`{name:'%s',color:'#ff4500',r:30}) return n";
+//            }
             String cypherSql = String.format("match (n:`%s`) where id(n)=%s return n", domain, sourceId);
             List<HashMap<String, Object>> sourceNodeList = Neo4jUtil.getGraphNode(cypherSql);
             if (sourceNodeList.size() > 0) {

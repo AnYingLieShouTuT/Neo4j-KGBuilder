@@ -186,10 +186,17 @@ class kgBuilderApi extends BaseAPI {
         return this.post("/atomicIndexPage", data);
     }
 
+    getEventPage(data) {
+        return this.post("/eventPage", data);
+    }
+
     getEventArgumentPage(data) {
         return this.post("/eventArgumentPage", data);
     }
 
+    addEventNode(data) {
+        return this.post("/addEventNode", data);
+    }
 }
 
 export default new kgBuilderApi();

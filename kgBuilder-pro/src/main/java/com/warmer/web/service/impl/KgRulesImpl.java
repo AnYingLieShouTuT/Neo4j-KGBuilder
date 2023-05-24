@@ -30,7 +30,7 @@ public class KgRulesImpl implements KgRulesService {
     }
 
     @Override
-    public KgRules getRule(int id) {
+    public KgRules getRuleById(int id) {
         return kgRulesMapper.selectOne(new QueryWrapper<KgRules>().eq("id", id));
     }
 }

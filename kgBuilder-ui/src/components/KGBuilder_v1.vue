@@ -10,15 +10,14 @@
     <menuBlank
       ref="menu_blank"
       @changeCursor="changeCursor"
-      @addRule="addRule"
-      :rules="ruleList"
+      @addEventNode="addEventNode"
     />
   </div>
 </template>
 <script>
 import * as d3 from "d3";
 import _ from "lodash";
-import { EventBus } from "@/utils/event-bus.js";
+import {EventBus} from "@/utils/event-bus.js";
 import menuLink from "@/components/KGBuilderMenuLink";
 import menuBlank from "@/components/KGBuilderMenuBlank";
 
@@ -56,11 +55,6 @@ export default {
     domainId: {
       type: Number,
       default: "",
-    },
-    ruleList: {
-      type: Array,
-      default: () => [],
-      required: true,
     },
   },
   created() {},
@@ -150,8 +144,6 @@ export default {
       this.height = x;
       _this.initGraph();
     });
-    // console.log("KgBuilder");
-    // console.log(this.ruleList);
   },
   methods: {
     //画布右击
@@ -184,7 +176,7 @@ export default {
         d3.select("#richContainer").style("display", "none");
       }
       let cursor = document.getElementById("BOX-SVG").style.cursor;
-      //如果鼠标指针样式为"crosshair"，则将其重置为"default"，并创建一个新节点。todo:添加规则节点判断
+      //如果鼠标指针样式为"crosshair"，则将其重置为"default"，并创建一个新节点。
       if (cursor == "crosshair") {
         // console.log("添加");
         //添加规则
@@ -218,15 +210,16 @@ export default {
           d3
             .forceLink()
             .distance(function (d) {
-              return 60;
-              // return Math.floor(Math.random() * (700 - 200)) ;
+              //   return 60;
+              //节点连线长度
+              return Math.floor(Math.random() * 300);
             })
             .id(function (d) {
               //   console.log(d);
               return d.uuid;
             })
         )
-        .force("charge", d3.forceManyBody().strength(-400))
+        .force("charge", d3.forceManyBody().strength(-800))
         .force("collide", d3.forceCollide())
         .force("center", d3.forceCenter(this.width / 2, this.height / 2));
       this.linkGroup = this.svg.append("g").attr("class", "line");
@@ -971,11 +964,11 @@ export default {
           .drag()
           .on("start", this.dragStarted)
           .on("drag", this.dragged)
-          .on("end", this.dragEnded)
+          .on("end", this.dragEnded) //去除拖拽
       );
       return nodeEnter;
     },
-    // 绘制节点文字todo
+    // 绘制节点文字
     drawNodeText(nodeText) {
       const _this = this;
       const nodeTextEnter = nodeText
@@ -995,15 +988,13 @@ export default {
         })
         .attr("font-family", "微软雅黑")
         .attr("text-anchor", "middle"); //设置文字居中
-      //   nodeText
-      //     .append("tspan")
-      //     .text("这是一段带有换行符的中文文本，")
-      //     .attr("x", 10)
-      //     .attr("dy", 20);
       nodeTextEnter.text(function (d) {
         //todo
         let text = d.name;
-        const len = text.length;
+        let len = 0;
+        if (text != "" && text != undefined) {
+          len = text.length;
+        }
 
         if (d.image) {
           return d.name;
@@ -1037,7 +1028,7 @@ export default {
           .drag()
           .on("start", this.dragStarted)
           .on("drag", this.dragged)
-          .on("end", this.dragEnded)
+          .on("end", this.dragEnded) //去除拖拽
       );
       return nodeTextEnter;
     },
@@ -1056,7 +1047,7 @@ export default {
           .drag()
           .on("start", this.dragStarted)
           .on("drag", this.dragged)
-          .on("end", this.dragEnded)
+          .on("end", this.dragEnded) //去除拖拽
       );
       return nodeSymbolEnter;
     },
@@ -1156,6 +1147,7 @@ export default {
       //可以调用call方法处理连线的动作
       return linkEnter;
     },
+
     // 构建连线上的文字，并绑定事件
     drawLinkText(links) {
       const _this = this;
@@ -1223,16 +1215,14 @@ export default {
     deleteLinkName() {
       this.$emit("deleteLinkName", d3, this);
     },
+    //添加事件节点
+    addEventNode(value) {
+      //   console.log(d3);
+      //   let data = { d3: d3, value: value };
+      this.$emit("addEventNode", value, this);
+    },
     changeCursor() {
       d3.select(".BOX-SVG").style("cursor", "crosshair"); //进入新增模式，鼠标变成＋
-    },
-    //todo
-    addRule(data) {
-      // console.log(this.ruleList);
-      // console.log(data);
-      d3.select(".BOX-SVG").style("cursor", "crosshair");
-      this.isAddRule = true;
-      this.ruleData = data;
     },
   },
 };

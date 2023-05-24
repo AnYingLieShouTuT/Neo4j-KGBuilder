@@ -7,6 +7,7 @@
           <h2 class="homelist ml-ht">图谱列表</h2>
           <div class="ml-a-box" style="min-height: 280px">
             <el-tag class="tag-ml-5" @click="createDomain">新建图谱</el-tag>
+            <el-tag class="tag-ml-5" @click="createEventDomain">事件图谱</el-tag>
             <el-tag
               @click="matchDomainGraph(m)"
               v-for="(m, index) in pageModel.nodeList"
@@ -25,14 +26,14 @@
               class="svg-a-sm"
               v-show="pageModel.pageIndex > 1"
               @click="prev"
-            >上一页</a
+              >上一页</a
             >
             <a
               href="javascript:void(0)"
               class="svg-a-sm"
               v-show="pageModel.pageIndex < pageModel.totalPage"
               @click="next"
-            >下一页</a
+              >下一页</a
             >
           </div>
         </div>
@@ -72,7 +73,7 @@
                 :type="m.isActive ? 'success' : ''"
                 class="tag-ml-5"
                 @click="setMatchSize(m)"
-              >{{ m.size }}</el-tag
+                >{{ m.size }}</el-tag
               >
             </span>
           </span>
@@ -105,7 +106,7 @@
         <div id="nodeDetail" class="node_detail">
           <h5>详细数据</h5>
           <span class="node_pd" v-for="(m, k) in nodeDetail" :key="k"
-          >{{ k }}:{{ m }}</span
+            >{{ k }}:{{ m }}</span
           >
         </div>
         <!-- 中部图谱画布 -->
@@ -117,8 +118,8 @@
             :domain="domain"
             :domainId="domainId"
             :ring-function="RingFunction"
-            :ruleList="ruleList"
             @editForm="editForm"
+            @addEventNode="handleAddEventNode"
           />
         </div>
       </el-scrollbar>
@@ -217,10 +218,11 @@ export default {
     return {
       _thisKey: this._thisKey,
       Dset: this.Dset,
-      ruleList: this.ruleList,
+      //   ruleList: this.ruleList,
       updateLinkName: this.updateLinkName,
       editLinkName: this.editLinkName,
       deleteLinkName: this.deleteLinkName,
+      handleAddEventNode: this.handleAddEventNode,
       quickAddNodes: this.btnQuickAddNode,
       createSingleNode: this.createSingleNode,
       createRuleNode: this.createRuleNode,
@@ -244,7 +246,7 @@ export default {
           label: "不成立",
         },
       ],
-      ruleList: [],
+      //   ruleList: [],
       style: null,
       width: null,
       height: null,
@@ -260,10 +262,10 @@ export default {
           },
           childrens: [
             {
-              title: "点",
+              title: "下级",
               icon: {
                 type: "text",
-                content: "点",
+                content: "下级",
               },
               defaultEvent: (d, _this, d3) => {
                 this.$refs.kg_form.initBatchAddChild(
@@ -303,7 +305,7 @@ export default {
             content: "#icon-salescenter-fill",
           },
           defaultEvent: (d, _this, d3) => {
-            let data = {domain: _this.domain, nodeId: d.uuid};
+            let data = { domain: _this.domain, nodeId: d.uuid };
             kgBuilderApi.getMoreRelationNode(data).then((result) => {
               if (result.code == 200) {
                 //把不存在于画布的节点添加到画布
@@ -324,7 +326,7 @@ export default {
             content: "#icon-ashbin-fill",
           },
           defaultEvent: (d, _this, d3) => {
-            let data = {domain: _this.domain, nodeId: d.uuid};
+            let data = { domain: _this.domain, nodeId: d.uuid };
             kgBuilderApi.deleteNode(data).then((result) => {
               if (result.code == 200) {
                 //let rShips = result.data;
@@ -365,28 +367,28 @@ export default {
           },
           childrens: [],
         },
-        {
-          title: "修改状态",
-          icon: {
-            type: "text",
-            content: "修改状态",
-          },
-          defaultEvent: (data, _this, d3) => {
-            this.editRuleStatus(data);
-            //_this.updateGraph();
-          },
-          childrens: [],
-        },
+        // {
+        //   title: "修改状态",
+        //   icon: {
+        //     type: "text",
+        //     content: "修改状态",
+        //   },
+        //   defaultEvent: (data, _this, d3) => {
+        //     this.editRuleStatus(data);
+        //     //_this.updateGraph();
+        //   },
+        //   childrens: [],
+        // },
       ],
       _thisView: null,
       timer: null,
       tooltip: null,
       nodeDetail: null,
       pageSizeList: [
-        {size: 500, isActive: true},
-        {size: 1000, isActive: false},
-        {size: 2000, isActive: false},
-        {size: 5000, isActive: false},
+        { size: 500, isActive: true },
+        { size: 1000, isActive: false },
+        { size: 2000, isActive: false },
+        { size: 5000, isActive: false },
       ],
       domain: "",
       domainId: 0,
@@ -417,8 +419,7 @@ export default {
       return domain;
     },
   },
-  mounted() {
-  },
+  mounted() {},
   created() {
     this.getDomain();
     this.$nextTick(() => {
@@ -496,13 +497,13 @@ export default {
     saveNodeContent(data) {
       kgBuilderApi.saveNodeContent(JSON.stringify(data)).then((result) => {
         if (result.code == 200) {
-          this.$message({message: "操作成功", type: "success"});
+          this.$message({ message: "操作成功", type: "success" });
         }
       });
     },
     //画布直接添加节点
     createSingleNode(left, top) {
-      let data = {name: "", r: 30};
+      let data = { name: "", r: 30 };
       data.domain = this.domain;
       kgBuilderApi.createNode(data).then((result) => {
         if (result.code == 200) {
@@ -529,7 +530,7 @@ export default {
         isRule: 1,
         ruleStatus: 0, //默认不满足
       };
-      let batchData = {ruleId: ruleData.id, domain: this.domain};
+      let batchData = { ruleId: ruleData.id, domain: this.domain };
       data.domain = this.domain;
       kgBuilderApi.createNodeOfRule(data).then((result) => {
         if (result.code == 200) {
@@ -563,9 +564,8 @@ export default {
       });
     },
     updateCoordinateOfNode(nodes) {
-      let data = {domain: this.domain, nodes: nodes};
-      kgBuilderApi.updateCoordinateOfNode(data).then((result) => {
-      });
+      let data = { domain: this.domain, nodes: nodes };
+      kgBuilderApi.updateCoordinateOfNode(data).then((result) => {});
     },
     //删除节点
     deleteNode(out_buttongroup_id) {
@@ -577,7 +577,7 @@ export default {
           type: "warning",
         })
         .then(function () {
-          let data = {domain: _this.domain, nodeId: _this.selectNode.nodeId};
+          let data = { domain: _this.domain, nodeId: _this.selectNode.nodeId };
           kgBuilderApi.deleteNode(data).then((result) => {
             if (result.code == 200) {
               _this.svg.selectAll(out_buttongroup_id).remove();
@@ -628,7 +628,7 @@ export default {
           type: "warning",
         })
         .then(function () {
-          let data = {domain: _this.domain, shipId: sdata.uuid};
+          let data = { domain: _this.domain, shipId: sdata.uuid };
           kgBuilderApi.deleteLink(data).then((result) => {
             if (result.code == 200) {
               let j = -1;
@@ -660,28 +660,58 @@ export default {
         }
       });
     },
-    //编辑规则状态todo
-    editRuleStatus(data) {
-      console.log(data);
-      this.changeNode = data;
-      if (data.isRule != 1 && data.isRule != 2) {
-        this.$message({
-          showClose: true,
-          message: "规则节点才可以修改状态！",
-          type: "warning",
-        });
-        return;
-      }
-      this.status = data.ruleStatus;
-      this.dialogFormVisible = true;
-      //   kgBuilderApi.createLink(data).then((result) => {
-      //     if (result.code == 200) {
-      //       let newShip = result.data;
-      //       this.graphData.links.push(newShip);
-      //     }
-      //   });
+    //添加事件节点todo
+    handleAddEventNode(sdata) {
+      //   console.log(sdata);
+      let _this = this;
+      //   sdata ='{"去世":{"时间":"未提及","去世人姓名":"车兰轮","去世人身份":"法定代表人","去世原因":"病逝"}}';
+      let data = { domain: _this.domain, eventExtractResult: sdata };
+      let nodes = [];
+      let ships = [];
+      kgBuilderApi.addEventNode(data).then((result) => {
+        if (result.code == 200) {
+          //   console.log("success");
+          console.log(result);
+          for (let i = 0; i < result.data.length; i++) {
+            // let newShip = result.data[i];
+            // console.log(newShip);
+            // this.graphData.links.push(newShip);
+            nodes = nodes.concat(result.data[i].nodes);
+            ships = ships.concat(result.data[i].ships);
+          }
+          //   let newShip = result.data;
+          //   this.graphData.links.push(newShip);
+          this.mergeNodeAndLink(nodes, ships);
+          //重新绘制
+          this.$message({
+            message: "操作成功",
+            type: "success",
+          });
+        }
+      });
     },
-    //提交节点修改todo
+    // //编辑规则状态todo
+    // editRuleStatus(data) {
+    //   console.log(data);
+    //   this.changeNode = data;
+    //   if (data.isRule != 1 && data.isRule != 2) {
+    //     this.$message({
+    //       showClose: true,
+    //       message: "规则节点才可以修改状态！",
+    //       type: "warning",
+    //     });
+    //     return;
+    //   }
+    //   this.status = data.ruleStatus;
+    //   this.dialogFormVisible = true;
+    //   //   kgBuilderApi.createLink(data).then((result) => {
+    //   //     if (result.code == 200) {
+    //   //       let newShip = result.data;
+    //   //       this.graphData.links.push(newShip);
+    //   //     }
+    //   //   });
+    // },
+    //提交节点修改
     btnChangeRuleStatus(data) {
       console.log(data);
       console.log(this.changeNode);
@@ -741,8 +771,7 @@ export default {
             }
           });
         })
-        .catch(function () {
-        });
+        .catch(function () {});
     },
     //更新节点名称
     updateNodeName(d) {
@@ -755,7 +784,7 @@ export default {
         })
         .then(function (res) {
           let value = res.value;
-          let data = {domain: _this.domain, nodeId: d.uuid, nodeName: value};
+          let data = { domain: _this.domain, nodeId: d.uuid, nodeName: value };
           kgBuilderApi.updateNodeName(data).then((result) => {
             if (result.code == 200) {
               if (d.uuid != 0) {
@@ -782,7 +811,7 @@ export default {
     },
     //初始化节点富文本内容
     initNodeContent(data) {
-      let param = {domainId: data.domainId, nodeId: data.nodeId};
+      let param = { domainId: data.domainId, nodeId: data.nodeId };
       kgBuilderApi.getNodeContent(param).then((response) => {
         if (response.code == 200) {
           if (response.data) {
@@ -795,7 +824,7 @@ export default {
     },
     //初始化节点添加的图片
     initNodeImage(data) {
-      let param = {domainId: data.domainId, nodeId: data.nodeId};
+      let param = { domainId: data.domainId, nodeId: data.nodeId };
       kgBuilderApi.getNodeImage(param).then((response) => {
         if (response.code == 200) {
           if (response.data) {
@@ -815,7 +844,7 @@ export default {
     },
     //一次性获取富文本和图片
     getNodeDetail(nodeId, left, top) {
-      let data = {domainId: this.domainId, nodeId: nodeId};
+      let data = { domainId: this.domainId, nodeId: nodeId };
       kgBuilderApi.getNodeDetail(data).then((result) => {
         if (result.code == 200) {
           if (result.data) {
@@ -866,7 +895,7 @@ export default {
       kgBuilderApi.getDomainGraph(data).then((result) => {
         if (result.code == 200) {
           if (result.data != null) {
-            _this.graphData = {nodes: [], links: []};
+            _this.graphData = { nodes: [], links: [] };
             _this.graphData.nodes = result.data.node;
             _this.graphData.links = result.data.relationship;
           }
@@ -875,7 +904,7 @@ export default {
     },
     //展开更多节点
     getMoreNode() {
-      let data = {domain: this.domain, nodeId: this.selectNode.nodeId};
+      let data = { domain: this.domain, nodeId: this.selectNode.nodeId };
       kgBuilderApi.getMoreRelationNode(data).then((result) => {
         if (result.code == 200) {
           //把不存在于画布的节点添加到画布
@@ -887,7 +916,7 @@ export default {
     },
     //快速添加
     btnQuickAddNode() {
-      this.$refs.kg_form.init(true, "batchAdd", this.domain);
+      this.$refs.kg_form.init(true, "batchAddChild", this.domain);
     },
     //删除领域
     deleteDomain(id, value) {
@@ -901,7 +930,7 @@ export default {
         }
       )
         .then(function (res) {
-          let data = {domainId: id, domain: value};
+          let data = { domainId: id, domain: value };
           kgBuilderApi.deleteDomain(data).then((result) => {
             if (result.code == 200) {
               this.getDomain();
@@ -924,7 +953,7 @@ export default {
       })
         .then((res) => {
           value = res.value;
-          let data = {domain: value, type: 0};
+          let data = { domain: value, type: 0 };
           kgBuilderApi.createDomain(data).then((result) => {
             if (result.code == 200) {
               this.getDomain();
@@ -933,8 +962,27 @@ export default {
             }
           });
         })
-        .catch(() => {
-        });
+        .catch(() => {});
+    },
+    //创建事件领域
+    createEventDomain(value) {
+      this.$prompt("", "请输入事件抽取结果", {
+        inputType: "textarea",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+      })
+        .then((res) => {
+          value = res.value;
+          let data = { domain: value, type: 0 };
+          kgBuilderApi.createEventDomain(data).then((result) => {
+            if (result.code == 200) {
+              this.getDomain();
+              this.domain = value;
+              this.getDomainGraph();
+            }
+          });
+        })
+        .catch(() => {});
     },
     //获取领域标签
     getLabels(data) {
@@ -1002,7 +1050,7 @@ export default {
         this.$message.warning("请选择一个领域");
         return;
       }
-      let data = {domain: this.domain};
+      let data = { domain: this.domain };
       kgBuilderApi.exportGraph(data).then((result) => {
         if (result.code == 200) {
           window.location.href = result.fileName;
@@ -1542,5 +1590,9 @@ ul {
 
 .my-select .el-input {
   width: 90%;
+}
+
+.el-textarea__inner {
+  min-height: 150px !important;
 }
 </style>

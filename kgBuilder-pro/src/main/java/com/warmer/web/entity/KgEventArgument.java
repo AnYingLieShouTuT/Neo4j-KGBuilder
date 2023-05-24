@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @TableName("t_event_argument")
 public class KgEventArgument {
     private Integer id;
-    private String argument_name;
-    private String argument_source;
-    private String associate_tables_name;
+    private String argumentName;
+    private String argumentSource;
+    private String associateTablesName;
 }

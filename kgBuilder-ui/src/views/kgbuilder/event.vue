@@ -3,10 +3,10 @@
     <el-row type="flex" class="row-bg" justify="center">
       <el-col :span="20">
         <h1 class="title">
-          原子指标
+          事件
           <el-button
             size="medium"
-            @click="addAtomicIndex()"
+            @click="addEvent()"
             type="primary"
             style="margin-left: 20px"
             >添加
@@ -25,62 +25,19 @@
           >
             <el-table-column prop="id" label="id" width="50" align="center">
             </el-table-column>
-            <el-table-column prop="" label="指标内容" align="center" width="200">
-              <template slot-scope="scope">
-                <!-- <p>{{'总人数'}} {{ (Number(scope.row.count1)) + (Number(scope.row.count2))}}</p> -->
-                <p v-if="scope.row.indexSymbol != null">
-                  {{
-                    scope.row.indexJudgeMethod +
-                    scope.row.indexSymbol +
-                    scope.row.indexValue
-                  }}
-                </p>
-                <p v-if="scope.row.indexSymbol == null">
-                  {{
-                    $stringFormat(
-                      scope.row.indexJudgeMethod.toString(),
-                      scope.row.indexValue.split(",")
-                    )
-                  }}
-                </p>
-              </template>
+            <el-table-column prop="eventType" label="事件类型" align="center" width="">
             </el-table-column>
-            <el-table-column prop="indexJudgeMethod" label="指标" width="" align="center">
-            </el-table-column>
-            <el-table-column prop="indexSymbol" label="符号" width="50" align="center">
-            </el-table-column>
-            <el-table-column prop="indexValue" label="数值" width="60" align="center">
-            </el-table-column>
-            <el-table-column prop="dataType" label="数据类型" width="120" align="center">
-            </el-table-column>
-            <el-table-column prop="description" label="指标描述" width="">
-              <template slot-scope="scope">
-                <p v-if="scope.row.description != null || scope.row.description != ''">
-                  {{
-                    scope.row.description.length > 5
-                      ? scope.row.description.slice(0, 65) + "..."
-                      : scope.row.description
-                  }}
-                  <i
-                    class="el-icon-copy-document icon"
-                    @click="showDialog(scope.row)"
-                    v-show="scope.row.description != null || scope.row.description != ''"
-                  ></i>
-                  <el-dialog :visible.sync="dialogVisible" width="30%">
-                    <span slot="title">
-                      <i class="el-icon-edit"></i>
-                      <span>指标描述</span>
-                    </span>
-                    {{ data }}
-                  </el-dialog>
-                </p>
-              </template>
-            </el-table-column>
-
             <el-table-column
-              prop="associateTableName"
-              label="关联表"
-              width="100"
+              prop="eventArgument"
+              label="事件论元"
+              width=""
+              align="center"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="eventArgumentId"
+              label="事件论元id"
+              width=""
               align="center"
             >
             </el-table-column>
@@ -120,7 +77,7 @@
 import {kgBuilderApi} from "@/api";
 
 export default {
-  name: "rules",
+  name: "event",
   data() {
     return {
       tableData: [], //表格显示的数据
@@ -138,13 +95,13 @@ export default {
   components: {},
   mounted() {},
   created() {
-    this.getRules();
+    this.getEvents();
   },
   methods: {
-    getRules() {
+    getEvents() {
       let that = this;
       let data = { pageCode: this.params.page, pageSize: this.params.size };
-      kgBuilderApi.getAtomicIndexPage(data).then((result) => {
+      kgBuilderApi.getEventPage(data).then((result) => {
         if (result.code == 200) {
           that.tableData = result.data.records;
           that.total = result.data.total;

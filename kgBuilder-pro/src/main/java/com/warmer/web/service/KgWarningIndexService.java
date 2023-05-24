@@ -6,10 +6,9 @@ import com.warmer.web.entity.KgWarningIndex;
 import java.util.List;
 
 public interface KgWarningIndexService {
-    //分页
     Page<KgWarningIndex> getPageWarningIndex(int pageCode, int pageSize);
 
     List<KgWarningIndex> getAllWarningIndex();
 
-    KgWarningIndex getWarningIndex(int id);
+    KgWarningIndex getWarningIndexById(int id);
 }

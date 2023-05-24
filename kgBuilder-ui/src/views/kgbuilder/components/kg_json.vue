@@ -29,7 +29,7 @@ export default {
       dialogVisible: false,
       flowJsonData: {},
       options: {
-        mode: { name: "javascript", json: true },
+        mode: {name: "javascript", json: true},
         lineNumbers: true,
       },
     };

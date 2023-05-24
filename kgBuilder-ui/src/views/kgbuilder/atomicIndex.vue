@@ -9,7 +9,7 @@
             @click="addAtomicIndex()"
             type="primary"
             style="margin-left: 20px"
-            >添加
+          >添加
           </el-button>
         </h1>
       </el-col>
@@ -87,13 +87,13 @@
             <el-table-column label="操作" align="center" width="170">
               <template slot-scope="scope">
                 <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-                  >编辑
+                >编辑
                 </el-button>
                 <el-button
                   size="mini"
                   type="danger"
                   @click="handleDelete(scope.$index, scope.row)"
-                  >删除
+                >删除
                 </el-button>
               </template>
             </el-table-column>
@@ -136,14 +136,15 @@ export default {
     };
   },
   components: {},
-  mounted() {},
+  mounted() {
+  },
   created() {
     this.getRules();
   },
   methods: {
     getRules() {
       let that = this;
-      let data = { pageCode: this.params.page, pageSize: this.params.size };
+      let data = {pageCode: this.params.page, pageSize: this.params.size};
       kgBuilderApi.getAtomicIndexPage(data).then((result) => {
         if (result.code == 200) {
           that.tableData = result.data.records;

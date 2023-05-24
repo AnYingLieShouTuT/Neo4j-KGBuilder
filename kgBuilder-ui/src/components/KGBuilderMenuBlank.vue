@@ -34,7 +34,8 @@ export default {
       form: null,
     };
   },
-  mounted() {},
+  mounted() {
+  },
   inject: ["quickAddNodes"],
   components: {},
   computed: {
@@ -59,11 +60,12 @@ export default {
         inputType: "textarea",
         closeOnClickModal: false,
       })
-        .then(({ value }) => {
+        .then(({value}) => {
           //   console.log(value);
           this.$emit("addEventNode", value);
         })
-        .catch(() => {});
+        .catch(() => {
+        });
     },
     btnAddSingle() {
       this.$emit("changeCursor");

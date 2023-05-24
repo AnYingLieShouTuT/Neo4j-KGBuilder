@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 public class KgEventArgumentImpl implements KgEventArgumentService {
-    
+
     @Autowired
     private KgEventArgumentMapper kgEventArgumentMapper;
 

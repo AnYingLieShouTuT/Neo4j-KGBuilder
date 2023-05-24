@@ -10,7 +10,8 @@
           plain
           size="small"
           @click="createDomain"
-          >新建图谱</el-button
+        >新建图谱
+        </el-button
         >
         <div class="ml-a-box" style="min-height: 280px">
           <a
@@ -25,7 +26,8 @@
               closable
               style="margin: 2px"
               @close="deleteDomain(m.id, m.name)"
-              >{{ m.name }}</el-tag
+            >{{ m.name }}
+            </el-tag
             >
           </a>
         </div>
@@ -35,14 +37,14 @@
             class="svg-a-sm"
             v-show="pageModel.pageIndex > 1"
             @click="prev"
-            >上一页</a
+          >上一页</a
           >
           <a
             href="javascript:void(0)"
             class="svg-a-sm"
             v-show="pageModel.pageIndex < pageModel.totalPage"
             @click="next"
-            >下一页</a
+          >下一页</a
           >
         </div>
       </div>
@@ -75,7 +77,7 @@
                 :title="m.size"
                 href="javascript:void(0)"
                 :class="[m.isActive ? 'sd-active' : '', 'sd']"
-                >{{ m.size }}</a
+              >{{ m.size }}</a
               >
             </span>
           </span>
@@ -108,7 +110,7 @@
         <div id="nodeDetail" class="node_detail">
           <h5>详细数据</h5>
           <span class="node_pd" v-for="(m, k) in nodeDetail" :key="k"
-            >{{ k }}:{{ m }}</span
+          >{{ k }}:{{ m }}</span
           >
         </div>
         <!-- 中部图谱画布 -->
@@ -201,13 +203,13 @@ export default {
       nodeButtonGroup: null,
       nodeButtonAction: "",
       tooltip: null,
-      mouserPos: { left: "-1000px", top: "-1000px" },
+      mouserPos: {left: "-1000px", top: "-1000px"},
       nodeDetail: null,
       pageSizeList: [
-        { size: 500, isActive: true },
-        { size: 1000, isActive: false },
-        { size: 2000, isActive: false },
-        { size: 5000, isActive: false },
+        {size: 500, isActive: true},
+        {size: 1000, isActive: false},
+        {size: 2000, isActive: false},
+        {size: 5000, isActive: false},
       ],
       isAddLink: false,
       isDeleteLink: false,
@@ -337,7 +339,7 @@ export default {
           return n.uuid === m.targetId;
         })[0];
         if (typeof targetNode == "undefined") return;
-        links.push({ source: sourceNode.uuid, target: targetNode.uuid, lk: m });
+        links.push({source: sourceNode.uuid, target: targetNode.uuid, lk: m});
       });
       //为每一个节点定制按钮组
       this.addNodeButton();
@@ -438,6 +440,7 @@ export default {
       this.simulation.nodes(nodes).on("tick", ticked);
       this.simulation.force("link").links(links);
       this.simulation.alphaTarget(1).restart();
+
       function linkArc(d) {
         let dx = d.target.x - d.source.x,
           dy = d.target.y - d.source.y,
@@ -467,8 +470,10 @@ export default {
           d.target.y;
         return dd;
       }
+
       const linkTextList = this.linkTextGroup.selectAll("g");
       const linkText = this.linkTextGroup.selectAll("g >text");
+
       function ticked() {
         link.attr("d", linkArc);
         // 更新节点坐标
@@ -515,6 +520,7 @@ export default {
           }
         });
       }
+
       // 鼠标滚轮缩放
       //this.svg.call(d3.zoom().transform, d3.zoomIdentity);//缩放至初始倍数
       this.svg.call(
@@ -602,7 +608,7 @@ export default {
     },
     //画布直接添加节点
     createSingleNode(left, top) {
-      let data = { name: "", r: 30 };
+      let data = {name: "", r: 30};
       data.domain = this.domain;
       kgBuilderApi.createNode(data).then((result) => {
         if (result.code == 200) {
@@ -726,14 +732,14 @@ export default {
     dragEnded(d) {
       if (!d3.event.active) this.simulation.alphaTarget(0.3);
       let moveNodes = [];
-      moveNodes.push({ uuid: d.uuid, fx: d.fx, fy: d.fy });
+      moveNodes.push({uuid: d.uuid, fx: d.fx, fy: d.fy});
       let relevantNodes = this.graph.links.filter((n) => n.sourceId == d.uuid);
       if (relevantNodes && relevantNodes.length > 0) {
         relevantNodes.forEach((x) => {
           let targetNodes = this.graph.nodes
             .filter((n) => n.uuid == x.targetId)
             .map((m) => {
-              let item = { uuid: m.uuid, fx: m.fx, fy: m.fy };
+              let item = {uuid: m.uuid, fx: m.fx, fy: m.fy};
               return item;
             });
           moveNodes = moveNodes.concat(targetNodes);
@@ -741,8 +747,9 @@ export default {
       }
       console.log(moveNodes);
       //批量更新本次移动的节点坐标
-      let data = { domain: this.domain, nodes: moveNodes };
-      kgBuilderApi.updateCoordinateOfNode(data).then((result) => {});
+      let data = {domain: this.domain, nodes: moveNodes};
+      kgBuilderApi.updateCoordinateOfNode(data).then((result) => {
+      });
     },
     //绘制节点
     drawNode(node) {
@@ -1044,7 +1051,7 @@ export default {
           type: "warning",
         })
         .then(function () {
-          let data = { domain: _this.domain, nodeId: _this.selectNode.nodeId };
+          let data = {domain: _this.domain, nodeId: _this.selectNode.nodeId};
           kgBuilderApi.deleteNode(data).then((result) => {
             if (result.code == 200) {
               _this.svg.selectAll(out_buttongroup_id).remove();
@@ -1095,7 +1102,7 @@ export default {
           type: "warning",
         })
         .then(function () {
-          let data = { domain: _this.domain, shipId: _this.selectNode.nodeId };
+          let data = {domain: _this.domain, shipId: _this.selectNode.nodeId};
           kgBuilderApi.deleteLink(data).then((result) => {
             if (result.code == 200) {
               let j = -1;
@@ -1186,7 +1193,7 @@ export default {
         })
         .then(function (res) {
           let value = res.value;
-          let data = { domain: _this.domain, nodeId: d.uuid, nodeName: value };
+          let data = {domain: _this.domain, nodeId: d.uuid, nodeName: value};
           kgBuilderApi.updateNodeName(data).then((result) => {
             if (result.code == 200) {
               if (d.uuid != 0) {
@@ -1213,7 +1220,7 @@ export default {
     },
     //初始化节点富文本内容
     initNodeContent() {
-      let data = { domainId: this.domainId, nodeId: this.selectNode.nodeId };
+      let data = {domainId: this.domainId, nodeId: this.selectNode.nodeId};
       kgBuilderApi.getNodeContent(data).then((response) => {
         if (response.code == 200) {
           if (response.data) {
@@ -1226,7 +1233,7 @@ export default {
     },
     //初始化节点添加的图片
     initNodeImage() {
-      let data = { domainId: this.domainId, nodeId: this.selectNode.nodeId };
+      let data = {domainId: this.domainId, nodeId: this.selectNode.nodeId};
       kgBuilderApi.getNodeImage(data).then((response) => {
         if (response.code == 200) {
           if (response.data) {
@@ -1246,7 +1253,7 @@ export default {
     },
     //一次性获取富文本和图片
     getNodeDetail(nodeId, left, top) {
-      let data = { domainId: this.domainId, nodeId: nodeId };
+      let data = {domainId: this.domainId, nodeId: nodeId};
       kgBuilderApi.getNodeDetail(data).then((result) => {
         if (result.code == 200) {
           if (result.data) {
@@ -1314,7 +1321,7 @@ export default {
     },
     //展开更多节点
     getMoreNode() {
-      let data = { domain: this.domain, nodeId: this.selectNode.nodeId };
+      let data = {domain: this.domain, nodeId: this.selectNode.nodeId};
       kgBuilderApi.getMoreRelationNode(data).then((result) => {
         if (result.code == 200) {
           //把不存在于画布的节点添加到画布
@@ -1340,7 +1347,7 @@ export default {
         }
       )
         .then(function (res) {
-          let data = { domainId: id, domain: value };
+          let data = {domainId: id, domain: value};
           kgBuilderApi.deleteDomain(data).then((result) => {
             if (result.code == 200) {
               this.getDomain();
@@ -1363,7 +1370,7 @@ export default {
       })
         .then((res) => {
           value = res.value;
-          let data = { domain: value, type: 0 };
+          let data = {domain: value, type: 0};
           kgBuilderApi.createDomain(data).then((result) => {
             if (result.code == 200) {
               this.getDomain();
@@ -1437,7 +1444,7 @@ export default {
         this.$message.warning("请选择一个领域");
         return;
       }
-      let data = { domain: this.domain };
+      let data = {domain: this.domain};
       kgBuilderApi.exportGraph(data).then((result) => {
         if (result.code == 200) {
           window.location.href = result.fileName;
@@ -1561,8 +1568,8 @@ export default {
         left: event.clientX,
         top: event.clientY,
       };
-      _this.$refs.menu_blank.init({ show: false });
-      _this.$refs.menu_link.init({ show: false });
+      _this.$refs.menu_blank.init({show: false});
+      _this.$refs.menu_link.init({show: false});
       _this.$refs.node_richer.close();
       if (event.target.tagName != "circle" && event.target.tagName != "link") {
         d3.select("#nodeDetail").style("display", "none");
@@ -1582,6 +1589,7 @@ export default {
   height: calc(100vh - 85px);
   overflow: hidden;
 }
+
 .mind-l {
   width: 300px;
   float: left;
@@ -1589,6 +1597,7 @@ export default {
   height: 100%;
   border-right: 1px solid #d3e2ec;
 }
+
 .ml-ht {
   padding-top: 20px;
   line-height: 50px;
@@ -1598,9 +1607,11 @@ export default {
   color: #333;
   border-bottom: 1px solid #d3e2ec;
 }
+
 .ml-a-box {
   margin: 10px;
 }
+
 .ml-a {
   display: inline-block;
   min-width: 46px;
@@ -1612,6 +1623,7 @@ export default {
   box-sizing: border-box;
   transition: 0.3s;
 }
+
 .ml-a span {
   max-width: 190px;
   display: inline-block;
@@ -1620,35 +1632,43 @@ export default {
   text-overflow: ellipsis;
   vertical-align: middle;
 }
+
 .ml-a-all {
   display: block;
   margin: 10px 10px 0;
   text-align: center;
 }
+
 .ml-a span:empty:before {
   content: "閺堫亜鎳￠崥锟�";
   color: #adadad;
 }
+
 .ml-a small {
   color: #999;
 }
+
 .ml-a:hover {
   background: #f4f4f4;
 }
+
 .ml-a.cur,
 .ml-a.cur small {
   background: #156498;
   color: #fff;
 }
+
 .ml-btn-box {
   text-align: right;
   padding: 0 10px;
   margin-bottom: 20px;
 }
+
 .ml-btn {
   padding: 0 5px;
   color: #156498;
 }
+
 .mind-con {
   height: calc(100vh - 40px);
   overflow: hidden;
@@ -1658,43 +1678,52 @@ export default {
   flex-direction: column;
   padding: 5px;
 }
+
 .mind-top {
   /* line-height: 70px;
   height: 70px; */
   padding: 0 22px;
   border-bottom: 1px solid #ededed;
 }
+
 .mt-m {
   color: #666;
   margin-right: 30px;
 }
+
 .mt-m i {
   font-size: 18px;
   color: #333;
   font-weight: 700;
   font-style: normal;
 }
+
 .mb-con .search,
 .mind-top .search {
   border: 1px solid #e2e2e2;
 }
+
 .svg-a-sm {
   font-size: 14px;
   color: #156498;
   margin-right: 30px;
   cursor: pointer;
 }
+
 .mind-cen {
   height: calc(100% - 70px);
 }
+
 .half-auto {
   height: 40%;
 }
+
 .mind-bottom {
   height: 490px;
   box-sizing: border-box;
   border-top: 1px solid #ededed;
 }
+
 .ss-d {
   display: inline-block;
   vertical-align: middle;
@@ -1702,40 +1731,51 @@ export default {
   border-radius: 50%;
   background: #dedede;
 }
+
 .sd {
   margin: 2px;
 }
+
 .sd-active {
   color: red !important;
   background: none !important;
 }
+
 .btn-line + .btn-line {
   margin-left: 10px;
 }
+
 .co {
   color: #ee8407 !important;
 }
+
 a {
   text-decoration: none;
 }
+
 .a {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .fl {
   float: left;
 }
+
 .fr {
   float: right;
   margin: 7px;
 }
+
 .tl {
   text-align: left;
 }
+
 .pl-20 {
   padding-left: 20px;
 }
+
 text {
   cursor: pointer;
   max-width: 25px;
@@ -1745,29 +1785,36 @@ text {
   text-overflow: ellipsis;
   vertical-align: middle;
 }
+
 circle {
   cursor: pointer;
 }
+
 #graphcontainerdiv {
   background: #fff;
 }
+
 .el-color-picker__panel {
   left: 812px !important;
 }
+
 .wange-toolbar {
   border: 1px solid #ccc;
 }
+
 .wangeditor-form {
   border: 1px solid #ccc;
   height: 350px;
   min-height: 340px;
 }
+
 .el-tag {
   max-width: 80px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .mind-fj-box {
   display: inline-block;
   width: 290px;
@@ -1775,23 +1822,27 @@ circle {
   border: 1px solid #e6e6e6;
   box-shadow: 0 0 8px rgba(206, 205, 201, 0.38);
 }
+
 .mind-fj-p {
   color: #666;
   line-height: 24px;
   padding: 5px;
   background: rgba(255, 255, 255, 0.85);
 }
+
 .mind-carousel + .mind-fj-p .el-scrollbar__wrap {
   height: auto;
   max-height: 220px;
   min-height: 0;
 }
+
 .carous-img {
   height: 100%;
   background: rgba(0, 0, 0, 0.1);
   line-height: 197px;
   text-align: center;
 }
+
 .carous-img img {
   max-width: 100%;
   max-height: 100%;
@@ -1811,12 +1862,14 @@ circle {
   background: rgba(198, 226, 255, 0.2);
   display: none;
 }
+
 .node_pd {
   padding: 4px;
   font-size: 13px;
   font-family: -webkit-body;
   font-weight: 600;
 }
+
 .operatetips {
   position: absolute;
   right: 10px;
@@ -1827,6 +1880,7 @@ circle {
   border: 2px #ee7942 solid;
   border-radius: 4px;
 }
+
 .jsoncontainer {
   position: absolute;
   right: 30%;
@@ -1839,12 +1893,14 @@ circle {
   border-radius: 4px;
   background: #fff;
 }
+
 .cypher_toolbar {
   line-height: 70px;
   height: 85px;
   padding: 0 22px;
   border-bottom: 1px solid #ededed;
 }
+
 .hometitle {
   font-size: 18px;
   color: #282828;
@@ -1860,9 +1916,11 @@ circle {
   overflow: hidden;
   position: relative;
 }
+
 ul {
   padding: 0px;
 }
+
 .icon {
   width: 1em;
   height: 1em;
@@ -1870,6 +1928,7 @@ ul {
   fill: currentColor;
   overflow: hidden;
 }
+
 .el-button {
   display: inline-block;
   line-height: 1;
@@ -1891,6 +1950,7 @@ ul {
   font-size: 14px;
   border-radius: 4px;
 }
+
 .search {
   position: relative;
   width: 220px;
@@ -1898,6 +1958,7 @@ ul {
   border-radius: 32px;
   overflow: hidden;
 }
+
 .search .el-input__inner {
   box-sizing: border-box;
   padding-left: 15px;
@@ -1909,6 +1970,7 @@ ul {
   border: none;
   transition: background 0.3s;
 }
+
 .search .el-button--default {
   position: absolute;
   right: 1px;
@@ -1921,24 +1983,29 @@ ul {
   border: none;
   z-index: 1;
 }
+
 .search .el-button--default:hover {
   color: #156498;
   background: transparent;
   border: none;
 }
+
 .top .search {
   margin-left: 30px;
   background: rgba(0, 0, 0, 0.25);
   display: none;
 }
+
 .circle_none {
   display: none;
 }
+
 .dibmr {
   padding: 4px;
   display: inline-block;
   line-height: 30px;
 }
+
 text {
   cursor: pointer;
   max-width: 30px;
@@ -1948,6 +2015,7 @@ text {
   text-overflow: ellipsis;
   vertical-align: middle;
 }
+
 circle {
   cursor: pointer;
 }

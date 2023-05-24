@@ -6,7 +6,7 @@
       @click="initContainerLeftClick"
       @contextmenu.prevent="initContainerRightClick"
     />
-    <menuLink ref="menu_link" />
+    <menuLink ref="menu_link"/>
     <menuBlank
       ref="menu_blank"
       @changeCursor="changeCursor"
@@ -38,7 +38,8 @@ export default {
   props: {
     styles: {
       type: Object,
-      default: () => {},
+      default: () => {
+      },
     },
     initData: {
       type: Object,
@@ -57,7 +58,8 @@ export default {
       default: "",
     },
   },
-  created() {},
+  created() {
+  },
   data() {
     return {
       timer: null,
@@ -163,8 +165,8 @@ export default {
     initContainerLeftClick(event) {
       let _this = this;
       //隐藏添加节点菜单和连线编辑菜单
-      _this.$refs.menu_blank.init({ show: false });
-      _this.$refs.menu_link.init({ show: false });
+      _this.$refs.menu_blank.init({show: false});
+      _this.$refs.menu_link.init({show: false});
       //移除SVG容器上的"mousemove"事件监听器。
       _this.svg.on("mousemove", null);
       //移除临时绘制的连线元素。
@@ -276,7 +278,7 @@ export default {
           return n.uuid === m.targetId;
         })[0];
         if (typeof targetNode === "undefined") return;
-        links.push({ source: sourceNode.uuid, target: targetNode.uuid, lk: m });
+        links.push({source: sourceNode.uuid, target: targetNode.uuid, lk: m});
       });
       // 为每一个节点定制按钮组
       this.addNodeButton();
@@ -781,7 +783,7 @@ export default {
     dragEnded(d) {
       if (!d3.event.active) this.simulation.alphaTarget(0.3);
       let moveNodes = [];
-      moveNodes.push({ uuid: d.uuid, fx: d.fx, fy: d.fy });
+      moveNodes.push({uuid: d.uuid, fx: d.fx, fy: d.fy});
       let relevantNodes = this.graph.links
         .filter((n) => n.sourceId == d.uuid)
         .map((m) => m.targetId);
@@ -794,7 +796,7 @@ export default {
           let targetNodes = this.graph.nodes
             .filter((n) => n.uuid == targetId)
             .map((m) => {
-              let item = { uuid: m.uuid, fx: m.x, fy: m.y };
+              let item = {uuid: m.uuid, fx: m.x, fy: m.y};
               return item;
             });
           moveNodes = moveNodes.concat(targetNodes);
